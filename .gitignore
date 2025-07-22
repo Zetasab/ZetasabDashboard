@@ -1,0 +1,48 @@
+## Archivos y carpetas generados por Visual Studio
+.vs/
+*.user
+*.suo
+
+## Build y salida
+bin/
+obj/
+
+## Archivos de publicación
+publish/
+out/
+
+## Archivos de configuración de Rider y VSCode (opcional)
+.idea/
+.vscode/
+
+## Archivos de lock y temporales
+project.lock.json
+project.fragment.lock.json
+*.lock.json
+*.tmp
+
+## Paquetes descargados
+packages/
+*.nupkg
+*.snupkg
+
+## Configuraciones locales de usuario
+*.userprefs
+
+## Archivos de log
+*.log
+
+## Configuraciones de IIS
+iisexpress/
+
+## Configuraciones del sistema operativo
+.DS_Store
+Thumbs.db
+
+## Archivos específicos de Blazor Server
+wwwroot/dist/
+wwwroot/node_modules/
+wwwroot/lib/
+
+# Si usas secretos con dotnet user-secrets
+secrets.json
