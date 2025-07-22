@@ -1,0 +1,38 @@
+﻿@page "/user"
+@using RailwayDashboard.Common.Models
+
+
+<div style="display:flex;justify-content:space-around">
+    <div></div>
+    <h3>Usuarios</h3>
+    <MudIconButton Variant="Variant.Filled" Icon="@Icons.Material.Filled.Add" Size="Size.Large" Color="Color.Primary" OnClick="@InsertOverlay"></MudIconButton>
+</div>
+
+@* insert modal*@
+<MudDialog @bind-Visible="InsertModal" Style="min-width:700px;min-height:400px">
+    <TitleContent>
+        Insertar Evento
+    </TitleContent>
+    <DialogContent>
+        <EditForm Model="InsertUser" OnValidSubmit="OnInsertData">
+            <MudTextField @bind-Value="InsertUser.Email" InputType="InputType.Email" Label="Email" Style="margin-top:25px;"></MudTextField>
+            <MudTextField @bind-Value="InsertUser.PasswordHash" InputType="InputType.Password"  Label="Password" Style="margin-top:25px;"></MudTextField>
+            <MudSelect @bind-Value="InsertUser.UserType" Label="Tipo de usuario" >
+                @foreach (var type in Enum.GetValues<User.EUserType>())
+                {
+                    <MudSelectItem Value="@type">@type</MudSelectItem>
+                }
+            </MudSelect>
+
+            <MudButton ButtonType="ButtonType.Submit" Color="Color.Primary" Style="margin-top:25px;" Variant="Variant.Filled">Aceptar</MudButton>
+            <MudButton Color="Color.Error" Style="margin-top:25px;" Variant="Variant.Filled" OnClick="@(() => InsertModal = false)">Cerrar</MudButton>
+        </EditForm>
+    </DialogContent>
+</MudDialog>
+@* ------- *@
+
+
+@foreach(var item in UserList)
+{
+    <MudText>@item.Email</MudText>
+}
