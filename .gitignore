@@ -7,11 +7,11 @@
 bin/
 obj/
 
-## Archivos de publicación
+## Archivos de publicaciï¿½n
 publish/
 out/
 
-## Archivos de configuración de Rider y VSCode (opcional)
+## Archivos de configuraciï¿½n de Rider y VSCode (opcional)
 .idea/
 .vscode/
 
@@ -39,10 +39,11 @@ iisexpress/
 .DS_Store
 Thumbs.db
 
-## Archivos específicos de Blazor Server
+## Archivos especï¿½ficos de Blazor Server
 wwwroot/dist/
 wwwroot/node_modules/
 wwwroot/lib/
 
 # Si usas secretos con dotnet user-secrets
 secrets.json
+Properties/launchSettings.json
