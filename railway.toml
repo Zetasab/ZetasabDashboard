@@ -1,2 +1,3 @@
-[build]
-nixpacksPlan = "dotnet@8.0"
+[build.nixpacksPlan]
+providers = ["dotnet"]
+languages = ["dotnet@8.0"]
