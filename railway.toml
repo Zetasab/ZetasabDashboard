@@ -1,0 +1,2 @@
+[build]
+nixpacksPlan = "dotnet@8.0"
