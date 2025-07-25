@@ -1,8 +1,19 @@
-﻿@rendermode InteractiveServer
+﻿@using ZetaDashboard.Components.Layout
+@using Microsoft.AspNetCore.Components.Authorization
 
-<Router AppAssembly="typeof(Program).Assembly">
-    <Found Context="routeData">
-        <RouteView RouteData="routeData" DefaultLayout="typeof(Layout.MainLayout)" />
-        <FocusOnNavigate RouteData="routeData" Selector="h1" />
-    </Found>
-</Router>
+@inject NavigationManager NavigationManager
+
+@rendermode InteractiveServer
+
+<CascadingAuthenticationState>
+    <Router AppAssembly="@typeof(App).Assembly">
+        <Found Context="routeData">
+            <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
+        </Found>
+        <NotFound>
+            @{
+                NavigationManager.NavigateTo("/404", false);
+            }
+        </NotFound>
+    </Router>
+</CascadingAuthenticationState>

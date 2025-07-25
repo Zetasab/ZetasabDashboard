@@ -1,0 +1,28 @@
+﻿@inherits LayoutComponentBase
+
+
+@* Required *@
+<MudThemeProvider />
+<MudPopoverProvider />
+
+@* Needed for dialogs *@
+<MudDialogProvider />
+
+@* Needed for snackbars *@
+<MudSnackbarProvider />
+
+<MudThemeProvider Theme="@MyTheme" IsDarkMode="@IsDarkMode" />
+
+<div class="page">
+    <main>
+        <article class="content" style="padding:0px !important;overflow:hidden;">
+            @Body
+        </article>
+    </main>
+</div>
+
+<div id="blazor-error-ui">
+    An unhandled error has occurred.
+    <a href="" class="reload">Reload</a>
+    <a class="dismiss">🗙</a>
+</div>

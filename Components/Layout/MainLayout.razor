@@ -14,6 +14,8 @@
 @* theme *@
 <MudThemeProvider Theme="@MyTheme" IsDarkMode="@IsDarkMode" />
 
+@if (IsAuthentificated)
+{
 <div class="page">
     <div class="sidebar">
         <NavMenu />
@@ -30,6 +32,7 @@
                     <MudTooltip Text="Cerrar Sesión">
                         <MudIconButton Icon="@Icons.Material.Filled.Logout"
                                         Variant="Variant.Filled"
+                                        OnClick="LogOutClicked"
                                         Color="Color.Error"></MudIconButton>
                     </MudTooltip>
                 
@@ -49,3 +52,4 @@
     <a href="" class="reload">Reload</a>
     <a class="dismiss">🗙</a>
 </div>
+}

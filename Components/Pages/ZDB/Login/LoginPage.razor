@@ -1,0 +1,186 @@
+﻿@page "/login"
+@using Microsoft.AspNetCore.Components.Authorization
+@using ZetaCommon.Auth
+@using ZetaDashboard.Common.ZDB.Models
+@using ZetaDashboard.Components.Layout
+@using MudBlazor
+
+@layout LoginLayout
+
+@inject IJSRuntime JS
+
+<div class="login-bg">
+	<MudHidden Breakpoint="Breakpoint.MdAndDown">
+		<div class="grid-overlay">
+			@for (int i = 0; i < Rows; i++)
+			{
+				<div class="grid-row">
+					@for (int j = 0; j < 18; j++)
+					{
+						var idx = i * 18 + j;
+						<div class="grid-cell @(ActiveCells.Contains(idx) ? "active" : "")"
+							 @onmouseover="() => ActivateCell(idx)">
+						</div>
+					}
+				</div>
+			}
+		</div>
+	</MudHidden>
+	<MudHidden Breakpoint="Breakpoint.LgAndUp">
+		<div class="grid-overlay">
+			@for (int i = 0; i < Rows; i++)
+			{
+				<div class="grid-row">
+					@for (int j = 0; j < 5; j++)
+					{
+						var idx = i * 18 + j;
+						<div class="grid-cell @(ActiveCells.Contains(idx) ? "active" : "")"
+							 @onmouseover="() => ActivateCell(idx)">
+						</div>
+					}
+				</div>
+			}
+		</div>
+	</MudHidden>
+
+
+	<div class="login-form">
+		<div style="display:flex;justify-content:center;margin-top:20px;">
+			<MudImage Src="Img/Logocsa.png" Style="width:100px;"></MudImage>
+		</div>
+		<h2 style="margin-top:40px;">Log In</h2>
+
+		<EditForm Model="@UserAccountModel" OnValidSubmit="@OnLogin" FormName="LoginForm" style="margin-top:30px;">
+			<MudTextField 
+				T="string"
+				@bind-Value="UserAccountModel.Email"
+				Placeholder="Email"
+				Variant="Variant.Text"
+				Adornment="Adornment.Start"
+				AdornmentIcon="@Icons.Material.Filled.Person"
+				Required="true"
+				RequiredError="Email is required!"
+				For="@(() => UserAccountModel.Email)" />
+
+			<div style="display:flex;">
+			<MudTextField 
+				T="string"
+				@bind-Value="UserAccountModel.PasswordHash"
+				Placeholder="Contraseña"
+				Variant="Variant.Text"
+				Adornment="Adornment.Start"
+				AdornmentIcon="@Icons.Material.Filled.Password"
+				InputType="@PasswordInput"
+				Required="true"
+				RequiredError="Password is required!"
+				Style="margin-top:25px;"
+				Class="mud-input-password-custom"
+				For="@(() => UserAccountModel.PasswordHash)" >
+			</MudTextField>
+				<MudIconButton 
+					Icon="@PasswordInputIcon"
+					OnClick="ButtonTestclick"
+					Style="position: absolute;right:0;margin-top: 16px;margin-right: 26px;">
+
+				</MudIconButton>
+			</div>
+
+			<MudButton 
+				Variant="Variant.Filled" 
+				ButtonType="ButtonType.Submit" 
+				Color="Color.Primary" 
+				Class="mt-4 login-submit-btn"
+				EndIcon="@Icons.Material.Filled.Login"
+				Style="margin-top:35px !important;"
+				FullWidth>
+				Entrar
+			</MudButton>
+
+		</EditForm>
+
+		<div style="margin-top:30px;display:flex;justify-content:center;">
+
+			@* github *@
+			<MudIconButton 
+				Color="Color.Primary"
+				Size="Size.Large"
+				Style="background-color: #293c6f; color: white; border-radius: 50%;"
+				OnClick="@(() => OpenUrl($"https://github.com/Zetasab"))"
+				Class="social-btn" >
+				<ChildContent>
+					<svg fill="white" viewBox="0 0 24 24" height="24" width="24" xmlns="http://www.w3.org/2000/svg">
+						<path d="M12 .5C5.4.5 0 5.9 0 12.5c0 5.3 3.4 9.8 8.2 11.4.6.1.8-.2.8-.6v-2c-3.3.7-4-1.6-4-1.6-.6-1.6-1.4-2-1.4-2-1.2-.8.1-.8.1-.8 1.3.1 2 .9 2 .9 1.2 2 3.1 1.4 3.8 1.1.1-.9.5-1.4.9-1.7-2.7-.3-5.6-1.3-5.6-5.9 0-1.3.5-2.3 1.2-3.2-.1-.3-.5-1.6.1-3.2 0 0 1-.3 3.3 1.2a11.4 11.4 0 0 1 6 0c2.3-1.5 3.3-1.2 3.3-1.2.6 1.6.2 2.9.1 3.2.7.9 1.2 2 1.2 3.2 0 4.6-2.9 5.6-5.6 5.9.5.4 1 .8 1 1.8v2.7c0 .3.2.7.8.6A12 12 0 0 0 24 12.5C24 5.9 18.6.5 12 .5Z" />
+					</svg>
+				</ChildContent>
+			</MudIconButton>
+			<div style="width:17px;"></div>
+			@* instagarm *@
+			<MudIconButton Color="Color.Primary"
+						   Style="background-color: #bf44bd; color: white; border-radius: 50%;"
+						   OnClick="@(() => OpenUrl($"https://www.instagram.com/zetasaab/"))"
+						   Class="social-btn">
+				<ChildContent>
+					<svg fill="white" viewBox="0 0 24 24" height="24" width="24" xmlns="http://www.w3.org/2000/svg">
+						<path d="M12 2.2c3.2 0 3.6 0 4.9.1 1.2.1 2 .3 2.5.5.6.2 1 .5 1.5 1 .5.5.8.9 1 1.5.2.5.4 1.3.5 2.5.1 1.3.1 1.7.1 4.9s0 3.6-.1 4.9c-.1 1.2-.3 2-.5 2.5-.2.6-.5 1-.9 1.5-.5.5-.9.8-1.5 1-.5.2-1.3.4-2.5.5-1.3.1-1.7.1-4.9.1s-3.6 0-4.9-.1c-1.2-.1-2-.3-2.5-.5a4.1 4.1 0 0 1-1.5-1c-.5-.5-.8-.9-1-1.5-.2-.5-.4-1.3-.5-2.5C2.2 15.6 2.2 15.2 2.2 12s0-3.6.1-4.9c.1-1.2.3-2 .5-2.5.2-.6.5-1 .9-1.5.5-.5.9-.8 1.5-1 .5-.2 1.3-.4 2.5-.5C8.4 2.2 8.8 2.2 12 2.2m0-2.2C8.7 0 8.3 0 7 0S4.3 0 3 0C1.3 0 .4.9.1 2.2c-.1 1.3-.1 1.7-.1 4.9s0 3.6.1 4.9c.1 1.3.3 2 .5 2.5.2.6.5 1 .9 1.5.5.5.9.8 1.5 1 .5.2 1.3.4 2.5.5 1.3.1 1.7.1 4.9.1s3.6 0 4.9-.1c1.2-.1 2-.3 2.5-.5a4.1 4.1 0 0 0 1.5-1c.5-.5.8-.9 1-1.5.2-.5.4-1.3.5-2.5.1-1.3.1-1.7.1-4.9s0-3.6-.1-4.9c-.1-1.2-.3-2-.5-2.5-.2-.6-.5-1-.9-1.5a4.1 4.1 0 0 0-1.5-1c-.5-.2-1.3-.4-2.5-.5C15.6 0 15.2 0 12 0zm0 5.8a6.2 6.2 0 1 0 0 12.4 6.2 6.2 0 0 0 0-12.4zm0 10.2a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.4-11.4a1.4 1.4 0 1 0 0 2.8 1.4 1.4 0 0 0 0-2.8z" />
+					</svg>
+				</ChildContent>
+			</MudIconButton>
+			<div style="width:17px;"></div>
+
+			@* csurl *@
+			<MudIconButton Color="Color.Primary"
+						   Style="background-color: #3b5998; color: white; border-radius: 50%;"
+						   OnClick="@(() => OpenUrl($"https://zetasab.github.io/cesarsobrino/"))"
+						   Class="social-btn">
+				<ChildContent>
+					<svg fill="white" height="24" width="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+						<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm1 7H8V8h7v1zm-7 2h7v1H8v-1zm0 2h7v1H8v-1zm9-7v2h-2V5l2 2z" />
+					</svg>
+				</ChildContent>
+			</MudIconButton>
+		</div>
+	</div>
+</div>
+
+<style>
+	/* button */
+	.login-submit-btn {
+		font-size: 1.18rem;
+		padding: 0.9rem 1.5rem;
+		border-radius: 12px;
+		font-weight: 700;
+		letter-spacing: 1px;
+		background: linear-gradient(90deg, #7c3aed 60%, #5a38d6 100%);
+		box-shadow: 0 6px 30px #7c3aed66, 0 1.5px 8px #19193050;
+		transition: background 0.18s, transform 0.13s, box-shadow 0.2s;
+		margin-top: 1.4rem;
+	}
+
+		.login-submit-btn:hover {
+			background: linear-gradient(90deg, #a084ee 60%, #7c3aed 100%);
+			transform: translateY(-2px) scale(1.03);
+			box-shadow: 0 12px 36px #7c3aed99, 0 2.5px 12px #19193070;
+		}
+		/* inpùt */
+	.mud-input-root{
+		color:white !important;
+	}
+
+	.mud-icon-root{
+		color:white !important;
+	}
+
+	.mud-input-slot{
+		width:70% !important;
+		margin-left:8px;
+	}
+
+	.social-btn{
+		transition:.3s ease-in-out;
+	}
+	.social-btn:hover {
+		transform: scale(1.15);
+		box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.3);
+			background-color: #ac8bf7 !important;
+	}
+</style>

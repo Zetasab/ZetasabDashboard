@@ -1,7 +1,11 @@
-﻿@using ZetaDashboard.Services
+﻿@using Microsoft.AspNetCore.Components.Authorization
+@using ZetaCommon.Auth
+@using ZetaDashboard.Services
 @using static ZetaDashboard.Services.CommonServices
 
 @inject CommonServices CommonService
+@inject AuthenticationStateProvider AuthProvider
+@inject NavigationManager Navigator
 
 <div class="top-row ps-3 navbar navbar-dark"
      style="@($"background-color: {CommonService.GetCssVar(Color.Primary, ColorType.Darken)};height:56px !important")">
@@ -36,6 +40,23 @@
             </NavLink>
         </div>
 
+        <MudHidden Invert="true" Breakpoint="Breakpoint.Xs">
+        <div class="nav-item px-3">
+            <MudButton 
+                OnClick="LogOutClicked"
+                Color="Color.Error"
+                FullWidth="true"
+                Style="margin-top:10px"
+                Variant="Variant.Filled"
+                EndIcon="@Icons.Material.Filled.Logout">Cerrar sesión</MudButton>
+        </div>
+        </MudHidden>
     </nav>
 </div>
 
+@code{
+    private async Task LogOutClicked()
+    {
+        (AuthProvider as CustomAuthenticationStateProvider).Logout(Navigator);
+    }
+}

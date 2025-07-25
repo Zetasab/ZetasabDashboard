@@ -1,7 +1,9 @@
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.Extensions.Options;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using MudBlazor.Services;
+using ZetaCommon.Auth;
 using ZetaDashboard.Common.Mongo.Config;
 using ZetaDashboard.Common.Mongo.DataModels;
 using ZetaDashboard.Common.ZDB.Services;
@@ -14,6 +16,10 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
+
+//Auth
+builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
+builder.Services.AddAuthenticationCore();
 
 //mudlbazor
 builder.Services.AddMudServices();

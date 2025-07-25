@@ -1,5 +1,8 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
 using MudBlazor;
+using ZetaCommon.Auth;
+using ZetaDashboard.Common.ZDB.Models;
 using ZetaDashboard.Services;
 
 namespace ZetaDashboard.Components.Layout
@@ -8,7 +11,35 @@ namespace ZetaDashboard.Components.Layout
     {
         #region Injects
         [Inject] CommonServices CommonService { get; set; }
+        [Inject] AuthenticationStateProvider AuthProvider { get; set; }
+        [Inject] NavigationManager Navigator { get; set; }
         #endregion
+
+        #region Vars
+        private UserModel LoggedUser { get; set; }
+        private bool IsAuthentificated { get; set; } = false;
+        #endregion
+
+        #region LifeCycles
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            if (firstRender)
+            {
+                IsAuthentificated = await (AuthProvider as CustomAuthenticationStateProvider).IsAuthentificatedAsync();
+                if (IsAuthentificated)
+                {
+                    LoggedUser = (AuthProvider as CustomAuthenticationStateProvider).LoggedUser;
+                    StateHasChanged();
+                }
+                else
+                {
+                    Navigator.NavigateTo("/login");
+                }
+            }
+        }
+        #endregion
+
+        #region Theme
 
         private bool IsDarkMode = true; // ⬅️ Dark mode por defecto
 
@@ -20,11 +51,19 @@ namespace ZetaDashboard.Components.Layout
             {
                 PrimaryDarken = "463e8b"
             }
-        }; // Personalízalo si quieres
+        };
 
         private void ToggleDarkMode()
         {
             IsDarkMode = !IsDarkMode;
         }
+        #endregion
+
+        #region LogOut
+        private async Task LogOutClicked()
+        {
+            (AuthProvider as CustomAuthenticationStateProvider).Logout(Navigator);
+        }
+        #endregion
     }
 }

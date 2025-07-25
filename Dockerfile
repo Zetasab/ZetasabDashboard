@@ -23,4 +23,4 @@ WORKDIR /app
 COPY --from=build /app/publish .
 
 # Aquí pon el nombre real de tu DLL
-ENTRYPOINT ["dotnet", "RailwayDashboard.dll"]
+ENTRYPOINT ["dotnet", "ZetaDashboard.dll"]
