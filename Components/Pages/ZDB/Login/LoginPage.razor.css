@@ -52,6 +52,23 @@
     min-height: 400px;
     padding:50px 100px;
 }
+@media screen and (max-width: 600px) {
+    .login-form {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        z-index: 1;
+        transform: translate(-50%, -50%);
+        background: -webkit-linear-gradient(top, #7579ffcc, #240947cc);
+        padding: 40px 30px !important;
+        border-radius: 15px;
+        box-shadow: 0 8px 50px #1119;
+        width: 550px;
+        max-width: 70vw;
+        min-height: 400px;
+        padding: 10px;
+    }
+}
 
     .login-form h2 {
         color: #fff;
