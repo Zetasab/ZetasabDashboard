@@ -1,4 +1,4 @@
-﻿namespace RailwayDashboard.Common.DB.Mongo.Config
+﻿namespace ZetaDashboard.Common.Mongo.Config
 {
     public class MongoConfig
     {

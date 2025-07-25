@@ -1,14 +1,14 @@
 ﻿using MongoDB.Driver;
-using RailwayDashboard.Common.DB.Mongo.DataModels;
-using RailwayDashboard.Common.Models;
-using static RailwayDashboard.Common.DB.Mongo.DataModels.MongoBase;
+using ZetaDashboard.Common.Mongo.DataModels;
+using ZetaDashboard.Common.ZDB.Models;
+using static ZetaDashboard.Common.Mongo.DataModels.MongoBase;
 
-namespace RailwayDashboard.Common.DB.Mongo.Services
+namespace ZetaDashboard.Common.ZDB.Services
 {
     public partial class BaseService : MongoRepositoryBase<User>
     {
         public BaseService(MongoContext context)
-           : base(context, "user")
+           : base(context, "users")
         {
         }
 

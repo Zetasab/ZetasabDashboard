@@ -1,12 +1,8 @@
 ﻿using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using MudBlazor;
-using RailwayDashboard.Common.DB.Mongo.Services;
-using RailwayDashboard.Common.Models;
-using System;
+using ZetaDashboard.Common.ZDB.Models;
+using ZetaDashboard.Common.ZDB.Services;
 
-namespace RailwayDashboard.Components.Pages.UserPage
+namespace ZetaDashboard.Components.Pages.ZDB.UserPage
 {
     public partial class UserPage
     {

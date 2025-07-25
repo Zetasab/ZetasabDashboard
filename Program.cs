@@ -1,11 +1,12 @@
 using Microsoft.Extensions.Options;
 using MongoDB.Bson;
 using MongoDB.Driver;
-using RailwayDashboard.Common.DB.Mongo.Config;
-using RailwayDashboard.Common.DB.Mongo.DataModels;
-using RailwayDashboard.Common.DB.Mongo.Services;
-using RailwayDashboard.Components;
 using MudBlazor.Services;
+using ZetaDashboard.Common.Mongo.Config;
+using ZetaDashboard.Common.Mongo.DataModels;
+using ZetaDashboard.Common.ZDB.Services;
+using ZetaDashboard.Components;
+using ZetaDashboard.Services;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,7 +18,7 @@ builder.Services.AddRazorComponents()
 //mudlbazor
 builder.Services.AddMudServices();
 
-
+//mongo
 builder.Services.Configure<MongoConfig>(builder.Configuration.GetSection("Mongo"));
 
 builder.Services.AddSingleton(sp =>
@@ -28,10 +29,19 @@ builder.Services.AddSingleton(sp =>
 
 builder.Services.AddScoped<BaseService>();
 
-var app = builder.Build();
 
 var config = builder.Configuration.GetSection("Mongo").Get<MongoConfig>();
 
+builder.Services.AddSingleton<MongoInfoService>(provider =>
+{
+    return new MongoInfoService(config);
+});
+
+
+var app = builder.Build();
+
+
+//Mongo check
 if (!await CheckMongoConnectionAsync(config))
 {
     Console.WriteLine("?? La aplicación no se iniciará sin conexión a MongoDB.");

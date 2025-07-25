@@ -1,7 +1,7 @@
 ﻿using MongoDB.Driver;
-using RailwayDashboard.Common.DB.Mongo.Config;
+using ZetaDashboard.Common.Mongo.Config;
 
-namespace RailwayDashboard.Common.DB.Mongo.DataModels
+namespace ZetaDashboard.Common.Mongo.DataModels
 {
     public class MongoContext
     {

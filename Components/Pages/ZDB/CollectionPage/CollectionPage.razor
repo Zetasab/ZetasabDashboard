@@ -1,0 +1,24 @@
+﻿@page "/collections"
+
+@using ZetaDashboard.Components.Layout
+
+@layout MainLayout
+
+
+<!-- #region Title -->
+<div style="display:flex;align-items:center;justify-content:space-between">
+    <div></div>
+    <h2>Colecciones</h2>
+    <div></div>
+</div>
+
+
+<!-- #endregion -->
+<h3>CollectionPage</h3>
+
+<MudDataGrid Items="@CollectionNames">
+    <Columns>
+        <PropertyColumn Property="x => x" Title="Nombre" />
+        
+    </Columns>
+</MudDataGrid>

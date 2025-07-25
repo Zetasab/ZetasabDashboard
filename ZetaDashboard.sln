@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.14.36202.13
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RailwayDashboard", "RailwayDashboard.csproj", "{9FCD0C04-2877-42BF-9085-B7153BCD032A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZetaDashboard", "ZetaDashboard.csproj", "{9FCD0C04-2877-42BF-9085-B7153BCD032A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

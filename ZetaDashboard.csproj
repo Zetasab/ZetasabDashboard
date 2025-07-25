@@ -11,4 +11,9 @@
     <PackageReference Include="MudBlazor" Version="8.10.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Common\XKB\" />
+    <Folder Include="Components\Pages\XKB\" />
+  </ItemGroup>
+
 </Project>

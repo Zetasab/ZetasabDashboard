@@ -1,6 +1,6 @@
 ﻿using MongoDB.Driver;
 
-namespace RailwayDashboard.Common.DB.Mongo.DataModels
+namespace ZetaDashboard.Common.Mongo.DataModels
 {
     public class MongoBase
     {

@@ -1,7 +1,7 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
-namespace RailwayDashboard.Common.Models
+namespace ZetaDashboard.Common.ZDB.Models
 {
     public class User
     {
