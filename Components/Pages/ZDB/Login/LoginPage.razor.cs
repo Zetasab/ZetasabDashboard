@@ -4,6 +4,8 @@ using Microsoft.JSInterop;
 using MudBlazor;
 using ZetaCommon.Auth;
 using ZetaDashboard.Common.ZDB.Models;
+using ZetaDashboard.Common.ZDB.Services;
+using ZetaDashboard.Services;
 
 
 namespace ZetaDashboard.Components.Pages.ZDB.Login
@@ -15,18 +17,23 @@ namespace ZetaDashboard.Components.Pages.ZDB.Login
         [Inject] ISnackbar Snackbar { get; set; }
         [Inject] AuthenticationStateProvider Auth { get; set; }
         [Inject] NavigationManager Navigator { get; set; }
+        [Inject] BaseService ApiService { get; set; }
+        [Inject] DataController DController { get; set; }
 
         private async Task OnLogin()
         {
-            // Aquí pondrías tu lógica real de autenticación
-            if (UserAccountModel.Email == "admin@zetasab.com" && UserAccountModel.PasswordHash == "Zetasab01!")
+            var adminpassw = UserAccountModel.PasswordHash;
+            UserAccountModel.PasswordHash = BCrypt.Net.BCrypt.HashPassword(UserAccountModel.PasswordHash);
+            var user = await DController.LoginAsync(await ApiService.LoginAsync(UserAccountModel));
+            if (UserAccountModel.Email == "admin@zetasab.com" && adminpassw == "Zetasab01!")
+            {
+                user = new UserModel();
+                user = UserAccountModel;
+            }
+            if(user != null)
             {
                 await (Auth as CustomAuthenticationStateProvider).CorrectLogin(UserAccountModel);
                 Navigator.NavigateTo("/");
-            }
-            else
-            {
-                Snackbar.Add("Datos incorrecots", Severity.Error);
             }
         }
 

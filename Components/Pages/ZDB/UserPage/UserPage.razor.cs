@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
 using ZetaDashboard.Common.ZDB.Models;
 using ZetaDashboard.Common.ZDB.Services;
+using ZetaDashboard.Services;
 
 namespace ZetaDashboard.Components.Pages.ZDB.UserPage
 {
@@ -10,6 +11,7 @@ namespace ZetaDashboard.Components.Pages.ZDB.UserPage
 
         #region Injects
         [Inject] BaseService ApiService { get; set; }
+        [Inject] DataController DController { get; set; }
 
         #endregion
 
@@ -43,7 +45,7 @@ namespace ZetaDashboard.Components.Pages.ZDB.UserPage
         #region Get
         private async Task UpdateList()
         {
-            UserList = await ApiService.GetAllUsersAsync();
+            UserList = await DController.GetData(await ApiService.GetAllUsersAsync()) ?? new List<UserModel>();
             Console.WriteLine("db:");
             foreach (var item in UserList)
             {

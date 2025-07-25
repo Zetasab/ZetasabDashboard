@@ -9,6 +9,8 @@
 
 @inject IJSRuntime JS
 
+<PageTitle>Login - ZetaDashboard</PageTitle>
+
 <div class="login-bg">
 	<MudHidden Breakpoint="Breakpoint.MdAndDown">
 		<div class="grid-overlay">
@@ -62,7 +64,7 @@
 				RequiredError="Email is required!"
 				For="@(() => UserAccountModel.Email)" />
 
-			<div style="display:flex;">
+			<div style="display:flex;position:relative;">
 			<MudTextField 
 				T="string"
 				@bind-Value="UserAccountModel.PasswordHash"
@@ -80,7 +82,7 @@
 				<MudIconButton 
 					Icon="@PasswordInputIcon"
 					OnClick="ButtonTestclick"
-					Style="position: absolute;right:0;margin-top: 16px;margin-right: 26px;">
+					Style="position: absolute;right:0;margin-top: 16px;">
 
 				</MudIconButton>
 			</div>

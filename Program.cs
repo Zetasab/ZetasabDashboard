@@ -46,6 +46,7 @@ builder.Services.AddSingleton<MongoInfoService>(provider =>
 
 //services
 builder.Services.AddScoped<CommonServices>();
+builder.Services.AddScoped<DataController>();
 
 var app = builder.Build();
 
