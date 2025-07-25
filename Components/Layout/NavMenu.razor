@@ -1,28 +1,38 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="">ZetaDashboard</a>
+﻿@using ZetaDashboard.Services
+@using static ZetaDashboard.Services.CommonServices
+
+@inject CommonServices CommonService
+
+<div class="top-row ps-3 navbar navbar-dark"
+     style="@($"background-color: {CommonService.GetCssVar(Color.Primary, ColorType.Darken)};height:56px !important")">
+    
+    <div class="container-fluid" style="display:flex;justify-content:center;align-items:center;">
+        <a class="navbar-brand" href="" style="margin-top:8px;margin-left: -28px;">ZetaDashboard</a>
     </div>
 </div>
 
 <input type="checkbox" title="Navigation menu" class="navbar-toggler" />
 
-<div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
+<div class="nav-scrollable navbar-gradientBg" onclick="document.querySelector('.navbar-toggler').click()">
     <nav class="flex-column">
         <div class="nav-item px-3">
             <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Inicio
+                <text style="font-size:24px">🏡</text>
+                <MudText Style="margin-left:5px;font-size:18px">Inicio</MudText>
             </NavLink>
         </div>
 
         <div class="nav-item px-3">
             <NavLink class="nav-link" href="user">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Usuarios
+                <text style="font-size:24px">👨‍👩‍👦‍👦</text>
+                <MudText Style="margin-left:5px;font-size:18px">Usuarios</MudText>
             </NavLink>
         </div>
-
+        
         <div class="nav-item px-3">
             <NavLink class="nav-link" href="collections">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Colecciones
+                <text style="font-size:24px">📉</text>
+                <MudText Style="margin-left:5px;font-size:18px">Colecciones</MudText>
             </NavLink>
         </div>
 

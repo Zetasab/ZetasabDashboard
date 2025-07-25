@@ -1,5 +1,5 @@
-﻿@inherits LayoutComponentBase
-
+﻿@using static ZetaDashboard.Services.CommonServices
+@inherits LayoutComponentBase
 
 @* Required *@
 <MudThemeProvider />
@@ -20,9 +20,23 @@
     </div>
 
     <main>
-        <MudPaper class="top-row px-4">
-           
-        </MudPaper>
+        <MudHidden Breakpoint="Breakpoint.Xs">
+            <div class="ps-3 navbar " 
+                 style="@($"background:linear-gradient(227deg,{CommonService.GetCssVar(Color.Primary, ColorType.Lighten)} 40%, {CommonService.GetCssVar(Color.Primary, ColorType.Darken)}); height:56px !important")">
+                
+                 <div class="container-fluid">
+                    <NoFreezeScreen />
+                    <MudSpacer/>
+                    <MudTooltip Text="Cerrar Sesión">
+                        <MudIconButton Icon="@Icons.Material.Filled.Logout"
+                                        Variant="Variant.Filled"
+                                        Color="Color.Error"></MudIconButton>
+                    </MudTooltip>
+                
+                
+                </div>
+            </div>
+        </MudHidden>
 
         <article class="content px-4">
             @Body

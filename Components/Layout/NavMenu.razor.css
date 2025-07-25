@@ -82,11 +82,16 @@
 }
 
 .nav-scrollable {
-    display: none;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.35s cubic-bezier(.4,0,.2,1), opacity 0.15s;
+    opacity: 0;
+    display: block; /* Siempre block, el truco es el max-height */
 }
 
 .navbar-toggler:checked ~ .nav-scrollable {
-    display: block;
+    max-height: 500px; /* O más si tu menú es más largo */
+    opacity: 1;
 }
 
 @media (min-width: 641px) {
@@ -95,11 +100,18 @@
     }
 
     .nav-scrollable {
-        /* Never collapse the sidebar for wide screens */
-        display: block;
-
-        /* Allow sidebar to scroll for tall menus */
-        height: calc(100vh - 3.5rem);
-        overflow-y: auto;
+        max-height: none !important; /* Siempre expandido */
+        opacity: 1 !important; /* Siempre visible */
+        height: calc(100vh - 3.5rem); /* O el alto que quieras */
+        overflow-y: auto; /* Scroll si el menú es largo */
+        transition: none !important; /* Sin animación en escritorio */
+        overflow-y:auto;
     }
+    .navbar-gradientBg {
+        background: linear-gradient(34deg,var(--mud-palette-primary-lighten) 10%, var(--mud-palette-primary-darken) 50%) !important;
+    }
+}
+
+.navbar-gradientBg {
+    background: linear-gradient(1deg,var(--mud-palette-primary-lighten) 9%, var(--mud-palette-primary-darken) 71%);
 }
