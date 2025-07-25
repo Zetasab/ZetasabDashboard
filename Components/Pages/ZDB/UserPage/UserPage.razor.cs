@@ -14,8 +14,8 @@ namespace ZetaDashboard.Components.Pages.ZDB.UserPage
         #endregion
 
         //models
-        private List<User> UserList { get; set; } = new List<User>();
-        private User InsertUser = new User();
+        private List<UserModel> UserList { get; set; } = new List<UserModel>();
+        private UserModel InsertUser = new UserModel();
 
         //modals
         private bool InsertModal { get; set; } = false;
@@ -56,7 +56,7 @@ namespace ZetaDashboard.Components.Pages.ZDB.UserPage
         #region Insert
         private async void InsertOverlay()
         {
-            InsertUser = new User();
+            InsertUser = new UserModel();
             InsertModal = true;
         }
         private async Task OnInsertData()

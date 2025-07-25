@@ -3,7 +3,7 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace ZetaDashboard.Common.ZDB.Models
 {
-    public class User
+    public class UserModel
     {
         public enum EUserType
         {
@@ -22,7 +22,7 @@ namespace ZetaDashboard.Common.ZDB.Models
         public List<string> Permissions { get; set; }
 
 
-        public User()
+        public UserModel()
         {
             Id = Guid.NewGuid().ToString();
         }

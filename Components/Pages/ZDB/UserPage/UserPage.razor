@@ -18,7 +18,7 @@
             <MudTextField @bind-Value="InsertUser.Email" InputType="InputType.Email" Label="Email" Style="margin-top:25px;"></MudTextField>
             <MudTextField @bind-Value="InsertUser.PasswordHash" InputType="InputType.Password"  Label="Password" Style="margin-top:25px;"></MudTextField>
             <MudSelect @bind-Value="InsertUser.UserType" Label="Tipo de usuario" >
-                @foreach (var type in Enum.GetValues<User.EUserType>())
+                @foreach (var type in Enum.GetValues<UserModel.EUserType>())
                 {
                     <MudSelectItem Value="@type">@type</MudSelectItem>
                 }

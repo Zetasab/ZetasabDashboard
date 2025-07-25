@@ -11,15 +11,18 @@
 @* Needed for snackbars *@
 <MudSnackbarProvider />
 
+@* theme *@
+<MudThemeProvider Theme="@MyTheme" IsDarkMode="@IsDarkMode" />
+
 <div class="page">
     <div class="sidebar">
         <NavMenu />
     </div>
 
     <main>
-        <div class="top-row px-4">
-            <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
-        </div>
+        <MudPaper class="top-row px-4">
+           
+        </MudPaper>
 
         <article class="content px-4">
             @Body

@@ -12,13 +12,36 @@
     <div></div>
 </div>
 
+<MudPaper Style="margin-top:20px;" Elevation="0">
+    <MudDataGrid Items="@CollectionNames">
+        <Columns>
+            <PropertyColumn Property="x => x.Name" Title="Nombre" />
+            <PropertyColumn Property="x => x.Count" Title="N registros" />
+            <PropertyColumn Property="x => x.StorageSize" Title="Tamaño" />
+            <PropertyColumn Property="x => x.Size" Title="Tamaño" />
+            <TemplateColumn CellClass="d-flex justify-end" Title="Acciones" >
+                <CellTemplate>
+                    <MudStack Row style="width:100%">
+                        <div style="width:100%;display:flex;justify-content:start">
+                            <!--
+                                MudIconButton  Variant="@Variant.Filled" 
+                                            Color="@Color.Primary"
+                                            Icon="@Icons.Material.Filled.Edit"></MudIconButton> 
+                            -->
+                            <MudTooltip Text="@($"Borrar colección {context.Item.Name}")">
+                                <MudIconButton Variant="@Variant.Filled"
+                                               Style="margin-left:7px;"
+                                               Color="@Color.Error"
+                                               OnClick="@(() => DeleteCollection(context.Item.Name))"
+                                               Icon="@Icons.Material.Filled.Delete">
+                                </MudIconButton>
+                            </MudTooltip>
+                        </div>
+                    </MudStack>
+                </CellTemplate>
+            </TemplateColumn>
+        </Columns>
+    </MudDataGrid>
+</MudPaper>
 
-<!-- #endregion -->
-<h3>CollectionPage</h3>
-
-<MudDataGrid Items="@CollectionNames">
-    <Columns>
-        <PropertyColumn Property="x => x" Title="Nombre" />
-        
-    </Columns>
-</MudDataGrid>
+                                        

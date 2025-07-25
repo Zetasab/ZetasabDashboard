@@ -5,25 +5,25 @@ using static ZetaDashboard.Common.Mongo.DataModels.MongoBase;
 
 namespace ZetaDashboard.Common.ZDB.Services
 {
-    public partial class BaseService : MongoRepositoryBase<User>
+    public partial class BaseService : MongoRepositoryBase<UserModel>
     {
         public BaseService(MongoContext context)
            : base(context, "users")
         {
         }
 
-        public async Task<User?> GetByEmailAsync(string email)
+        public async Task<UserModel?> GetByEmailAsync(string email)
         {
-            var filter = Builders<User>.Filter.Eq(u => u.Email, email);
+            var filter = Builders<UserModel>.Filter.Eq(u => u.Email, email);
             return await FindFirstAsync(filter);
         }
 
-        public async Task<List<User>> GetAllUsersAsync()
+        public async Task<List<UserModel>> GetAllUsersAsync()
         {
             return await FindAllAsync();
         }
 
-        public async Task AddUserAsync(User user)
+        public async Task AddUserAsync(UserModel user)
         {
             await InsertAsync(user);
         }
