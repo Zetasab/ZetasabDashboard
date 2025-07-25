@@ -88,7 +88,7 @@ namespace ZetaDashboard.Common.ZDB.Services
                 else
                 {
                     response.Result = false;
-                    response.Message = "No existe usuario";
+                    response.Message = "Email o contraseña incorrectos";
                 }
             }
             catch (Exception ex)

@@ -13,7 +13,7 @@ namespace ZetaDashboard.Components.Pages.ZDB.Login
     public partial class LoginPage
     {
         private UserModel UserAccountModel = new();
-
+        private bool error { get; set; } = false;
         [Inject] ISnackbar Snackbar { get; set; }
         [Inject] AuthenticationStateProvider Auth { get; set; }
         [Inject] NavigationManager Navigator { get; set; }
@@ -23,9 +23,11 @@ namespace ZetaDashboard.Components.Pages.ZDB.Login
         private async Task OnLogin()
         {
             var adminpassw = UserAccountModel.PasswordHash;
-            UserAccountModel.PasswordHash = BCrypt.Net.BCrypt.HashPassword(UserAccountModel.PasswordHash);
-            var user = await DController.LoginAsync(await ApiService.LoginAsync(UserAccountModel));
-            if (UserAccountModel.Email == "admin@zetasab.com" && adminpassw == "Zetasab01!")
+            var usermodel = new UserModel();
+            usermodel.Email = UserAccountModel.Email;
+            usermodel.PasswordHash = BCrypt.Net.BCrypt.HashPassword(UserAccountModel.PasswordHash);
+            var user = await DController.LoginAsync(await ApiService.LoginAsync(usermodel));
+            if (usermodel.Email == "admin@zetasab.com" && adminpassw == "Zetasab01!")
             {
                 user = new UserModel();
                 user = UserAccountModel;
@@ -34,6 +36,12 @@ namespace ZetaDashboard.Components.Pages.ZDB.Login
             {
                 await (Auth as CustomAuthenticationStateProvider).CorrectLogin(UserAccountModel);
                 Navigator.NavigateTo("/");
+            }
+            else
+            {
+                UserAccountModel.PasswordHash = "";
+                error = true;
+                StateHasChanged();
             }
         }
 
