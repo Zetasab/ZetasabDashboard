@@ -12,13 +12,36 @@ namespace ZetaDashboard.Components.Pages.ZDB.Login
 {
     public partial class LoginPage
     {
-        private UserModel UserAccountModel = new();
-        private bool error { get; set; } = false;
+        [Parameter] public string? name { get; set; }
+        [Parameter] public string? password { get; set; }
+        
+        #region Injects
         [Inject] ISnackbar Snackbar { get; set; }
         [Inject] AuthenticationStateProvider Auth { get; set; }
         [Inject] NavigationManager Navigator { get; set; }
         [Inject] BaseService ApiService { get; set; }
         [Inject] DataController DController { get; set; }
+        #endregion
+
+        #region Vars
+        private bool error { get; set; } = false;
+        private UserModel UserAccountModel = new();
+        #endregion
+
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            if(firstRender)
+            {
+                UserAccountModel.Name = name ?? "";
+                UserAccountModel.PasswordHash = password ?? "";
+                if (name != null && password != null)
+                {
+                    await OnLogin();
+                }
+                SetGridSize();
+                StartRandomHighlighting();
+            }
+        }
 
         private async Task OnLogin()
         {
@@ -26,13 +49,13 @@ namespace ZetaDashboard.Components.Pages.ZDB.Login
             var usermodel = new UserModel();
             usermodel.Name = UserAccountModel.Name;
             usermodel.PasswordHash = BCrypt.Net.BCrypt.HashPassword(UserAccountModel.PasswordHash);
-            var user = await DController.LoginAsync(await ApiService.LoginAsync(usermodel));
+            var user = await DController.LoginAsync(await ApiService.Users.LoginAsync(usermodel));
             if (usermodel.Name == "Zetasab" && adminpassw == "Zetasab01!")
             {
                 user = new UserModel();
                 user = UserAccountModel;
             }
-            if(user != null)
+            if (user != null)
             {
                 await (Auth as CustomAuthenticationStateProvider).CorrectLogin(UserAccountModel);
                 Navigator.NavigateTo("/");
@@ -80,12 +103,6 @@ namespace ZetaDashboard.Components.Pages.ZDB.Login
         private MudBlazor.Breakpoint currentBreakpoint = MudBlazor.Breakpoint.None;
 
         private Random _rnd = new();
-
-        protected override async Task OnInitializedAsync()
-        {
-            SetGridSize();
-            StartRandomHighlighting();
-        }
 
         private void SetGridSize()
         {
