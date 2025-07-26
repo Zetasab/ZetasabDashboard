@@ -45,7 +45,7 @@ namespace ZetaDashboard.Components.Pages.ZDB.UserPage
         #region Get
         private async Task UpdateList()
         {
-            UserList = await DController.GetData(await ApiService.GetAllUsersAsync()) ?? new List<UserModel>();
+            UserList = await DController.GetData(await ApiService.Users.GetAllUsersAsync()) ?? new List<UserModel>();
             Console.WriteLine("db:");
             foreach (var item in UserList)
             {
@@ -64,7 +64,7 @@ namespace ZetaDashboard.Components.Pages.ZDB.UserPage
         private async Task OnInsertData()
         {
             //_ = DController.InsertData(await Db.InsertEvents(InsertEvent));
-            await ApiService.AddUserAsync(InsertUser);
+            //await ApiService.Users.InsertUserAsync(InsertUser);
             UpdateList();
             InsertModal = false;
         }

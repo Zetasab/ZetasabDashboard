@@ -3,9 +3,9 @@ using MudBlazor;
 using ZetaDashboard.Common.ZDB.Models;
 using ZetaDashboard.Services;
 
-namespace ZetaDashboard.Components.Pages.ZDB.CollectionPage
+namespace ZetaDashboard.Components.Pages.ZDB.CollectionsPage
 {
-    public partial class CollectionPage
+    public partial class CollectionsPage
     {
         #region Injects
         [Inject] MongoInfoService MongoService { get; set; }

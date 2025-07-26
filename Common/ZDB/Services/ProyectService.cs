@@ -1,4 +1,6 @@
 ﻿using MongoDB.Driver;
+using SharpCompress.Common;
+using System.Diagnostics.Metrics;
 using ZetaDashboard.Common.Mongo;
 using ZetaDashboard.Common.Mongo.DataModels;
 using ZetaDashboard.Common.ZDB.Models;
@@ -8,13 +10,13 @@ namespace ZetaDashboard.Common.ZDB.Services
 {
     public partial class BaseService
     {
-        public class UserService: MongoRepositoryBase<UserModel>
+        public class ProyectService : MongoRepositoryBase<ProyectModel>
         {
-            public UserService(MongoContext context)
-                : base(context, "users") { }
+            public ProyectService(MongoContext context)
+                : base(context, "proyects") { }
 
             #region Get
-            //public async Task<ApiResponse<UserModel>?> GetByEmailAsync(string email)
+            //public async Task<ApiResponse<UserModel>?> GetByCodeAsync(string email)
             //{
             //    ApiResponse<UserModel?> response = new ApiResponse<UserModel?>();
 
@@ -34,7 +36,7 @@ namespace ZetaDashboard.Common.ZDB.Services
             //            response.Message = "No existe usuario";
             //        }
             //    }
-            //    catch (Exception ex)
+            //    catch (Exception ex) 
             //    {
             //        response.Result = false;
             //        response.Message += "Error:" + ex.Message;
@@ -43,9 +45,9 @@ namespace ZetaDashboard.Common.ZDB.Services
             //    return response;
             //}
 
-            public async Task<ApiResponse<List<UserModel>>> GetAllUsersAsync()
+            public async Task<ApiResponse<List<ProyectModel>>> GetAllProyectsAsync()
             {
-                ApiResponse<List<UserModel?>> response = new ApiResponse<List<UserModel?>>();
+                ApiResponse<List<ProyectModel?>> response = new ApiResponse<List<ProyectModel?>>();
                 try
                 {
                     var result = await FindAllAsync();
@@ -68,50 +70,31 @@ namespace ZetaDashboard.Common.ZDB.Services
                 return response;
             }
 
-
-
             #endregion
 
 
             #region Post
-            public async Task<ApiResponse<UserModel?>> LoginAsync(UserModel user)
+            public async Task<ApiResponse<bool>> InsertProyectAsync(ProyectModel model)
             {
-                ApiResponse<UserModel?> response = new();
-
+                ApiResponse<bool> response = new ApiResponse<bool>();
+                
                 try
                 {
-                    var filter = Builders<UserModel>.Filter.And(
-                        Builders<UserModel>.Filter.Eq(u => u.Name, user.Name),
-                        Builders<UserModel>.Filter.Eq(u => u.PasswordHash, user.PasswordHash)
-                    );
-
-                    var first = await FindFirstAsync(filter);
-
-                    if (first != null)
-                    {
-                        response.Result = true;
-                        response.Data = first;
-                    }
-                    else
-                    {
-                        response.Result = false;
-                        response.Message = "Email o contraseña incorrectos";
-                    }
+                    await InsertAsync(model);
+                    response.Result = true;
+                    response.Message = "El proyecto se ha insertado correctamente";
                 }
-                catch (Exception ex)
+                catch(Exception ex)
                 {
                     response.Result = false;
-                    response.Message += "Error:" + ex.Message;
+                    response.Message = "Ha ocurrido un error al insertar el proyecto";
+                    Console.WriteLine($"Error: {ex.Message}");
                 }
-
                 return response;
-            }
-            public async Task InsertUserAsync(UserModel user)
-            {
-                await InsertAsync(user);
             }
             #endregion
         }
+
 
     }
 }

@@ -1,17 +1,23 @@
 ﻿@page "/user"
 @using ZetaDashboard.Common.ZDB.Models
 
-
-<div style="display:flex;justify-content:space-around">
+<!-- #region Title -->
+<div style="display:flex;align-items:center;justify-content:space-between">
     <div></div>
-    <h3>Usuarios</h3>
-    <MudIconButton Variant="Variant.Filled" Icon="@Icons.Material.Filled.Add" Size="Size.Large" Color="Color.Primary" OnClick="@InsertOverlay"></MudIconButton>
+    <div>
+        <MudIcon
+            Icon="@Icons.Material.Filled.Person"
+            Size="Size.Large" />
+        <h2>Usuarios</h2>
+    </div>
+    <div></div>
 </div>
+<!-- #endregion -->
 
-@* insert modal*@
+<!-- #region Insert modal -->
 <MudDialog @bind-Visible="InsertModal" Style="min-width:700px;min-height:400px">
     <TitleContent>
-        Insertar Evento
+        Insertar Usuario
     </TitleContent>
     <DialogContent>
         <EditForm Model="InsertUser" OnValidSubmit="OnInsertData">
@@ -29,10 +35,37 @@
         </EditForm>
     </DialogContent>
 </MudDialog>
-@* ------- *@
+<!-- #endregion -->
 
-
-@foreach(var item in UserList)
-{
-    <MudText>@item.Name</MudText>
-}
+<!-- #region Datagrid -->
+<MudPaper Style="margin-top:20px;" Elevation="0">
+    <MudDataGrid Items="@UserList">
+        <Columns>
+            <PropertyColumn Property="x => x.Name" Title="Nombre" />
+            <TemplateColumn CellClass="d-flex justify-end" Title="Acciones">
+                <CellTemplate>
+                    <MudStack Row style="width:100%">
+                        <div style="width:100%;display:flex;justify-content:start">
+                            
+                            <MudTooltip Text="@($"Editar usuario {context.Item.Name}")">
+                                <MudIconButton  Variant="@Variant.Filled"
+                                                Color="@Color.Primary"
+                                                Icon="@Icons.Material.Filled.Edit"></MudIconButton>
+                                </MudTooltip>
+                            
+                            <MudTooltip Text="@($"Borrar usuario {context.Item.Name}")">
+                                <MudIconButton Variant="@Variant.Filled"
+                                               Style="margin-left:7px;"
+                                               Color="@Color.Error"
+                                               
+                                               Icon="@Icons.Material.Filled.Delete">
+                                </MudIconButton>
+                            </MudTooltip>
+                        </div>
+                    </MudStack>
+                </CellTemplate>
+            </TemplateColumn>
+        </Columns>
+    </MudDataGrid>
+</MudPaper>
+<!-- #endregion -->

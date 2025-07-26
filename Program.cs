@@ -6,6 +6,7 @@ using MudBlazor.Services;
 using ZetaCommon.Auth;
 using ZetaDashboard.Common.Mongo.Config;
 using ZetaDashboard.Common.Mongo.DataModels;
+using ZetaDashboard.Common.ZDB.Models;
 using ZetaDashboard.Common.ZDB.Services;
 using ZetaDashboard.Components;
 using ZetaDashboard.Services;

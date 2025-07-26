@@ -1,0 +1,88 @@
+﻿@page "/proyects"
+
+
+<!-- #region Title -->
+<div style="display:flex;align-items:center;justify-content:space-between">
+    <div></div>
+    <h2>Proyectos</h2>
+    <div>
+        <MudTooltip Text="Insertar proyecto">
+            <MudIconButton 
+                Variant="Variant.Filled" 
+                Icon="@Icons.Material.Filled.Add" 
+                Size="Size.Large" 
+                Color="Color.Primary"
+                           OnClick="@OnOpenInsertModal"></MudIconButton>
+        </MudTooltip>
+    </div>
+</div>
+<!-- #endregion -->
+
+<!-- #region Insert Modal -->
+<MudDialog @bind-Visible="InsertModal" Style="min-width:700px;min-height:400px">
+    <TitleContent>
+        Insertar Proyecto
+    </TitleContent>
+    <DialogContent>
+        <EditForm Model="InsertModel" OnValidSubmit="OnInsertData">
+            <MudTextField 
+                @bind-Value="InsertModel.Code" 
+                Immediate="true" 
+                MaxLength="3"
+                Label="Codigo" 
+                Required="true"
+                Style="margin-top:25px;">
+            </MudTextField>
+            <MudTextField 
+                @bind-Value="InsertModel.Name" 
+                Immediate="true" 
+                Label="Nombre" 
+                Required="true"
+                Style="margin-top:25px;">
+            </MudTextField>
+            <MudText Style="margin-top:25px;"> @($"{InsertModel.Code}-{InsertModel.Name}")</MudText>
+            <MudTextField @bind-Value="InsertModel.Url" Label="Url" Style="margin-top:25px;"></MudTextField>
+            
+            <div style="display:flex;justify-content:center;">
+                <div style="display:flex;justify-content:space-around;width:70%">
+                    <MudButton ButtonType="ButtonType.Submit" Color="Color.Primary" Style="margin-top:25px;" Variant="Variant.Filled">Aceptar</MudButton>
+                    <MudButton Color="Color.Error" Style="margin-top:25px;" Variant="Variant.Filled" OnClick="@(() => InsertModal = false)">Cerrar</MudButton>
+                </div>
+            </div>
+        </EditForm>
+    </DialogContent>
+</MudDialog>
+<!-- #endregion -->
+
+<!-- #region DataGrid -->
+<MudPaper Style="margin-top:20px;" Elevation="0">
+    <MudDataGrid Items="@DataList">
+        <Columns>
+            <PropertyColumn Property="x => x.Code" Title="Codigo" />
+            <PropertyColumn Property="x => x.Name" Title="Nombre" />
+            <PropertyColumn Property="x => x.FullName" Title="Nombre Completo" />
+            <PropertyColumn Property="x => x.Url" Title="Direccion" />
+            <TemplateColumn CellClass="d-flex justify-end" Title="Acciones">
+                <CellTemplate>
+                    <MudStack Row style="width:100%">
+                        <div style="width:100%;display:flex;justify-content:start">
+                            <!--
+                                MudIconButton  Variant="@Variant.Filled"
+                                            Color="@Color.Primary"
+                                            Icon="@Icons.Material.Filled.Edit"></MudIconButton>
+                            -->
+                            <MudTooltip Text="@($"Borrar proyecto {context.Item.Name}")">
+                                <MudIconButton Variant="@Variant.Filled"
+                                               Style="margin-left:7px;"
+                                               Color="@Color.Error"
+                                               Icon="@Icons.Material.Filled.Delete">
+                                </MudIconButton>
+                            </MudTooltip>
+                        </div>
+                    </MudStack>
+                </CellTemplate>
+            </TemplateColumn>
+        </Columns>
+    </MudDataGrid>
+</MudPaper>
+<!-- #endregion -->

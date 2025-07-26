@@ -51,7 +51,20 @@ namespace ZetaDashboard.Services
                 Snackbar.Add(response.Message, Severity.Error);
                 return default;
             }
+        }
 
+        public async Task<bool> InsertData<T>(ApiResponse<T> response)
+        {
+            if (response.Result)
+            {
+                Snackbar.Add(response.Message, Severity.Success);
+                return true;
+            }
+            else
+            {
+                Snackbar.Add(response.Message, Severity.Error);
+                return false;
+            }
         }
         #endregion
     }

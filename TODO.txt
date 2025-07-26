@@ -1,0 +1,19 @@
+Global ->
+	-entrar login por parametros
+	-Poner Loading
+	-ajustar theme
+	-Poner permisions
+
+Proyects;
+
+-Editar proyectos
+-Borrar proyectos
+-Poner filtro datagrid busqueda
+-Paginacion datagrid
+
+-Crear dashboard mongo
+-ajustar todo con collections 
+
+-crud users
+
+-Mensaje de confirmacion de borrar

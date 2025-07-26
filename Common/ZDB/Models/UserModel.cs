@@ -7,19 +7,23 @@ namespace ZetaDashboard.Common.ZDB.Models
     {
         public enum EUserType
         {
-            Normal,
-            //Editor,
-            Admin,
+            Restricted,
             SuperAdmin
         }
-        
+
+        public enum EUserPermissionType
+        {
+            Visor,
+            Editor,
+            Admin
+        }
+
         public string Id { get; set; } = string.Empty;
 
         public string Name { get; set; } = string.Empty;
         public string PasswordHash { get; set; } = string.Empty;
-
-        public EUserType UserType { get; set; }
-        public List<string> Permissions { get; set; }
+        public EUserType UserType { get; set; } = EUserType.Restricted;
+        public List<UserPermissions> Permissions { get; set; } = new List<UserPermissions>();
 
 
         public UserModel()
@@ -27,5 +31,10 @@ namespace ZetaDashboard.Common.ZDB.Models
             Id = Guid.NewGuid().ToString();
         }
 
+        public class UserPermissions
+        {
+            public string Code { get; set; }
+            public EUserType UserType { get; set; }
+        }
     }
 }
