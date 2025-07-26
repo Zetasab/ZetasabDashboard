@@ -23,7 +23,7 @@ namespace ZetaCommon.Auth
                 {
                     var identity = new ClaimsIdentity(new[]
                     {
-                new Claim(ClaimTypes.Name, storageUser.Value.Email),
+                new Claim(ClaimTypes.Name, storageUser.Value.Name),
             }, "apiauth");
 
                     return new AuthenticationState(new ClaimsPrincipal(identity));
@@ -50,7 +50,7 @@ namespace ZetaCommon.Auth
         {
             LoggedUser = loggedUser;
             var identity = new ClaimsIdentity(new[]
-                {new Claim(ClaimTypes.Name, loggedUser.Email)}, "dbauthType");
+                {new Claim(ClaimTypes.Name, loggedUser.Name)}, "dbauthType");
             var userClaim = new ClaimsPrincipal(identity);
              await storage.SetAsync("user", loggedUser);
             NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(userClaim)));

@@ -24,10 +24,10 @@ namespace ZetaDashboard.Components.Pages.ZDB.Login
         {
             var adminpassw = UserAccountModel.PasswordHash;
             var usermodel = new UserModel();
-            usermodel.Email = UserAccountModel.Email;
+            usermodel.Name = UserAccountModel.Name;
             usermodel.PasswordHash = BCrypt.Net.BCrypt.HashPassword(UserAccountModel.PasswordHash);
             var user = await DController.LoginAsync(await ApiService.LoginAsync(usermodel));
-            if (usermodel.Email == "admin@zetasab.com" && adminpassw == "Zetasab01!")
+            if (usermodel.Name == "Zetasab" && adminpassw == "Zetasab01!")
             {
                 user = new UserModel();
                 user = UserAccountModel;
@@ -41,7 +41,8 @@ namespace ZetaDashboard.Components.Pages.ZDB.Login
             {
                 UserAccountModel.PasswordHash = "";
                 error = true;
-                StateHasChanged();
+                Thread.Sleep(100);
+                await InvokeAsync(StateHasChanged);
             }
         }
 

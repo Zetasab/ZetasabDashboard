@@ -53,19 +53,20 @@
 		</div>
 		<h2 style="margin-top:40px;">Log In</h2>
 
-		<EditForm Model="@UserAccountModel" OnValidSubmit="@OnLogin" FormName="LoginForm" style="margin-top:30px;">
+		<EditForm Model="@UserAccountModel" OnValidSubmit="@OnLogin" 
+			FormName="LoginForm" style="margin-top:30px;">
 			<MudTextField 
 				T="string"
-				@bind-Value="UserAccountModel.Email"
-				Placeholder="Email"
-				InputType="InputType.Email"
+				@bind-Value="UserAccountModel.Name"
+				Placeholder="Username"
+				InputType="InputType.Text"
 				Variant="Variant.Text"
 				Error="@error"
 				Adornment="Adornment.Start"
 				AdornmentIcon="@Icons.Material.Filled.Person"
 				Required="true"
 				RequiredError="Email is required!"
-				For="@(() => UserAccountModel.Email)" />
+						  For="@(() => UserAccountModel.Name)" />
 
 			<div style="display:flex;position:relative;">
 			<MudTextField 

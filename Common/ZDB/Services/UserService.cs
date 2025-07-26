@@ -20,7 +20,7 @@ namespace ZetaDashboard.Common.ZDB.Services
 
             try
             {
-                var filter = Builders<UserModel>.Filter.Eq(u => u.Email, email);
+                var filter = Builders<UserModel>.Filter.Eq(u => u.Name, email);
                 var first = await FindFirstAsync(filter);
 
                 if (first != null)
@@ -75,7 +75,7 @@ namespace ZetaDashboard.Common.ZDB.Services
             try
             {
                 var filter = Builders<UserModel>.Filter.And(
-                    Builders<UserModel>.Filter.Eq(u => u.Email, user.Email),
+                    Builders<UserModel>.Filter.Eq(u => u.Name, user.Name),
                     Builders<UserModel>.Filter.Eq(u => u.PasswordHash, user.PasswordHash)
                 );
                 var first = await FindFirstAsync(filter);
