@@ -29,7 +29,7 @@ builder.Services.AddMudServices(config =>
     config.SnackbarConfiguration.PositionClass = Defaults.Classes.Position.TopRight;
     config.SnackbarConfiguration.HideTransitionDuration = 100; 
     config.SnackbarConfiguration.ShowTransitionDuration = 100; 
-    config.SnackbarConfiguration.VisibleStateDuration = 600;  
+    config.SnackbarConfiguration.VisibleStateDuration = 1000;  
 });
 
 //mongo

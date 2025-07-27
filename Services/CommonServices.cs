@@ -1,4 +1,5 @@
-﻿using MudBlazor;
+﻿using Microsoft.AspNetCore.Components;
+using MudBlazor;
 using ZetaDashboard.Common.ZDB.Models;
 using static ZetaDashboard.Common.ZDB.Models.UserModel;
 
@@ -6,6 +7,16 @@ namespace ZetaDashboard.Services
 {
     public class CommonServices
     {
+        #region Injects
+        public NavigationManager  Navigator { get; set; }
+        public ISnackbar  Snackbar { get; set; }
+
+        public CommonServices(NavigationManager navigator, ISnackbar snackbar) 
+        {
+            Navigator = navigator;
+            Snackbar = snackbar;
+        }
+        #endregion
 
         #region Permissions
         public bool CheckLoginPermissions(UserModel user)
@@ -22,6 +33,29 @@ namespace ZetaDashboard.Services
                 }
             }
                 return false;
+        }
+        public bool CheckIfPermissions(UserModel user,UserPermissions permisions)
+        {
+            if(user.UserType == EUserType.SuperAdmin)
+            {
+                return true;
+            }
+            foreach (var perm in user.Permissions)
+            {
+                if (perm.Code == permisions.Code && perm.UserType >= permisions.UserType)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+        public void CheckPermissions(UserModel user, UserPermissions permisions)
+        {
+            if(!CheckIfPermissions(user, permisions))
+            {
+                Snackbar.Add("No tienes los suficientes permisos", Severity.Warning);
+                Navigator.NavigateTo("/");
+            }
         }
         #endregion
         #region Icons

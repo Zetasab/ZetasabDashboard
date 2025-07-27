@@ -2,9 +2,26 @@
 
 <PageTitle>Home</PageTitle>
 
-<h1>Hello, world!</h1>
+<div style="display:flex;flex-direction:column;align-items:center;">
+    <div class="dashboard-header" >
+        <!-- Si quieres pon un logo aquí -->
+        <span>👨‍💻</span> My Projects Dashboard
+    </div>
+    <div class="dashboard-grid" style="margin-top:40px;"  >
+        
+        @foreach (var proy in DataList)
+        {
+            <div class="project-card" @onclick="@(() => OnClick(proy.Url))">
+                <img class="project-img" src="@($"Img/proyects/{proy.Code}.png")" loading="lazy"  />
+                <div class="project-title">Movie App</div>
+                <div class="project-desc">A movie tracker with Blazor Server and MongoDB. Allows user auth, reviews, and ratings.</div>
+                <a class="project-link" href="https://movieapp.example.com" target="_blank">Open Project</a>
+            </div>
+        }
 
-Welcome to your new app.
+        
+        
+        <!-- Agrega más proyectos aquí -->
+    </div>
+</div>
 
-
-<h1>EASDASFASD FASD PRUEBAAAAA</h1>

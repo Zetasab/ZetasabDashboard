@@ -1,10 +1,13 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
 using MudBlazor;
+using ZetaCommon.Auth;
 using ZetaDashboard.Common.ZDB.Models;
 using ZetaDashboard.Common.ZDB.Services;
 using ZetaDashboard.Services;
 using ZetaDashboard.Shared.ConfirmDeleteDialog;
 using static MudBlazor.CategoryTypes;
+using static ZetaDashboard.Common.ZDB.Models.UserModel;
 
 namespace ZetaDashboard.Components.Pages.ZDB.ProyectsPage
 {
@@ -14,9 +17,29 @@ namespace ZetaDashboard.Components.Pages.ZDB.ProyectsPage
         [Inject] BaseService ApiService { get; set; }
         [Inject] DataController DController { get; set; }
         [Inject] private IDialogService DialogService { get; set; } = default!;
+        [Inject] private CommonServices CService { get; set; } = default!;
+        [Inject] private AuthenticationStateProvider Auth { get; set; } = default!;
         #endregion
 
         #region Vars
+        #region Global
+        private UserModel LoggedUser { get; set; }
+        private UserPermissions ThisPage { get; set; } = new UserPermissions()
+        {
+            Code = "zdb",
+            UserType = EUserPermissionType.Visor
+        };
+        private UserPermissions ThisPageEdit { get; set; } = new UserPermissions()
+        {
+            Code = "zdb",
+            UserType = EUserPermissionType.Editor
+        };
+        private UserPermissions ThisPageAdmin { get; set; } = new UserPermissions()
+        {
+            Code = "zdb",
+            UserType = EUserPermissionType.Admin
+        };
+        #endregion
         private List<ProyectModel> DataList = new();
 
         //modals
@@ -30,6 +53,8 @@ namespace ZetaDashboard.Components.Pages.ZDB.ProyectsPage
         #region LifeCycles
         protected override async Task OnInitializedAsync()
         {
+            LoggedUser = (Auth as CustomAuthenticationStateProvider).LoggedUser;
+            CService.CheckPermissions(LoggedUser, ThisPage);
             GetList();
         }
         #endregion
@@ -76,7 +101,6 @@ namespace ZetaDashboard.Components.Pages.ZDB.ProyectsPage
             InsertModel.FullName = $"{InsertModel.Code}-{InsertModel.Name}";
             InsertModel.Name = InsertModel.Name.ToLower();
             InsertModel.Code = InsertModel.Code.ToLower();
-            InsertModel.Url = InsertModel.Url?.ToLower();
             var result = await DController.InsertData(await ApiService.Proyects.InsertProyectAsync(InsertModel));
             if (result)
             {
@@ -99,7 +123,6 @@ namespace ZetaDashboard.Components.Pages.ZDB.ProyectsPage
             UpdateModel.FullName = $"{UpdateModel.Code}-{UpdateModel.Name}";
             UpdateModel.Name = UpdateModel.Name.ToLower();
             UpdateModel.Code = UpdateModel.Code.ToLower();
-            UpdateModel.Url = UpdateModel.Url?.ToLower();
             var result = await DController.UpdateData(await ApiService.Proyects.UpdateProyectAsync(UpdateModel));
             if (result)
             {

@@ -17,8 +17,6 @@
 
 @if (IsAuthentificated)
 {
-
-
 <div class="page">
     <div class="sidebar">
         <NavMenu />
@@ -58,7 +56,7 @@
             </div>
         </MudHidden>
 
-        <article class="content px-4">
+            <article class="content px-4" style="overflow-y:auto;height: calc(100vh - 56px);">
             @Body
         </article>
     </main>

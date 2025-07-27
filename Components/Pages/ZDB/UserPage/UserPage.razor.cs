@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
 using MongoDB.Driver;
 using MudBlazor;
+using ZetaCommon.Auth;
 using ZetaDashboard.Common.ZDB.Models;
 using ZetaDashboard.Common.ZDB.Services;
 using ZetaDashboard.Services;
@@ -16,9 +18,29 @@ namespace ZetaDashboard.Components.Pages.ZDB.UserPage
         [Inject] DataController DController { get; set; }
         [Inject] private IDialogService DialogService { get; set; } = default!;
         [Inject] private CommonServices CService { get; set; } = default!;
+        [Inject] private AuthenticationStateProvider Auth { get; set; } = default!;
         #endregion
 
         #region Vars
+        #region Global
+        private UserModel LoggedUser { get; set; }
+        private UserPermissions ThisPage { get; set; } = new UserPermissions()
+        {
+            Code = "zdb",
+            UserType = EUserPermissionType.Visor
+        };
+        private UserPermissions ThisPageEdit { get; set; } = new UserPermissions()
+        {
+            Code = "zdb",
+            UserType = EUserPermissionType.Editor
+        };
+        private UserPermissions ThisPageAdmin { get; set; } = new UserPermissions()
+        {
+            Code = "zdb",
+            UserType = EUserPermissionType.Admin
+        };
+        #endregion
+
         private List<UserModel> DataList = new();
         private List<ProyectModel> DataProyectList = new();
 
@@ -34,6 +56,8 @@ namespace ZetaDashboard.Components.Pages.ZDB.UserPage
         #region LifeCycles
         protected override async Task OnInitializedAsync()
         {
+            LoggedUser = (Auth as CustomAuthenticationStateProvider).LoggedUser;
+            CService.CheckPermissions(LoggedUser,ThisPage);
             GetList();
             GetProyectoList();
         }
@@ -63,18 +87,6 @@ namespace ZetaDashboard.Components.Pages.ZDB.UserPage
             }
             UpdateModal = true;
             StateHasChanged();
-        }
-        private async Task<EUserPermissionType> CheckUserUpdatePermissions(string code)
-        {
-            var x = UpdateModel.Permissions.FirstOrDefault(x => x.Code == code);
-            if(x != null)
-            {
-                return x.UserType;
-            }
-            else
-            {
-                return EUserPermissionType.None;
-            }
         }
 
         private async void OnOpenDeleteModal(UserModel model)
@@ -183,7 +195,7 @@ namespace ZetaDashboard.Components.Pages.ZDB.UserPage
         {
             if(updatePassword != "")
             {
-                InsertModel.PasswordHash = BCrypt.Net.BCrypt.HashPassword(updatePassword);
+                UpdateModel.PasswordHash = BCrypt.Net.BCrypt.HashPassword(updatePassword);
             }
 
             var result = await DController.UpdateData(await ApiService.Users.UpdateUserAsync(UpdateModel));

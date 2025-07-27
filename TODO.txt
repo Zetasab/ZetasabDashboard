@@ -1,16 +1,18 @@
 Global ->
 	-BreadcrumItems
-	-Poner Loading
 	-ajustar theme
-	-Poner permisions
 
 Proyects;
 
 -Crear dashboard mongo
--ajustar todo con collections 
 
--ajustar nav con lo de que se hace la pantalla   como el nav de mi portfolio
+-ajustar nav con lo de que se hace la pantalla como el nav de mi portfolio
 
--advertencia de borrado en collecciones
 
 auditoria
+
+crear backups
+
+arreglar home
+
+arreglar proyectos cohn url que no sea lower
