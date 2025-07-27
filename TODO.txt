@@ -1,19 +1,16 @@
 Global ->
-	-entrar login por parametros
+	-BreadcrumItems
 	-Poner Loading
 	-ajustar theme
 	-Poner permisions
 
 Proyects;
 
--Editar proyectos
--Borrar proyectos
--Poner filtro datagrid busqueda
--Paginacion datagrid
-
 -Crear dashboard mongo
 -ajustar todo con collections 
 
--crud users
+-ajustar nav con lo de que se hace la pantalla   como el nav de mi portfolio
 
--Mensaje de confirmacion de borrar
+-advertencia de borrado en collecciones
+
+auditoria

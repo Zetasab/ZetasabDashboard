@@ -21,6 +21,7 @@ namespace ZetaDashboard.Components.Pages.ZDB.Login
         [Inject] NavigationManager Navigator { get; set; }
         [Inject] BaseService ApiService { get; set; }
         [Inject] DataController DController { get; set; }
+        [Inject] CommonServices CService { get; set; }
         #endregion
 
         #region Vars
@@ -48,17 +49,24 @@ namespace ZetaDashboard.Components.Pages.ZDB.Login
             var adminpassw = UserAccountModel.PasswordHash;
             var usermodel = new UserModel();
             usermodel.Name = UserAccountModel.Name;
-            usermodel.PasswordHash = BCrypt.Net.BCrypt.HashPassword(UserAccountModel.PasswordHash);
+            usermodel.PasswordHash = UserAccountModel.PasswordHash;
             var user = await DController.LoginAsync(await ApiService.Users.LoginAsync(usermodel));
-            if (usermodel.Name == "Zetasab" && adminpassw == "Zetasab01!")
-            {
-                user = new UserModel();
-                user = UserAccountModel;
-            }
+            //if (usermodel.Name == "Zetasab" && adminpassw == "Zetasab01!")
+            //{
+            //    user = new UserModel();
+            //    user = UserAccountModel;
+            //}
             if (user != null)
             {
-                await (Auth as CustomAuthenticationStateProvider).CorrectLogin(UserAccountModel);
-                Navigator.NavigateTo("/");
+                if (CService.CheckLoginPermissions(user)) 
+                { 
+                    await (Auth as CustomAuthenticationStateProvider).CorrectLogin(user);
+                    Navigator.NavigateTo("/");
+                }
+                else
+                {
+                    Snackbar.Add("No tienes permisos para acceder", Severity.Warning);
+                }
             }
             else
             {

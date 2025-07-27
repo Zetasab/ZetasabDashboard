@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.Extensions.Options;
 using MongoDB.Bson;
 using MongoDB.Driver;
+using MudBlazor;
 using MudBlazor.Services;
 using ZetaCommon.Auth;
 using ZetaDashboard.Common.Mongo.Config;
@@ -23,7 +24,13 @@ builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStat
 builder.Services.AddAuthenticationCore();
 
 //mudlbazor
-builder.Services.AddMudServices();
+builder.Services.AddMudServices(config =>
+{
+    config.SnackbarConfiguration.PositionClass = Defaults.Classes.Position.TopRight;
+    config.SnackbarConfiguration.HideTransitionDuration = 100; 
+    config.SnackbarConfiguration.ShowTransitionDuration = 100; 
+    config.SnackbarConfiguration.VisibleStateDuration = 600;  
+});
 
 //mongo
 builder.Services.Configure<MongoConfig>(builder.Configuration.GetSection("Mongo"));

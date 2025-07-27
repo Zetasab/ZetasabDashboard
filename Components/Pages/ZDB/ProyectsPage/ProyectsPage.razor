@@ -1,11 +1,16 @@
 ﻿@page "/proyects"
 
+@using ZetaDashboard.Common.ZDB.Models
+
+<PageTitle>Proyectos - ZetaDashboard</PageTitle>
 
 <!-- #region Title -->
 <div style="display:flex;align-items:center;justify-content:space-between">
     <div></div>
-    <h2>Proyectos</h2>
     <div>
+        <h2>🛠️ Proyectos</h2>
+    </div>
+    <div style="padding-right:30px;">
         <MudTooltip Text="Insertar proyecto">
             <MudIconButton 
                 Variant="Variant.Filled" 
@@ -19,9 +24,26 @@
 <!-- #endregion -->
 
 <!-- #region Insert Modal -->
-<MudDialog @bind-Visible="InsertModal" Style="min-width:700px;min-height:400px">
+<MudDialog @bind-Visible="InsertModal" Class="dialog-modal-custom">
     <TitleContent>
-        Insertar Proyecto
+        <div style="display:flex;align-items:center;justify-content:space-between;">
+            <div></div>
+            <div style="display:flex;align-items:center;">
+                <MudIcon
+                    Icon="@Icons.Material.Filled.AddCircle"
+                    >
+                </MudIcon>
+                <h3 style="margin-left:10px">Insertar Proyecto</h3>
+            </div>
+            <div>
+                <MudIconButton
+                    Icon="@Icons.Material.Filled.Close"
+                    Variant="Variant.Filled"
+                    Color="Color.Error"
+                    OnClick="@(() => InsertModal = false)">
+                </MudIconButton>
+            </div>
+        </div>
     </TitleContent>
     <DialogContent>
         <EditForm Model="InsertModel" OnValidSubmit="OnInsertData">
@@ -54,10 +76,73 @@
 </MudDialog>
 <!-- #endregion -->
 
+<!-- #region Update Modal -->
+<MudDialog @bind-Visible="UpdateModal" Class="dialog-modal-custom">
+    <TitleContent>
+        <div style="display:flex;align-items:center;justify-content:space-between;">
+            <div></div>
+            <div style="display:flex;align-items:center;">
+                <MudIcon Icon="@Icons.Material.Filled.Edit">
+                </MudIcon>
+                <h3 style="margin-left:10px">Editar @UpdateModel.FullName Proyecto</h3>
+            </div>
+            <div>
+                <MudIconButton Icon="@Icons.Material.Filled.Close"
+                               Variant="Variant.Filled"
+                               Color="Color.Error"
+                               OnClick="@(() => UpdateModal = false)">
+                </MudIconButton>
+            </div>
+        </div>
+    </TitleContent>
+    <DialogContent>
+        <EditForm Model="UpdateModel" OnValidSubmit="OnUpdateData">
+            <MudTextField @bind-Value="UpdateModel.Code"
+                          Immediate="true"
+                          MaxLength="3"
+                          Label="Codigo"
+                          Required="true"
+                          Style="margin-top:25px;">
+            </MudTextField>
+            <MudTextField @bind-Value="UpdateModel.Name"
+                          Immediate="true"
+                          Label="Nombre"
+                          Required="true"
+                          Style="margin-top:25px;">
+            </MudTextField>
+            <MudText Style="margin-top:25px;"> @($"{UpdateModel.Code}-{UpdateModel.Name}")</MudText>
+            <MudTextField @bind-Value="UpdateModel.Url" Label="Url" Style="margin-top:25px;"></MudTextField>
+
+            <div style="display:flex;justify-content:center;">
+                <div style="display:flex;justify-content:space-around;width:70%">
+                    <MudButton ButtonType="ButtonType.Submit" Color="Color.Primary" Style="margin-top:25px;" Variant="Variant.Filled">Aceptar</MudButton>
+                    <MudButton Color="Color.Error" Style="margin-top:25px;" Variant="Variant.Filled" OnClick="@(() => UpdateModal = false)">Cerrar</MudButton>
+                </div>
+            </div>
+        </EditForm>
+    </DialogContent>
+</MudDialog>
+<!-- #endregion -->
+
 <!-- #region DataGrid -->
 <MudPaper Style="margin-top:20px;" Elevation="0">
-    <MudDataGrid Items="@DataList">
+    <MudDataGrid Items="@DataList" T="ProyectModel" Filterable="true" QuickFilter="_quickFilter" Hideable="true">
+        <ToolBarContent>
+            <MudText Typo="Typo.h6"></MudText>
+            <MudSpacer />
+            <MudTextField @bind-Value="_searchString" Placeholder="Search" Adornment="Adornment.Start" Immediate="true"
+                          AdornmentIcon="@Icons.Material.Filled.Search" Clearable="true" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+        </ToolBarContent>
         <Columns>
+            <TemplateColumn>
+                <CellTemplate>
+                    <MudTooltip Text="@(context.Item.Id)">
+                        <MudIcon 
+                            Icon="@Icons.Material.Filled.Info">
+                        </MudIcon>
+                    </MudTooltip>
+                </CellTemplate>
+            </TemplateColumn>
             <PropertyColumn Property="x => x.Code" Title="Codigo" />
             <PropertyColumn Property="x => x.Name" Title="Nombre" />
             <PropertyColumn Property="x => x.FullName" Title="Nombre Completo" />
@@ -65,15 +150,18 @@
             <TemplateColumn CellClass="d-flex justify-end" Title="Acciones">
                 <CellTemplate>
                     <MudStack Row style="width:100%">
-                        <div style="width:100%;display:flex;justify-content:start">
-                            <!--
-                                MudIconButton  Variant="@Variant.Filled"
+                        <div class="modal-buttons-actions">
+                            <MudTooltip Text="@($"Editar proyecto {context.Item.Name}")">
+                                <MudIconButton  Variant="@Variant.Filled"
                                             Color="@Color.Primary"
+                                               OnClick="@(() => OnOpenUpdateModal(context.Item))"
                                             Icon="@Icons.Material.Filled.Edit"></MudIconButton>
-                            -->
+                            </MudTooltip>
+
                             <MudTooltip Text="@($"Borrar proyecto {context.Item.Name}")">
                                 <MudIconButton Variant="@Variant.Filled"
-                                               Style="margin-left:7px;"
+                                               Style="margin-left:7px;" 
+                                               OnClick="@(() => OnOpenDeleteModal(context.Item))"
                                                Color="@Color.Error"
                                                Icon="@Icons.Material.Filled.Delete">
                                 </MudIconButton>
@@ -83,6 +171,9 @@
                 </CellTemplate>
             </TemplateColumn>
         </Columns>
+        <PagerContent>
+            <MudDataGridPager T="ProyectModel" />
+        </PagerContent>
     </MudDataGrid>
 </MudPaper>
 <!-- #endregion -->

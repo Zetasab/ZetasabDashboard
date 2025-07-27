@@ -1,4 +1,5 @@
 ﻿@using static ZetaDashboard.Services.CommonServices
+
 @inherits LayoutComponentBase
 
 @* Required *@
@@ -16,6 +17,8 @@
 
 @if (IsAuthentificated)
 {
+
+
 <div class="page">
     <div class="sidebar">
         <NavMenu />
@@ -28,13 +31,27 @@
                 
                  <div class="container-fluid">
                     <NoFreezeScreen />
+                        <MudSpacer />
+                    <MudText>breadcrum</MudText>
+                        <MudSpacer />
+                    <div></div>
                     <MudSpacer/>
-                    <MudTooltip Text="Cerrar Sesión">
-                        <MudIconButton Icon="@Icons.Material.Filled.Logout"
-                                        Variant="Variant.Filled"
-                                        OnClick="LogOutClicked"
-                                        Color="Color.Error"></MudIconButton>
-                    </MudTooltip>
+                    <div style="display:flex;align-items:center;margin-right:20px">
+                            <div style="margin-right:30px;display:flex;align-items:center">
+                                <MudTooltip Text="@LoggedUser.UserType.ToString()">
+                                <MudIcon Icon="@CService.EUserTypeIcon(LoggedUser.UserType)">
+
+                                </MudIcon>
+                            </MudTooltip>
+                                <MudText Style="font-size:19px;margin-left:5px">@LoggedUser.Name</MudText>
+                        </div>
+                        <MudTooltip Text="Cerrar Sesión">
+                            <MudIconButton Icon="@Icons.Material.Filled.Logout"
+                                            Variant="Variant.Filled"
+                                            OnClick="LogOutClicked"
+                                            Color="Color.Error"></MudIconButton>
+                        </MudTooltip>
+                    </div>
                 
                 
                 </div>
@@ -53,3 +70,4 @@
     <a class="dismiss">🗙</a>
 </div>
 }
+

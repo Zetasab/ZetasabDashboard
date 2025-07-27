@@ -1,4 +1,5 @@
 ﻿using MudBlazor;
+using System.Text.Json;
 using ZetaDashboard.Common.Mongo;
 using ZetaDashboard.Common.ZDB.Models;
 
@@ -66,6 +67,53 @@ namespace ZetaDashboard.Services
                 return false;
             }
         }
+        #endregion
+
+        #region Update
+        public async Task<bool> UpdateData<T>(ApiResponse<T> response)
+        {
+            if (response.Result)
+            {
+                Snackbar.Add(response.Message, Severity.Success);
+                return true;
+            }
+            else
+            {
+                Snackbar.Add(response.Message, Severity.Error);
+                return false;
+            }
+        }
+        #endregion
+
+        #region Delete
+        public async Task<bool> DeleteData<T>(ApiResponse<T> response)
+        {
+            if (response.Result)
+            {
+                Snackbar.Add(response.Message, Severity.Success);
+                return true;
+            }
+            else
+            {
+                Snackbar.Add(response.Message, Severity.Error);
+                return false;
+            }
+        }
+        #endregion
+        #region format
+        public async Task<T> DeepCoopy<T>(T entity)
+        {
+            if (entity == null)
+                throw new ArgumentNullException(nameof(entity));
+
+            var json = JsonSerializer.Serialize(entity);
+            var copy = JsonSerializer.Deserialize<T>(json);
+
+            if (copy == null)
+                throw new InvalidOperationException("Failed to deserialize deep copy.");
+
+            return copy;
+        } 
         #endregion
     }
 }

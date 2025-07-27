@@ -13,6 +13,7 @@ namespace ZetaDashboard.Common.ZDB.Models
 
         public enum EUserPermissionType
         {
+            None,
             Visor,
             Editor,
             Admin
@@ -34,7 +35,7 @@ namespace ZetaDashboard.Common.ZDB.Models
         public class UserPermissions
         {
             public string Code { get; set; }
-            public EUserType UserType { get; set; }
+            public EUserPermissionType UserType { get; set; }
         }
     }
 }

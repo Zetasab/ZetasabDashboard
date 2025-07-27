@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.JSInterop;
 using MudBlazor;
 using ZetaCommon.Auth;
 using ZetaDashboard.Common.ZDB.Models;
@@ -13,6 +14,8 @@ namespace ZetaDashboard.Components.Layout
         [Inject] CommonServices CommonService { get; set; }
         [Inject] AuthenticationStateProvider AuthProvider { get; set; }
         [Inject] NavigationManager Navigator { get; set; }
+        [Inject] CommonServices CService { get; set; }
+        [Inject] IJSRuntime JS { get; set; }
         #endregion
 
         #region Vars
@@ -29,6 +32,7 @@ namespace ZetaDashboard.Components.Layout
                 if (IsAuthentificated)
                 {
                     LoggedUser = (AuthProvider as CustomAuthenticationStateProvider).LoggedUser;
+                    await JS.InvokeVoidAsync("hideSplash");
                     StateHasChanged();
                 }
                 else

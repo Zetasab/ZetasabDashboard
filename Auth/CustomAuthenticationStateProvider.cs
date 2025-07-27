@@ -18,7 +18,7 @@ namespace ZetaCommon.Auth
             try
             {
                 var storageUser = await storage.GetAsync<UserModel>("user");
-
+                LoggedUser = storageUser.Value;
                 if (storageUser.Success && storageUser.Value != null)
                 {
                     var identity = new ClaimsIdentity(new[]

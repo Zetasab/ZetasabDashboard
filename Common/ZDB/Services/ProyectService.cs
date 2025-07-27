@@ -16,35 +16,6 @@ namespace ZetaDashboard.Common.ZDB.Services
                 : base(context, "proyects") { }
 
             #region Get
-            //public async Task<ApiResponse<UserModel>?> GetByCodeAsync(string email)
-            //{
-            //    ApiResponse<UserModel?> response = new ApiResponse<UserModel?>();
-
-            //    try
-            //    {
-            //        var filter = Builders<UserModel>.Filter.Eq(u => u.Name, email);
-            //        var first = await FindFirstAsync(filter);
-
-            //        if (first != null)
-            //        {
-            //            response.Result = true;
-            //            response.Data = first;
-            //        }
-            //        else
-            //        {
-            //            response.Result = false;
-            //            response.Message = "No existe usuario";
-            //        }
-            //    }
-            //    catch (Exception ex) 
-            //    {
-            //        response.Result = false;
-            //        response.Message += "Error:" + ex.Message;
-            //    }
-
-            //    return response;
-            //}
-
             public async Task<ApiResponse<List<ProyectModel>>> GetAllProyectsAsync()
             {
                 ApiResponse<List<ProyectModel?>> response = new ApiResponse<List<ProyectModel?>>();
@@ -59,7 +30,7 @@ namespace ZetaDashboard.Common.ZDB.Services
                     else
                     {
                         response.Result = false;
-                        response.Message = "Error obteniendo usuarios";
+                        response.Message = "Error obteniendo proyectos";
                     }
                 }
                 catch (Exception ex)
@@ -88,6 +59,48 @@ namespace ZetaDashboard.Common.ZDB.Services
                 {
                     response.Result = false;
                     response.Message = "Ha ocurrido un error al insertar el proyecto";
+                    Console.WriteLine($"Error: {ex.Message}");
+                }
+                return response;
+            }
+            #endregion
+
+            #region Update
+            public async Task<ApiResponse<bool>> UpdateProyectAsync(ProyectModel model)
+            {
+                ApiResponse<bool> response = new ApiResponse<bool>();
+
+                try
+                {
+                    await UpdateAsync(model);
+                    response.Result = true;
+                    response.Message = "El proyecto se ha editado correctamente";
+                }
+                catch (Exception ex)
+                {
+                    response.Result = false;
+                    response.Message = "Ha ocurrido un error al editar el proyecto";
+                    Console.WriteLine($"Error: {ex.Message}");
+                }
+                return response;
+            }
+            #endregion
+
+            #region Delete
+            public async Task<ApiResponse<bool>> DeleteProyectAsync(ProyectModel model)
+            {
+                ApiResponse<bool> response = new ApiResponse<bool>();
+
+                try
+                {
+                    await DeleteAsync(model);
+                    response.Result = true;
+                    response.Message = "El proyecto se ha borrado correctamente";
+                }
+                catch (Exception ex)
+                {
+                    response.Result = false;
+                    response.Message = "Ha ocurrido un error al borrar el proyecto";
                     Console.WriteLine($"Error: {ex.Message}");
                 }
                 return response;

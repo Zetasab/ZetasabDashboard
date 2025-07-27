@@ -1,0 +1,22 @@
+﻿@using MudBlazor
+@inject IDialogService DialogService
+
+<MudDialog Class="dialog-modal-custom">
+    <DialogContent>
+        <MudText Typo="Typo.h6">@Message</MudText>
+    </DialogContent>
+    <DialogActions>
+        <div style="width:100%;display:flex;justify-content:center;">
+            <MudButton Color="Color.Error" EndIcon="@Icons.Material.Filled.Delete" 
+                Variant="Variant.Filled" OnClick="() => MudDialog.Close(DialogResult.Ok(true))">Aceptar</MudButton>
+            <div style="width:50px;"></div>
+            <MudButton Color="Color.Primary" EndIcon="@Icons.Material.Filled.Close"
+            Variant="Variant.Filled" OnClick="() => MudDialog.Cancel()">Cancelar</MudButton>
+        </div>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter] IMudDialogInstance MudDialog { get; set; } = default!;
+    [Parameter] public string Message { get; set; } = "¿Estás seguro que quieres continuar?";
+}

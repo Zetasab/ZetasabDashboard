@@ -33,10 +33,46 @@ namespace ZetaDashboard.Common.Mongo.DataModels
             {
                 await _collection.UpdateOneAsync(filter, update);
             }
+            public async Task UpdateAsync(T entity)
+            {
+                if (entity == null)
+                    throw new ArgumentNullException(nameof(entity));
+
+                var idProperty = typeof(T).GetProperty("Id");
+                if (idProperty == null)
+                    throw new InvalidOperationException("Model does not contain an 'Id' property");
+
+                var idValue = idProperty.GetValue(entity);
+                if (idValue == null)
+                    throw new InvalidOperationException("Entity ID is null.");
+
+                var filter = Builders<T>.Filter.Eq("Id", idValue);
+                await _collection.ReplaceOneAsync(filter, entity);
+            }
 
             public async Task DeleteAsync(FilterDefinition<T> filter)
             {
                 await _collection.DeleteOneAsync(filter);
+            }
+            public async Task DeleteAsync(T entity)
+            {
+                if (entity == null)
+                    throw new ArgumentNullException(nameof(entity));
+
+                var idProperty = typeof(T).GetProperty("Id");
+                if (idProperty == null)
+                    throw new InvalidOperationException("El modelo no tiene una propiedad 'Id'.");
+
+                var idValue = idProperty.GetValue(entity);
+                if (idValue == null)
+                    throw new InvalidOperationException("El valor de 'Id' es null.");
+
+                var filter = Builders<T>.Filter.Eq("Id", idValue);
+
+                var result = await _collection.DeleteOneAsync(filter);
+
+                if (result.DeletedCount == 0)
+                    throw new InvalidOperationException("No se encontró el documento para eliminar.");
             }
         }
     }

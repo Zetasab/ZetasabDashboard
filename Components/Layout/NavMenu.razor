@@ -10,60 +10,160 @@
 <div class="top-row ps-3 navbar navbar-dark"
      style="@($"background-color: {CommonService.GetCssVar(Color.Primary, ColorType.Darken)};height:56px !important")">
     
-    <div class="container-fluid" style="display:flex;justify-content:center;align-items:center;">
-        <a class="navbar-brand" href="" style="margin-top:8px;margin-left: -28px;">ZetaDashboard</a>
+    <div class="container-fluid logohover" @onclick="GoToHome" style="display:flex;justify-content:center;align-items:center;width:100%;height:100%;">
+        <img src="Img/Logocsa.png" style="height:100%;" />
+        <MudText Style="margin-left:10px;font-size:22px;">&lt;Zetasab /&gt;</MudText>
     </div>
 </div>
 
 <input type="checkbox" title="Navigation menu" class="navbar-toggler" />
 
-<div class="nav-scrollable navbar-gradientBg" onclick="document.querySelector('.navbar-toggler').click()">
-    <nav class="flex-column">
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <text style="font-size:24px">🏡</text>
-                <MudText Style="margin-left:5px;font-size:18px">Inicio</MudText>
-            </NavLink>
-        </div>
+<div class="nav-scrollable navbar-gradientBg" onclick="if (!event.target.closest('.mud-nav-group')) document.querySelector('.navbar-toggler').click()">
+    <MudNavMenu Class="pa-4" >
+        <MudNavGroup Title="ZDB" Icon="@Icons.Material.Filled.Dashboard" Class="mb-2 mud-nav-link-groupNoBefore" Expanded="true">
+            <MudNavLink Href="/" Match="NavLinkMatch.All" Style="margin-top:5px;" Class="mud-nav-link-c1">
+                <div style="display:flex;align-items:center;">
+                    <text style="font-size:24px">🏡</text>
+                    <MudText Style="margin-left:5px;font-size:18px">Inicio</MudText>
+                </div>
+            </MudNavLink>
+            <MudNavLink Href="/user" Match="NavLinkMatch.All" Style="margin-top:5px;" Class="mud-nav-link-c2">
+                <div style="display:flex;align-items:center;">
+                    <text style="font-size:24px">👨‍👩‍👦‍👦</text>
+                    <MudText Style="margin-left:5px;font-size:18px">Usuarios</MudText>
+                </div>
+            </MudNavLink>
+            <MudNavLink Href="/collections" Match="NavLinkMatch.All" Style="margin-top:5px;" Class="mud-nav-link-c3">
+                <div style="display:flex;align-items:center;">
+                    <text style="font-size:24px">📉</text>
+                    <MudText Style="margin-left:5px;font-size:18px">Colecciones</MudText>
+                </div>
+            </MudNavLink>
+            <MudNavLink Href="/proyects" Match="NavLinkMatch.All" Style="margin-top:5px;" Class="mud-nav-link-c4">
+                <div style="display:flex;align-items:center;">
+                    <text style="font-size:24px">🛠️</text>
+                    <MudText Style="margin-left:5px;font-size:18px">Proyectos</MudText>
+                </div>
+            </MudNavLink>
+        </MudNavGroup>
 
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="user">
-                <text style="font-size:24px">👨‍👩‍👦‍👦</text>
-                <MudText Style="margin-left:5px;font-size:18px">Usuarios</MudText>
-            </NavLink>
-        </div>
-        
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="collections">
-                <text style="font-size:24px">📉</text>
-                <MudText Style="margin-left:5px;font-size:18px">Colecciones</MudText>
-            </NavLink>
-        </div>
-
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="proyects">
-                <text style="font-size:24px">🛠️</text>
-                <MudText Style="margin-left:5px;font-size:18px">Proyectos</MudText>
-            </NavLink>
-        </div>
+        @* <MudNavGroup Title="Management" Icon="@Icons.Material.Filled.Settings" Class="mb-2">
+            <MudNavLink Href="/users" Icon="@Icons.Material.Filled.Group">
+                Users
+            </MudNavLink>
+            <MudNavLink Href="/settings" Icon="@Icons.Material.Filled.Tune">
+                Settings
+            </MudNavLink>
+        </MudNavGroup> *@
 
         <MudHidden Invert="true" Breakpoint="Breakpoint.Xs">
-        <div class="nav-item px-3">
-            <MudButton 
-                OnClick="LogOutClicked"
-                Color="Color.Error"
-                FullWidth="true"
-                Style="margin-top:10px"
-                Variant="Variant.Filled"
-                EndIcon="@Icons.Material.Filled.Logout">Cerrar sesión</MudButton>
-        </div>
+        <MudDivider Class="my-2" />
+            <div class="nav-item px-3">
+                <MudButton OnClick="LogOutClicked"
+                           Color="Color.Error"
+                           FullWidth="true"
+                           Style="margin-top:10px"
+                           Variant="Variant.Filled"
+                           EndIcon="@Icons.Material.Filled.Logout">Cerrar sesión</MudButton>
+            </div>
         </MudHidden>
-    </nav>
+       
+    </MudNavMenu>
 </div>
 
 @code{
+
+    private async Task GoToHome()
+    {
+        Navigator.NavigateTo("/");
+    }
     private async Task LogOutClicked()
     {
         (AuthProvider as CustomAuthenticationStateProvider).Logout(Navigator);
     }
 }
+
+<style>
+    .logohover{
+        transition:0.3s;
+    }
+
+    .logohover:hover{
+        transform:scale(1.15);
+        filter:opacity(0.7);
+        cursor:pointer;
+    }
+
+    /*. mud-nav-link {
+        border-radius: 8px;
+        margin-bottom: 4px;
+        transition: background-color 0.3s ease;
+        color:white;
+        text-decoration: none !important;
+    }
+
+    .mud-nav-link:hover {
+        background-color: rgba(255, 255, 255, 0.08) !important;
+            color: #fff !important;
+            border-radius: 8px !important;
+    } */
+    .mud-nav-link {
+    position: relative;
+    overflow: hidden;
+    z-index: 0;
+    border-radius: 8px;
+    background: transparent;
+    transition: color 0.2s;
+}
+
+    .mud-nav-link-groupNoBefore > .mud-nav-link::before {
+        width: 0% !important;
+    }
+    .mud-nav-link-groupNoBefore:hover::before,
+    .mud-nav-link-groupNoBefore:focus::before {
+        width: 0% !important;
+    }
+.mud-nav-link::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0;
+    width: 5%;
+    height: 100%;
+    z-index: -1;
+        background: linear-gradient(90deg, var(--mud-palette-primary-lighten), var(--mud-palette-primary-lighten));
+    transition: width 0.35s cubic-bezier(0.4,0,0.2,1);
+    opacity: 0.8;
+}
+
+
+.mud-nav-link:hover, .mud-nav-link:focus {
+    color: #fff !important;
+}
+        .mud-nav-link-c1 > 
+        .mud-nav-link:hover::before,
+        .mud-nav-link:focus::before {
+            width: 100%;
+            background: linear-gradient(90deg, var(--mud-palette-primary-lighten), #fc5c7d);
+        }
+
+        .mud-nav-link-c2 >
+        .mud-nav-link:hover::before,
+        .mud-nav-link:focus::before {
+            width: 100%;
+            background: linear-gradient(90deg, var(--mud-palette-primary-lighten), #11998e );
+        }
+
+        .mud-nav-link-c3 >
+        .mud-nav-link:hover::before,
+        .mud-nav-link:focus::before {
+            width: 100%;
+            background: linear-gradient(90deg, var(--mud-palette-primary-lighten), #ff9966 );
+        }
+
+        .mud-nav-link-c4 >
+        .mud-nav-link:hover::before,
+        .mud-nav-link:focus::before {
+            width: 100%;
+            background: linear-gradient(90deg, var(--mud-palette-primary-lighten), #00c3ff );
+        }
+</style>

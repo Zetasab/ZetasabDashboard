@@ -14,8 +14,14 @@
     <HeadOutlet />
 </head>
 
-<body>
-    <Routes />
+<body style="overflow:hidden;">
+    <SplashScreen>
+
+    </SplashScreen>
+    <main style="overflow-y:auto;">
+        <Routes />
+    </main>
+    <script src="js/script.js"></script>
     <script src="_framework/blazor.web.js"></script>
     <script src="_content/MudBlazor/MudBlazor.min.js?v=@(MudBlazor.Metadata.Version)"></script>
 </body>

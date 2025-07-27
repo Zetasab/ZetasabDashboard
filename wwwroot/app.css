@@ -1,3 +1,13 @@
+:root {
+    --hue: 153;
+    --primary1: rgb(76, 23, 88) !important;
+    --primary3: rgb(194, 181, 198) !important;
+    --primary7: rgb(132, 12, 172) !important;
+    --primary9: rgb(33, 1, 33) !important;
+    --trans-dur: 0.3s;
+   
+}
+
 html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
@@ -48,4 +58,39 @@ h1:focus {
 
 .darker-border-checkbox.form-check-input {
     border-color: #929292;
+}
+
+
+/* dialog */
+/* Estilo para el modal */
+.dialog-modal-custom {
+    min-width:400px !important;
+    max-width: 700px !important;
+    min-height: 250px !important;
+    padding: 16px !important;
+}
+.modal-buttons-actions {
+    width: 100% !important;
+    display: flex !important;
+    justify-content: start !important;
+}
+
+/* Ajuste para móvil */
+@media screen and (max-width: 600px) {
+    .dialog-modal-custom {
+        max-width: 90vw !important;
+        min-width: 200px !important;
+        min-height: 250px !important;
+        max-height: 90vh !important;
+        border-radius: 0 !important;
+    }
+
+    .mud-dialog {
+        border-radius: 0 !important; /* Para quitar esquinas redondeadas en móvil */
+    }
+    .modal-buttons-actions {
+        width: 100% !important;
+        display: flex !important;
+        justify-content: end !important;
+    }
 }
