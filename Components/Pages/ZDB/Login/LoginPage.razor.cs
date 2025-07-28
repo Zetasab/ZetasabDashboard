@@ -37,7 +37,7 @@ namespace ZetaDashboard.Components.Pages.ZDB.Login
                 UserAccountModel.PasswordHash = password ?? "";
                 if (name != null && password != null)
                 {
-                    //await OnLogin();
+                    await OnLogin();
                 }
                 SetGridSize();
                 StartRandomHighlighting();
