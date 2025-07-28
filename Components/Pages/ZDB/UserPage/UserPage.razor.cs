@@ -70,6 +70,22 @@ namespace ZetaDashboard.Components.Pages.ZDB.UserPage
             GetList();
             GetProyectoList();
         }
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            if (firstRender)
+            {
+                await CService.UpdateCrumbItems("👨‍👩‍👦‍👦 Usuarios", "/user", 2);
+                CService.OnBreadcrumbChanged += OnBreadcrumbsChanged;
+            }
+        }
+        private void OnBreadcrumbsChanged()
+        {
+            InvokeAsync(StateHasChanged); // forzar que el layout se actualice
+        }
+        public void Dispose()
+        {
+            CService.OnBreadcrumbChanged -= OnBreadcrumbsChanged;
+        }
         #endregion
 
         #region Events

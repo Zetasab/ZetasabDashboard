@@ -21,10 +21,17 @@
 				<div class="grid-row">
 					@for (int j = 0; j < 18; j++)
 					{
+						@try
+						{
 						var idx = i * 18 + j;
 						<div class="grid-cell @(ActiveCells.Contains(idx) ? "active" : "")"
 							 @onmouseover="() => ActivateCell(idx)">
-						</div>
+							</div>
+						}
+						catch (Exception ex)
+						{
+							
+						}
 					}
 				</div>
 			}

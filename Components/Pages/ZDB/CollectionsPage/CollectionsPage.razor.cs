@@ -6,6 +6,7 @@ using MongoDB.Bson;
 using MongoDB.Driver;
 using MudBlazor;
 using System.Collections;
+using System.Runtime.CompilerServices;
 using ZetaCommon.Auth;
 using ZetaDashboard.Common.ZDB.Models;
 using ZetaDashboard.Common.ZDB.Services;
@@ -67,6 +68,22 @@ namespace ZetaDashboard.Components.Pages.ZDB.CollectionsPage
             await ApiService.Audits.InsertAsync(audit);
             GetCollectionList();
         }
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            if (firstRender)
+            {
+                await CService.UpdateCrumbItems("📉 Colecciones", "/collections",2);
+                CService.OnBreadcrumbChanged += OnBreadcrumbsChanged;
+            }
+        }
+        private void OnBreadcrumbsChanged()
+        {
+            InvokeAsync(StateHasChanged); // forzar que el layout se actualice
+        }
+        public void Dispose()
+        {
+            CService.OnBreadcrumbChanged -= OnBreadcrumbsChanged;
+        }
         #endregion
 
         #region CRUD
@@ -74,8 +91,10 @@ namespace ZetaDashboard.Components.Pages.ZDB.CollectionsPage
         private async Task GetCollectionList()
         {
             CollectionNames = await MongoService.GetCollectionInfoAsync();
+            UpdateDataCharts();
             await InvokeAsync(StateHasChanged);
         }
+
         #endregion
         #region Delete
         private async Task DeleteCollection(string name)
@@ -112,6 +131,29 @@ namespace ZetaDashboard.Components.Pages.ZDB.CollectionsPage
         {
             string json = await MongoService.GetBackUpCollectionAsync(name);
             await JS.InvokeVoidAsync("downloadJsonFile", $"{name}.json", json);
+        }
+        #endregion
+
+        #region Charts
+        public double[] _donutData = { 25, 77, 28, 5 };
+        public string[] _donut_labels = { "Oil", "Coal", "Gas", "Biomass" };
+
+        public double[] _pieData = { 25, 77, 28, 5 };
+        public string[] _pie_labels = { "Oil", "Coal", "Gas", "Biomass" };
+        private string[] _colors = {"", "", "", "", "", "", "", "", "", "", "", "", "", "", ""};
+        private void UpdateDataCharts()
+        {
+            var rnd = new Random();
+            _colors = Enumerable.Range(0, 20)
+                .Select(_ => $"rgb({rnd.Next(256)}, {rnd.Next(256)}, {rnd.Next(256)})")
+                .ToArray();
+
+            _donutData = CollectionNames.Select(x => x.Count).ToArray();
+            _donut_labels = CollectionNames.Select(x => x.Name).ToArray();
+
+            _pieData = CollectionNames.Select(x => x.Size).ToArray();
+            _pie_labels = CollectionNames.Select(x => x.Name).ToArray();
+            StateHasChanged();
         }
         #endregion
     }

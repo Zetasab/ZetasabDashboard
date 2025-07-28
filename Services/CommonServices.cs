@@ -115,5 +115,50 @@ namespace ZetaDashboard.Services
             return colorToReturn;
         }
         #endregion
+        #region BreadCrumItems
+        public event Action? OnBreadcrumbChanged;
+        public List<BreadcrumbItem> BreadcrumbItems { get; set; } = new List<BreadcrumbItem>();
+        /// <summary>
+        /// Update CrumItems depeding of what sublevel it's
+        /// </summary>
+        /// <param name="name">displayed name</param>
+        /// <param name="path">path name</param>
+        /// <param name="level">what level is</param>
+        /// <param name="disabled">if is disabled or not</param>
+        public async Task UpdateCrumbItems(string name, string path, int level = 1, bool disabled = false)
+        {
+            if (level == 1)
+            {
+                //Level Home
+                BreadcrumbItems.Clear();
+                BreadcrumbItems.Add(new BreadcrumbItem("🏡Inicio", "/home", false));
+
+            }
+            else if (level > BreadcrumbItems.Count)
+            {
+                //level from home
+                BreadcrumbItems.Add(new BreadcrumbItem(name, path, disabled));
+            }
+            else if (level == BreadcrumbItems.Count)
+            {
+                //same level
+                BreadcrumbItems.RemoveAt(BreadcrumbItems.Count - 1);
+                BreadcrumbItems.Add(new BreadcrumbItem(name, path, disabled));
+            }
+            else
+            {
+                //previus level
+                var actualsBreadcrumitems = BreadcrumbItems;
+                int deepLeves = BreadcrumbItems.Count - level;
+
+                int indexStart = Math.Max(0, BreadcrumbItems.Count - deepLeves);
+
+                BreadcrumbItems.RemoveRange(indexStart, deepLeves);
+                BreadcrumbItems.Add(new BreadcrumbItem(name, path, disabled));
+            }
+            OnBreadcrumbChanged?.Invoke();
+        }
+
+        #endregion
     }
 }

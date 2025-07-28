@@ -24,13 +24,13 @@
 
     <main>
         <MudHidden Breakpoint="Breakpoint.Xs">
-            <div class="ps-3 navbar " 
-                 style="@($"background:linear-gradient(227deg,{CommonService.GetCssVar(Color.Primary, ColorType.Lighten)} 40%, {CommonService.GetCssVar(Color.Primary, ColorType.Darken)}); height:56px !important")">
+            <div class="ps-3 navbar "  
+                     style="@($"background:linear-gradient(227deg,{CommonService.GetCssVar(Color.Primary, ColorType.Lighten)} 40%, {CommonService.GetCssVar(Color.Primary, ColorType.Darken)}); height:56px !important;padding:0px;")">
                 
                  <div class="container-fluid">
                     <NoFreezeScreen />
                         <MudSpacer />
-                    <MudText>breadcrum</MudText>
+                        <MudBreadcrumbs Items="@CService?.BreadcrumbItems"></MudBreadcrumbs>
                         <MudSpacer />
                     <div></div>
                     <MudSpacer/>

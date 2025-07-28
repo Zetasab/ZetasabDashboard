@@ -49,6 +49,23 @@ namespace ZetaDashboard.Components.Pages.ZDB.AuditsPage
             await ApiService.Audits.InsertAsync(audit);
             await GetList();
         }
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            if (firstRender)
+            {
+                await CService.UpdateCrumbItems("📰 Auditoria", "/audits",2);
+                await Task.Delay(100);
+                CService.OnBreadcrumbChanged += OnBreadcrumbsChanged;
+            }
+        }
+        private void OnBreadcrumbsChanged()
+        {
+            InvokeAsync(StateHasChanged); // forzar que el layout se actualice
+        }
+        public void Dispose()
+        {
+            CService.OnBreadcrumbChanged -= OnBreadcrumbsChanged;
+        }
         #endregion
         #region CRUD
         #region Get

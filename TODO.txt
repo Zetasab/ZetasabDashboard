@@ -1,23 +1,16 @@
-Global ->
-	-BreadcrumItems
-	-ajustar theme crear perfil
+Todo: ->
+BreadcrumItems (mah o menoh)
+Crear dashboard mongo
 
--Crear dashboard mongo
+Mejoras->
 
--ajustar nav con lo de que se hace la pantalla como el nav de mi portfolio
-
-
-auditoria
-
-poner todos los pagina tittle
-arreglar responsive tablas de datos
-
-
+ajustar theme crear perfil
+ajustar nav con lo de que se hace la pantalla como el nav de mi portfolio
 cambiar fotos por buckets
-
 loading en botones datagrids etc
 
 
+Siguiente ->
 Arreglar perfil de github
 enganchar  proyectos de portfolio y zetaproyectos
 proyectos

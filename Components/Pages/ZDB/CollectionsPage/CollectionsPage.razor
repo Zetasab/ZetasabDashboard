@@ -9,18 +9,18 @@
 <!-- #region Title -->
 <div style="display:flex;align-items:center;justify-content:space-between">
     <div></div>
-    <h2>Colecciones</h2>
+    <h2>📉 Colecciones</h2>
     <div></div>
 </div>
 <!-- #endregion -->
 
 <!-- #region DataGrid -->
-<MudPaper Style="margin-top:20px;" Elevation="0">
-    <MudDataGrid Items="@CollectionNames">
+<MudPaper Style="margin-top:20px;background-color:transparent" Class="PaperCollections" Elevation="0">
+    <MudDataGrid Items="@CollectionNames" Class="PaperCollections_datagrid" Elevation="0">
         <Columns>
             <PropertyColumn Property="x => x.Name" Title="Nombre" />
             <PropertyColumn Property="x => x.Count" Title="N registros" />
-            <PropertyColumn Property="x => x.StorageSize" Title="Tamaño" />
+            <PropertyColumn Property="x => x.StorageSize" Title="Tamaño Disco" />
             <PropertyColumn Property="x => x.Size" Title="Tamaño" />
             <TemplateColumn CellClass="d-flex justify-end" Title="Acciones" >
                 <CellTemplate>
@@ -56,6 +56,54 @@
             </TemplateColumn>
         </Columns>
     </MudDataGrid>
+
+    <MudGrid Class="PaperCollections_charts" Style="padding:20px;">
+        <MudItem xs="12" sm="6" Style="height:100%;">
+            <MudPaper Style="text-align:center;height:100%;padding:20px;background-color:transparent" Elevation="0">
+                <MudChart ChartType="ChartType.Donut"  Width="100%" Height="100%" InputData="@_donutData" InputLabels="@_donut_labels">
+                    <CustomGraphics>
+                        <text class="donut-inner-text" x="50%" y="35%" dominant-baseline="middle" text-anchor="middle" fill="white" font-family="Helvetica" font-size="20">Count Total</text>
+                        <text class="donut-inner-text" x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="white" font-family="Helvetica" font-size="50" font-color="white">@_donutData.Sum().ToString()</text>
+                    </CustomGraphics>
+                </MudChart>
+            </MudPaper>
+        </MudItem>
+        <MudItem xs="12" sm="6" Style="height:100%;">
+            <MudPaper Class="pa-4" Style="text-align:center;height:100%;padding:20px;background-color:transparent" Elevation="0">
+                <MudChart ChartType="ChartType.Pie" InputData="@_pieData" InputLabels="@_pie_labels" Width="100%" Height="100%" />
+            </MudPaper>
+        </MudItem>
+    </MudGrid>
 </MudPaper>
 <!-- #endregion -->
-                                        
+                         
+            
+<style>
+    @@media screen and (min-width: 1024px) {
+        .PaperCollections{
+        height: calc(100% - 67px) !important;
+    }
+
+    .PaperCollections_datagrid {
+        height: 50% !important;
+    }
+
+    .PaperCollections_charts {
+        height: 50% !important;
+    }
+
+    }
+
+    .mud-chart > .mud-chart-pie > g > path:nth-child(1) {
+        fill: @(_colors[0]) !important;
+    }
+
+    .mud-chart > .mud-chart-pie > g > path:nth-child(2) {
+        fill: @(_colors[1]) !important;
+    }
+
+    .mud-chart > .mud-chart-pie > g > path:nth-child(3) {
+        fill: @(_colors[2]) !important;
+    }
+
+</style>

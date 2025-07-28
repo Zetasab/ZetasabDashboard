@@ -33,9 +33,17 @@ namespace ZetaDashboard.Components.Pages
             LoggedUser = (Auth as CustomAuthenticationStateProvider).LoggedUser;
             GetList();
         }
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            if (firstRender)
+            {
+                CService.UpdateCrumbItems("🏡 Inicio", "/");
+                await InvokeAsync(StateHasChanged);
+            } 
+        }
         #endregion
 
-        #region LifeCycles
+        #region Crud
         #region Get
         private async Task GetList()
         {
