@@ -44,7 +44,8 @@ namespace ZetaDashboard.Common.ZDB.Services
                 catch (Exception ex)
                 {
                     response.Result = ResponseStatus.InternalError;
-                    response.Message = "Error" + ex.Message;
+                    response.Message = "Ha ocurrido un error al obtener los proyectos";
+                    Console.WriteLine(ex.ToString());
                 }
                 return response;
             }

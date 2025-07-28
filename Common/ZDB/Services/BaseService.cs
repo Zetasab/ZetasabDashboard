@@ -12,11 +12,13 @@ namespace ZetaDashboard.Common.ZDB.Services
             // Inicializas repositorios por colección
             Users = new UserService(context);
             Proyects = new ProyectService(context);
+            Audits = new AuditService(context);
         }
 
         private readonly MongoContext _context;
 
         public UserService Users { get; }
         public ProyectService Proyects { get; }
+        public AuditService Audits { get; }
     }
 }

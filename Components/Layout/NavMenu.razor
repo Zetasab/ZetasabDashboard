@@ -47,6 +47,15 @@
                         <MudText Style="margin-left:5px;font-size:18px">Proyectos</MudText>
                     </div>
                 </MudNavLink>
+                @if (CService.CheckIfPermissions(LoggedUser, ThisPageAdmin))
+                {
+                    <MudNavLink Href="/audits" Match="NavLinkMatch.All" Style="margin-top:5px;" Class="mud-nav-link-c4">
+                        <div style="display:flex;align-items:center;" onclick="changetoggler()">
+                        <text style="font-size:24px">📰</text>
+                        <MudText Style="margin-left:5px;font-size:18px">Auditoria</MudText>
+                    </div>
+                </MudNavLink>
+                }
             </MudNavGroup>
         }
 

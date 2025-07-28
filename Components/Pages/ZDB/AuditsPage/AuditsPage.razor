@@ -1,0 +1,57 @@
+﻿@page "/audits"
+
+@using ZetaDashboard.Common.ZDB.Models
+
+<PageTitle>Auditoria - ZetaDashboard</PageTitle>
+
+<!-- #region Title -->
+<div style="display:flex;align-items:center;justify-content:space-between">
+    <div></div>
+    <div>
+        <h2>📰 Audits</h2>
+    </div>
+    <div style="padding-right:30px;">
+    </div>
+</div>
+<!-- #endregion -->
+<!-- #region DataGrid -->
+<MudPaper Style="margin-top:20px;" Elevation="0" >
+    <MudDataGrid Items="@DataList" T="AuditModel" @ref="_datagrid" Filterable="true" QuickFilter="_quickFilter" Hideable="true">
+        <ToolBarContent>
+            <MudText Typo="Typo.h6"></MudText>
+            <MudSpacer />
+            <MudTextField @bind-Value="_searchString" Placeholder="Search" Adornment="Adornment.Start" Immediate="true"
+                          AdornmentIcon="@Icons.Material.Filled.Search" Clearable="true" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+        </ToolBarContent>
+        <Columns>
+            <TemplateColumn>
+                <CellTemplate>
+                    <MudTooltip Text="@(context.Item.Id)">
+                        <MudIcon Icon="@Icons.Material.Filled.Info">
+                        </MudIcon>
+                    </MudTooltip>
+                </CellTemplate>
+            </TemplateColumn>
+            <TemplateColumn Title="Usuario">
+                <CellTemplate>
+                    <MudTooltip Text="@(context.Item.UserId)">
+                        <MudIcon Icon="@Icons.Material.Filled.Person">
+                        </MudIcon>
+                        @context.Item.UserName
+                    </MudTooltip>
+                </CellTemplate>
+            </TemplateColumn>
+            <PropertyColumn Property="x => x.What.ToString()" Title="¿Que?" />
+            <PropertyColumn Property="x => x.Where" Title="¿Donde?" />
+            <PropertyColumn Property="x => x.Description" Title="Descripcion" />
+            <PropertyColumn Property="x => x.Details" Title="Detalles" />
+            <PropertyColumn Property="@(x => x.When.ToString("dd/MM/yyyy HH:mm:ss"))" InitialDirection="SortDirection.Descending"  Title="¿Cuando?" />
+            <PropertyColumn Property="x => x.Status.ToString()" Title="Resultado" />
+            
+        </Columns>
+        <PagerContent>
+            <MudDataGridPager T="AuditModel" />
+        </PagerContent>
+    </MudDataGrid>
+</MudPaper>
+<!-- #endregion -->

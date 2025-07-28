@@ -9,9 +9,6 @@ Global ->
 
 auditoria
 
-crear backups
-
-
 poner todos los pagina tittle
 arreglar responsive tablas de datos
 
@@ -22,6 +19,7 @@ loading en botones datagrids etc
 
 
 Arreglar perfil de github
+enganchar  proyectos de portfolio y zetaproyectos
 proyectos
 notas (json poder editar)
 pelis

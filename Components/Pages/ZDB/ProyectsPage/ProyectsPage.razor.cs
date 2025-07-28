@@ -55,6 +55,15 @@ namespace ZetaDashboard.Components.Pages.ZDB.ProyectsPage
         {
             LoggedUser = (Auth as CustomAuthenticationStateProvider).LoggedUser;
             CService.CheckPermissions(LoggedUser, ThisPage);
+            var audit = new AuditModel(
+                LoggedUser.Id,
+                LoggedUser.Name,
+                AuditWhat.See,
+                "Proyects",
+                "Entrando en proyectos",
+                Common.Mongo.ResponseStatus.Ok
+                );
+            await ApiService.Audits.InsertAsync(audit);
             GetList();
         }
         #endregion
@@ -101,7 +110,12 @@ namespace ZetaDashboard.Components.Pages.ZDB.ProyectsPage
             InsertModel.FullName = $"{InsertModel.Code}-{InsertModel.Name}";
             InsertModel.Name = InsertModel.Name.ToLower();
             InsertModel.Code = InsertModel.Code.ToLower();
-            var result = await DController.InsertData(await ApiService.Proyects.InsertProyectAsync(InsertModel, LoggedUser));
+            var result = await DController.InsertData(
+                await ApiService.Proyects.InsertProyectAsync(InsertModel, LoggedUser),
+                LoggedUser,
+                $"Proyects:{nameof(OnInsertData)}",
+                $"Insertando proyecto {InsertModel.FullName}"
+                );
             if (result)
             {
                 InsertModal = false;
@@ -123,7 +137,11 @@ namespace ZetaDashboard.Components.Pages.ZDB.ProyectsPage
             UpdateModel.FullName = $"{UpdateModel.Code}-{UpdateModel.Name}";
             UpdateModel.Name = UpdateModel.Name.ToLower();
             UpdateModel.Code = UpdateModel.Code.ToLower();
-            var result = await DController.UpdateData(await ApiService.Proyects.UpdateProyectAsync(UpdateModel, LoggedUser));
+            var result = await DController.UpdateData(
+                await ApiService.Proyects.UpdateProyectAsync(UpdateModel, LoggedUser),
+                LoggedUser,
+                $"ProyectPage: {nameof(OnUpdateData)}",
+                $"ActualizandoData {UpdateModel.FullName}");
             if (result)
             {
                 UpdateModel = new ProyectModel();
@@ -135,7 +153,12 @@ namespace ZetaDashboard.Components.Pages.ZDB.ProyectsPage
         #region Delete
         private async Task OnDeleteData()
         {
-            var result = await DController.DeleteData(await ApiService.Proyects.DeleteProyectAsync(UpdateModel, LoggedUser));
+            var result = await DController.DeleteData(
+                await ApiService.Proyects.DeleteProyectAsync(UpdateModel, LoggedUser),
+                LoggedUser,
+                $"ProyectPage: {nameof(OnDeleteData)}",
+                $"Borrando {UpdateModel.FullName}"
+                );
             if (result)
             {
                 UpdateModel = new ProyectModel();

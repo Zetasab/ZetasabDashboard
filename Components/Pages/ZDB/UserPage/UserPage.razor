@@ -135,11 +135,7 @@
     <DialogContent>
         <EditForm Model="UpdateModel" OnValidSubmit="OnUpdateData">
             <div style="margin-top:25px;">
-                <MudTextField @bind-Value="UpdateModel.Name"
-                              Immediate="true"
-                              Label="Nombre"
-                              Required="true">
-                </MudTextField>
+                <MudText>@UpdateModel.Name</MudText>
             </div>
             <div style="margin-top:15px;">
                 <MudTextField @bind-Value="updatePassword"

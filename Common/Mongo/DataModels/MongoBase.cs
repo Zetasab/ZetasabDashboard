@@ -89,19 +89,26 @@ namespace ZetaDashboard.Common.Mongo.DataModels
             #region Permissions
             public bool HasPermissions(UserModel user, EUserPermissionType type, List<string> page)
             {
-                if(user.UserType == EUserType.SuperAdmin)
+                try
                 {
-                    return true;
-                }
-                foreach(var perm in user.Permissions)
-                {
-                    if(page.FirstOrDefault(x => x == perm.Code) != null)
+                    if(user.UserType == EUserType.SuperAdmin)
                     {
-                        if(perm.UserType >= type)
+                        return true;
+                    }
+                    foreach(var perm in user.Permissions)
+                    {
+                        if(page.FirstOrDefault(x => x == perm.Code) != null)
                         {
-                            return true;
+                            if(perm.UserType >= type)
+                            {
+                                return true;
+                            }
                         }
                     }
+                }catch(Exception ex)
+                {
+                    Console.WriteLine(ex.ToString());
+                    return false;
                 }
                 return false;
             }

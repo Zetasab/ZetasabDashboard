@@ -8,6 +8,7 @@ using MudBlazor;
 using System.Collections;
 using ZetaCommon.Auth;
 using ZetaDashboard.Common.ZDB.Models;
+using ZetaDashboard.Common.ZDB.Services;
 using ZetaDashboard.Services;
 using ZetaDashboard.Shared.ConfirmDeleteDialog;
 using static ZetaDashboard.Common.ZDB.Models.UserModel;
@@ -23,6 +24,8 @@ namespace ZetaDashboard.Components.Pages.ZDB.CollectionsPage
         [Inject] private AuthenticationStateProvider Auth { get; set; } = default!;
         [Inject] private IDialogService DialogService { get; set; } = default!;
         [Inject] IJSRuntime JS { get; set; }
+        [Inject] BaseService ApiService { get; set; }
+
 
         #endregion
 
@@ -53,6 +56,15 @@ namespace ZetaDashboard.Components.Pages.ZDB.CollectionsPage
         {
             LoggedUser = (Auth as CustomAuthenticationStateProvider).LoggedUser;
             CService.CheckSuperAdminPermissions(LoggedUser);
+            var audit = new AuditModel(
+                LoggedUser.Id,
+                LoggedUser.Name,
+                AuditWhat.See,
+                "Collections",
+                "Entrando en collections",
+                Common.Mongo.ResponseStatus.Ok
+                );
+            await ApiService.Audits.InsertAsync(audit);
             GetCollectionList();
         }
         #endregion

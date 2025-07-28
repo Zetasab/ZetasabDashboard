@@ -2,6 +2,7 @@
 {
     public enum ResponseStatus
     {
+        Unknown = 0,
         Ok = 200,
         BadRequest = 400,
         Unauthorized = 401,

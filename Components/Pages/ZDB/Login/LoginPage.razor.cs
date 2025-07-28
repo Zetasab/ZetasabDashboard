@@ -61,15 +61,39 @@ namespace ZetaDashboard.Components.Pages.ZDB.Login
                 if (CService.CheckLoginPermissions(user)) 
                 { 
                     await (Auth as CustomAuthenticationStateProvider).CorrectLogin(user);
+                    var audit = new AuditModel(
+                        user.Id,
+                        user.Name,
+                        AuditWhat.Login,
+                        nameof(OnLogin),
+                        $"El usuario {user.Name} ha logeado correctamente",
+                        Common.Mongo.ResponseStatus.Ok);
+                    _ = await DController.InsertAudit(await ApiService.Audits.InsertAuditAsync(audit));
                     Navigator.NavigateTo("/");
                 }
                 else
                 {
                     Snackbar.Add("No tienes permisos para acceder", Severity.Warning);
+                    var audit = new AuditModel(
+                        user.Id,
+                        user.Name,
+                        AuditWhat.Login,
+                        nameof(OnLogin),
+                        $"El usuario {user.Name} ha logeado pero no tiene permisos",
+                        Common.Mongo.ResponseStatus.Unauthorized);
+                    _ = await DController.InsertAudit(await ApiService.Audits.InsertAuditAsync(audit));
                 }
             }
             else
             {
+                var audit = new AuditModel(
+                        "",
+                        UserAccountModel.Name,
+                        AuditWhat.Login,
+                        nameof(OnLogin),
+                        $"El usuario {UserAccountModel.Name} ha logeado pero ha sido fallido",
+                        Common.Mongo.ResponseStatus.NotFound);
+                _ = await DController.InsertAudit(await ApiService.Audits.InsertAuditAsync(audit));
                 UserAccountModel.PasswordHash = "";
                 error = true;
                 Thread.Sleep(100);

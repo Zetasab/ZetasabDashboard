@@ -58,6 +58,15 @@ namespace ZetaDashboard.Components.Pages.ZDB.UserPage
         {
             LoggedUser = (Auth as CustomAuthenticationStateProvider).LoggedUser;
             CService.CheckSuperAdminPermissions(LoggedUser);
+            var audit = new AuditModel(
+                LoggedUser.Id,
+                LoggedUser.Name,
+                AuditWhat.See,
+                "Users",
+                "Entrando en usuarios",
+                Common.Mongo.ResponseStatus.Ok
+                );
+            await ApiService.Audits.InsertAsync(audit);
             GetList();
             GetProyectoList();
         }
@@ -168,7 +177,11 @@ namespace ZetaDashboard.Components.Pages.ZDB.UserPage
         private async Task OnInsertData()
         {
             InsertModel.PasswordHash = BCrypt.Net.BCrypt.HashPassword(InsertModel.PasswordHash);
-            var result = await DController.InsertData(await ApiService.Users.InsertUserAsync(InsertModel, LoggedUser));
+            var result = await DController.InsertData(
+                await ApiService.Users.InsertUserAsync(InsertModel, LoggedUser),
+                LoggedUser,
+                $"UserPage: {nameof(OnInsertData)}",
+                $"Insertando usuario {InsertModel.Name}");
             if (result)
             {
                 InsertModal = false;
@@ -198,7 +211,12 @@ namespace ZetaDashboard.Components.Pages.ZDB.UserPage
                 UpdateModel.PasswordHash = BCrypt.Net.BCrypt.HashPassword(updatePassword);
             }
 
-            var result = await DController.UpdateData(await ApiService.Users.UpdateUserAsync(UpdateModel, LoggedUser));
+            var result = await DController.UpdateData(
+                await ApiService.Users.UpdateUserAsync(UpdateModel, LoggedUser),
+                LoggedUser,
+                $"UserPage: {nameof(OnUpdateData)}",
+                $"Actualizando {UpdateModel.Name}"
+                );
             if (result)
             {
                 UpdateModel = new UserModel();
@@ -210,7 +228,11 @@ namespace ZetaDashboard.Components.Pages.ZDB.UserPage
         #region Delete
         private async Task OnDeleteData()
         {
-            var result = await DController.DeleteData(await ApiService.Users.DeleteUserAsync(UpdateModel, LoggedUser));
+            var result = await DController.DeleteData(
+                await ApiService.Users.DeleteUserAsync(UpdateModel, LoggedUser),
+                LoggedUser,
+                $"UserPage: {nameof(OnDeleteData)}",
+                $"Borrando {UpdateModel.Name}");
             if (result)
             {
                 UpdateModel = new UserModel();
