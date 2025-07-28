@@ -9,3 +9,8 @@
         }, 1200); // Espera inicial antes de empezar la animación (puedes poner 0 si quieres que sea instantáneo)
     }
 }
+
+function changetoggler() {
+    const toggler = document.getElementById('navbar-toggler');
+    if (toggler) toggler.checked = false;
+}

@@ -12,15 +12,10 @@
         @foreach (var proy in DataList)
         {
             <div class="project-card" @onclick="@(() => OnClick(proy.Url))">
-                <img class="project-img" src="@($"Img/proyects/{proy.Code}.png")" loading="lazy"  />
-                <div class="project-title">Movie App</div>
-                <div class="project-desc">A movie tracker with Blazor Server and MongoDB. Allows user auth, reviews, and ratings.</div>
-                <a class="project-link" href="https://movieapp.example.com" target="_blank">Open Project</a>
+                <img class="project-img" width="500" height="300" src="@($"Img/proyects/{proy.Code}.png")" loading="lazy" />
+                <div class="project-title">@($"{proy.Icon} {proy.Name}")</div>
             </div>
         }
-
-        
-        
         <!-- Agrega más proyectos aquí -->
     </div>
 </div>

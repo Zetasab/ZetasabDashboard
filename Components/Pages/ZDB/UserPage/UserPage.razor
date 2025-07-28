@@ -220,9 +220,11 @@
 
             <TemplateColumn Title="Tipo">
                 <CellTemplate >
-                        <MudIcon Icon="@CService.EUserTypeIcon(context.Item.UserType)">
-                        </MudIcon>
-                        @context.Item.UserType.ToString()
+                    <div>
+                            <MudIcon Icon="@CService.EUserTypeIcon(context.Item.UserType)">
+                            </MudIcon>
+                            @context.Item.UserType.ToString()
+                    </div>
                 </CellTemplate>
             </TemplateColumn>
             <PropertyColumn Property="x => x.Name" Title="Nombre" />

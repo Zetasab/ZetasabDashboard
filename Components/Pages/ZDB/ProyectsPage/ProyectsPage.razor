@@ -50,27 +50,44 @@
     </TitleContent>
     <DialogContent>
         <EditForm Model="InsertModel" OnValidSubmit="OnInsertData">
-            <MudTextField 
-                @bind-Value="InsertModel.Code" 
-                Immediate="true" 
-                MaxLength="3"
-                Label="Codigo" 
-                Required="true"
-                Style="margin-top:25px;">
-            </MudTextField>
-            <MudTextField 
-                @bind-Value="InsertModel.Name" 
-                Immediate="true" 
-                Label="Nombre" 
-                Required="true"
-                Style="margin-top:25px;">
-            </MudTextField>
-            <MudText Style="margin-top:25px;"> @($"{InsertModel.Code}-{InsertModel.Name}")</MudText>
-            <MudTextField @bind-Value="InsertModel.Url" Label="Url" Style="margin-top:25px;"></MudTextField>
+            <div style="margin-top:25px;">
+                <MudTextField 
+                    @bind-Value="InsertModel.Code" 
+                    Immediate="true" 
+                    MaxLength="3"
+                    Label="Codigo" 
+                    Required="true"
+                    >
+                </MudTextField>
+            </div>
+            <div style="margin-top:25px;">
+                <MudTextField @bind-Value="InsertModel.Icon"
+                              Immediate="true"
+                              
+                              Label="Icono"
+                              Required="true"
+                              >
+                </MudTextField>
+            </div>
+            <div style="margin-top:25px;">
+                <MudTextField 
+                    @bind-Value="InsertModel.Name" 
+                    Immediate="true" 
+                    Label="Nombre" 
+                    Required="true"
+                    >
+                </MudTextField>
+            </div>
+            <div style="margin-top:25px;">
+                <MudText > @($"{InsertModel.Code}-{InsertModel.Name}")</MudText>
+            </div>
+            <div style="margin-top:25px;">
+                <MudTextField @bind-Value="InsertModel.Url" Label="Url" ></MudTextField>
+            </div>
             
             <div style="display:flex;justify-content:center;">
                 <div style="display:flex;justify-content:space-around;width:70%">
-                    <MudButton ButtonType="ButtonType.Submit" Color="Color.Primary" Style="margin-top:25px;" Variant="Variant.Filled">Aceptar</MudButton>
+                    <MudButton ButtonType="ButtonType.Submit" Color="Color.Primary"  Variant="Variant.Filled">Aceptar</MudButton>
                     <MudButton Color="Color.Error" Style="margin-top:25px;" Variant="Variant.Filled" OnClick="@(() => InsertModal = false)">Cerrar</MudButton>
                 </div>
             </div>
@@ -100,21 +117,37 @@
     </TitleContent>
     <DialogContent>
         <EditForm Model="UpdateModel" OnValidSubmit="OnUpdateData">
-            <MudTextField @bind-Value="UpdateModel.Code"
-                          Immediate="true"
-                          MaxLength="3"
-                          Label="Codigo"
-                          Required="true"
-                          Style="margin-top:25px;">
-            </MudTextField>
-            <MudTextField @bind-Value="UpdateModel.Name"
-                          Immediate="true"
-                          Label="Nombre"
-                          Required="true"
-                          Style="margin-top:25px;">
-            </MudTextField>
-            <MudText Style="margin-top:25px;"> @($"{UpdateModel.Code}-{UpdateModel.Name}")</MudText>
-            <MudTextField @bind-Value="UpdateModel.Url" Label="Url" Style="margin-top:25px;"></MudTextField>
+            <div style="margin-top:25px;">
+                <MudTextField @bind-Value="UpdateModel.Code"
+                              Immediate="true"
+                              MaxLength="3"
+                              Label="Codigo"
+                              Required="true"
+                              >
+                </MudTextField>
+            </div>
+            <div style="margin-top:25px;">
+                <MudTextField @bind-Value="UpdateModel.Icon"
+                              Immediate="true"
+                              
+                              Label="Icono"
+                              Required="true"
+                              ></MudTextField>
+            </div>
+            <div style="margin-top:25px;">
+                <MudTextField @bind-Value="UpdateModel.Name"
+                              Immediate="true"
+                              Label="Nombre"
+                              Required="true"
+                              >
+                </MudTextField>
+            </div>
+            <div style="margin-top:25px;">
+                <MudText > @($"{UpdateModel.Code}-{UpdateModel.Name}")</MudText>
+            </div>
+            <div style="margin-top:25px;">
+                <MudTextField @bind-Value="UpdateModel.Url" Label="Url" ></MudTextField>
+            </div>
 
             <div style="display:flex;justify-content:center;">
                 <div style="display:flex;justify-content:space-around;width:70%">
@@ -147,6 +180,13 @@
                 </CellTemplate>
             </TemplateColumn>
             <PropertyColumn Property="x => x.Code" Title="Codigo" />
+            <TemplateColumn>
+                <CellTemplate>
+                    <MudText>
+                        @context.Item.Icon
+                    </MudText>
+                </CellTemplate>
+            </TemplateColumn>
             <PropertyColumn Property="x => x.Name" Title="Nombre" />
             <PropertyColumn Property="x => x.FullName" Title="Nombre Completo" />
             <PropertyColumn Property="x => x.Url" Title="Direccion" />

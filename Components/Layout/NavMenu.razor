@@ -16,12 +16,12 @@
     </div>
 </div>
 
-<input type="checkbox" title="Navigation menu" class="navbar-toggler" />
+<input type="checkbox" title="Navigation menu" class="navbar-toggler" id="navbar-toggler" />
 
-<div class="nav-scrollable navbar-gradientBg" onclick="if (!event.target.closest('.mud-nav-group')) document.querySelector('.navbar-toggler').click()">
+<div class="nav-scrollable navbar-gradientBg">
     <MudNavMenu Class="pa-4" >
-        <MudNavLink Href="/" Match="NavLinkMatch.All" Style="margin-top:5px;" Class="mud-nav-link-c1">
-            <div style="display:flex;align-items:center;">
+        <MudNavLink Href="/" Match="NavLinkMatch.All" Style="margin-top:5px;" Class="mud-nav-link-c1" >
+            <div style="display:flex;align-items:center;" onclick="changetoggler()">
                 <text style="font-size:24px">🏡</text>
                 <MudText Style="margin-left:5px;font-size:18px">Inicio</MudText>
             </div>
@@ -30,19 +30,19 @@
         {
             <MudNavGroup Title="ZDB" Icon="@Icons.Material.Filled.Dashboard" Class="mb-2 mud-nav-link-groupNoBefore" Expanded="true">
                 <MudNavLink Href="/user" Match="NavLinkMatch.All" Style="margin-top:5px;" Class="mud-nav-link-c2">
-                    <div style="display:flex;align-items:center;">
+                    <div style="display:flex;align-items:center;" onclick="changetoggler()">
                         <text style="font-size:24px">👨‍👩‍👦‍👦</text>
                         <MudText Style="margin-left:5px;font-size:18px">Usuarios</MudText>
                     </div>
                 </MudNavLink>
                 <MudNavLink Href="/collections" Match="NavLinkMatch.All" Style="margin-top:5px;" Class="mud-nav-link-c3">
-                    <div style="display:flex;align-items:center;">
+                    <div style="display:flex;align-items:center;" onclick="changetoggler()">
                         <text style="font-size:24px">📉</text>
                         <MudText Style="margin-left:5px;font-size:18px">Colecciones</MudText>
                     </div>
                 </MudNavLink>
                 <MudNavLink Href="/proyects" Match="NavLinkMatch.All" Style="margin-top:5px;" Class="mud-nav-link-c4">
-                    <div style="display:flex;align-items:center;">
+                    <div style="display:flex;align-items:center;" onclick="changetoggler()">
                         <text style="font-size:24px">🛠️</text>
                         <MudText Style="margin-left:5px;font-size:18px">Proyectos</MudText>
                     </div>
