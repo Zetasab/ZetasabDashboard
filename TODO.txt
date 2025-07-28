@@ -1,6 +1,5 @@
 Todo: ->
 BreadcrumItems (mah o menoh)
-Crear dashboard mongo
 
 Mejoras->
 
@@ -11,8 +10,6 @@ loading en botones datagrids etc
 
 
 Siguiente ->
-Arreglar perfil de github
-enganchar  proyectos de portfolio y zetaproyectos
 proyectos
 notas (json poder editar)
 pelis
