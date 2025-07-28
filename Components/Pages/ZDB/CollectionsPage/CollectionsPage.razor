@@ -33,6 +33,14 @@
                             -->
                             @if (CService.CheckIfPermissions(LoggedUser,ThisPageAdmin))
                             {
+                                <MudTooltip Text="@($"Backup {context.Item.Name}")">
+                                    <MudIconButton Variant="@Variant.Filled"
+                                                   Style="margin-left:7px;"
+                                                   Color="@Color.Primary"
+                                                   OnClick="@(() => BackUpCollection(context.Item.Name))"
+                                                   Icon="@Icons.Material.Filled.DataExploration">
+                                    </MudIconButton>
+                                </MudTooltip>
                                 <MudTooltip Text="@($"Borrar colección {context.Item.Name}")">
                                     <MudIconButton Variant="@Variant.Filled"
                                                    Style="margin-left:7px;"

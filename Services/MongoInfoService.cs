@@ -1,5 +1,6 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Driver;
+using System.Collections;
 using System.Xml.Linq;
 using ZetaDashboard.Common.Mongo.Config;
 using ZetaDashboard.Common.ZDB.Models;
@@ -48,6 +49,15 @@ namespace ZetaDashboard.Services
                 _list.Add(collection);
             }
             return _list;
+        }
+
+        public async Task<string> GetBackUpCollectionAsync(string name)
+        {
+            var collection = _database.GetCollection<BsonDocument>(name);
+            var documents = await collection.Find(FilterDefinition<BsonDocument>.Empty).ToListAsync();
+
+            // Serializa la lista de BsonDocuments a JSON
+            return documents.ToJson();
         }
 
         public async Task<bool> DeleteCollection(string name)

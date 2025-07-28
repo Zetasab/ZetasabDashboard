@@ -1,7 +1,11 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.JSInterop;
+using MongoDB.Bson;
+using MongoDB.Driver;
 using MudBlazor;
+using System.Collections;
 using ZetaCommon.Auth;
 using ZetaDashboard.Common.ZDB.Models;
 using ZetaDashboard.Services;
@@ -18,6 +22,7 @@ namespace ZetaDashboard.Components.Pages.ZDB.CollectionsPage
         [Inject] private CommonServices CService { get; set; } = default!;
         [Inject] private AuthenticationStateProvider Auth { get; set; } = default!;
         [Inject] private IDialogService DialogService { get; set; } = default!;
+        [Inject] IJSRuntime JS { get; set; }
 
         #endregion
 
@@ -47,7 +52,7 @@ namespace ZetaDashboard.Components.Pages.ZDB.CollectionsPage
         protected override async Task OnInitializedAsync()
         {
             LoggedUser = (Auth as CustomAuthenticationStateProvider).LoggedUser;
-            CService.CheckPermissions(LoggedUser, ThisPage);
+            CService.CheckSuperAdminPermissions(LoggedUser);
             GetCollectionList();
         }
         #endregion
@@ -88,6 +93,14 @@ namespace ZetaDashboard.Components.Pages.ZDB.CollectionsPage
             }
         }
         #endregion
+        #endregion
+
+        #region Event
+        private async Task BackUpCollection(string name)
+        {
+            string json = await MongoService.GetBackUpCollectionAsync(name);
+            await JS.InvokeVoidAsync("downloadJsonFile", $"{name}.json", json);
+        }
         #endregion
     }
 }

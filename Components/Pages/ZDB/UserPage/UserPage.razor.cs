@@ -57,7 +57,7 @@ namespace ZetaDashboard.Components.Pages.ZDB.UserPage
         protected override async Task OnInitializedAsync()
         {
             LoggedUser = (Auth as CustomAuthenticationStateProvider).LoggedUser;
-            CService.CheckPermissions(LoggedUser,ThisPage);
+            CService.CheckSuperAdminPermissions(LoggedUser);
             GetList();
             GetProyectoList();
         }

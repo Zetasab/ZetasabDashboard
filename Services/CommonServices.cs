@@ -57,6 +57,15 @@ namespace ZetaDashboard.Services
                 Navigator.NavigateTo("/");
             }
         }
+        public void CheckSuperAdminPermissions(UserModel user)
+        {
+            if (user.UserType < EUserType.SuperAdmin) 
+            {
+                Snackbar.Add("No tienes los suficientes permisos", Severity.Warning);
+                Navigator.NavigateTo("/");
+            }
+
+        }
         #endregion
         #region Icons
         public string EUserTypeIcon(EUserType user) => user switch
