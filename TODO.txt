@@ -11,20 +11,15 @@ auditoria
 
 crear backups
 
-arreglar home
-	-> poner titulo que salga de abajo o arriba
-	-> poner en el modelo de proyectos un icnon
-
 
 poner todos los pagina tittle
-
 arreglar responsive tablas de datos
 
 
 en móvil hay dos overflows
 
-cambiar fotos por buckets
 
+cambiar fotos por buckets
 
 loading en botones datagrids etc
 

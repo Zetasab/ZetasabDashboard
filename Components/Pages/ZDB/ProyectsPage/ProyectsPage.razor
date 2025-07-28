@@ -192,7 +192,7 @@
             <PropertyColumn Property="x => x.Url" Title="Direccion" />
             @if (CService.CheckIfPermissions(LoggedUser, ThisPageEdit))
             {
-                <TemplateColumn CellClass="d-flex justify-end" Title="Acciones">
+                <TemplateColumn Title="Acciones">
                     <CellTemplate>
                         <MudStack Row style="width:100%">
                             <div class="modal-buttons-actions">
