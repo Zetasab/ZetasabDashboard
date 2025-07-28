@@ -168,7 +168,7 @@ namespace ZetaDashboard.Components.Pages.ZDB.UserPage
         private async Task OnInsertData()
         {
             InsertModel.PasswordHash = BCrypt.Net.BCrypt.HashPassword(InsertModel.PasswordHash);
-            var result = await DController.InsertData(await ApiService.Users.InsertUserAsync(InsertModel));
+            var result = await DController.InsertData(await ApiService.Users.InsertUserAsync(InsertModel, LoggedUser));
             if (result)
             {
                 InsertModal = false;
@@ -179,12 +179,12 @@ namespace ZetaDashboard.Components.Pages.ZDB.UserPage
         #region Get
         private async Task GetList()
         {
-            DataList = await DController.GetData(await ApiService.Users.GetAllUsersAsync()) ?? new List<UserModel>();
+            DataList = await DController.GetData(await ApiService.Users.GetAllUsersAsync(LoggedUser)) ?? new List<UserModel>();
             await InvokeAsync(StateHasChanged);
         }
         private async Task GetProyectoList()
         {
-            DataProyectList = await DController.GetData(await ApiService.Proyects.GetAllProyectsAsync()) ?? new List<ProyectModel>();
+            DataProyectList = await DController.GetData(await ApiService.Proyects.GetAllProyectsAsync(LoggedUser)) ?? new List<ProyectModel>();
 
             await InvokeAsync(StateHasChanged);
         }
@@ -198,7 +198,7 @@ namespace ZetaDashboard.Components.Pages.ZDB.UserPage
                 UpdateModel.PasswordHash = BCrypt.Net.BCrypt.HashPassword(updatePassword);
             }
 
-            var result = await DController.UpdateData(await ApiService.Users.UpdateUserAsync(UpdateModel));
+            var result = await DController.UpdateData(await ApiService.Users.UpdateUserAsync(UpdateModel, LoggedUser));
             if (result)
             {
                 UpdateModel = new UserModel();
@@ -210,7 +210,7 @@ namespace ZetaDashboard.Components.Pages.ZDB.UserPage
         #region Delete
         private async Task OnDeleteData()
         {
-            var result = await DController.DeleteData(await ApiService.Users.DeleteUserAsync(UpdateModel));
+            var result = await DController.DeleteData(await ApiService.Users.DeleteUserAsync(UpdateModel, LoggedUser));
             if (result)
             {
                 UpdateModel = new UserModel();

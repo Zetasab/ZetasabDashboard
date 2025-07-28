@@ -101,7 +101,7 @@ namespace ZetaDashboard.Components.Pages.ZDB.ProyectsPage
             InsertModel.FullName = $"{InsertModel.Code}-{InsertModel.Name}";
             InsertModel.Name = InsertModel.Name.ToLower();
             InsertModel.Code = InsertModel.Code.ToLower();
-            var result = await DController.InsertData(await ApiService.Proyects.InsertProyectAsync(InsertModel));
+            var result = await DController.InsertData(await ApiService.Proyects.InsertProyectAsync(InsertModel, LoggedUser));
             if (result)
             {
                 InsertModal = false;
@@ -112,7 +112,7 @@ namespace ZetaDashboard.Components.Pages.ZDB.ProyectsPage
         #region Get
         private async Task GetList()
         {
-            DataList = await DController.GetData(await ApiService.Proyects.GetAllProyectsAsync()) ?? new List<ProyectModel>();
+            DataList = await DController.GetData(await ApiService.Proyects.GetAllProyectsAsync(LoggedUser)) ?? new List<ProyectModel>();
             await InvokeAsync(StateHasChanged);
         }
         #endregion
@@ -123,7 +123,7 @@ namespace ZetaDashboard.Components.Pages.ZDB.ProyectsPage
             UpdateModel.FullName = $"{UpdateModel.Code}-{UpdateModel.Name}";
             UpdateModel.Name = UpdateModel.Name.ToLower();
             UpdateModel.Code = UpdateModel.Code.ToLower();
-            var result = await DController.UpdateData(await ApiService.Proyects.UpdateProyectAsync(UpdateModel));
+            var result = await DController.UpdateData(await ApiService.Proyects.UpdateProyectAsync(UpdateModel, LoggedUser));
             if (result)
             {
                 UpdateModel = new ProyectModel();
@@ -135,7 +135,7 @@ namespace ZetaDashboard.Components.Pages.ZDB.ProyectsPage
         #region Delete
         private async Task OnDeleteData()
         {
-            var result = await DController.DeleteData(await ApiService.Proyects.DeleteProyectAsync(UpdateModel));
+            var result = await DController.DeleteData(await ApiService.Proyects.DeleteProyectAsync(UpdateModel, LoggedUser));
             if (result)
             {
                 UpdateModel = new ProyectModel();

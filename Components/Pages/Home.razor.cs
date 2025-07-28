@@ -39,7 +39,7 @@ namespace ZetaDashboard.Components.Pages
         #region Get
         private async Task GetList()
         {
-            DataList = await DController.GetData(await ApiService.Proyects.GetAllProyectsAsync()) ?? new List<ProyectModel>();
+            DataList = await DController.GetData(await ApiService.Proyects.GetAllProyectsAsync(LoggedUser)) ?? new List<ProyectModel>();
             await InvokeAsync(StateHasChanged);
         }
         #endregion

@@ -16,7 +16,7 @@ namespace ZetaDashboard.Services
         #region Get
         public async Task<T> GetData<T>(ApiResponse<T> response) 
         {
-            if (response.Result)
+            if (response.Result == ResponseStatus.Ok)
             {
                 return response.Data;
             }
@@ -28,7 +28,7 @@ namespace ZetaDashboard.Services
         }
         public async Task<List<T>> GetData<T>(ApiResponse<List<T>> response)
         {
-            if (response.Result)
+            if (response.Result == ResponseStatus.Ok)
             {
                 return response.Data;
             }
@@ -43,7 +43,7 @@ namespace ZetaDashboard.Services
         #region Post
         public async Task<T?> LoginAsync<T>(ApiResponse<T> response)
         {
-            if (response.Result)
+            if (response.Result == ResponseStatus.Ok)
             {
                 return response.Data;
             }
@@ -56,7 +56,7 @@ namespace ZetaDashboard.Services
 
         public async Task<bool> InsertData<T>(ApiResponse<T> response)
         {
-            if (response.Result)
+            if (response.Result == ResponseStatus.Ok)
             {
                 Snackbar.Add(response.Message, Severity.Success);
                 return true;
@@ -72,7 +72,7 @@ namespace ZetaDashboard.Services
         #region Update
         public async Task<bool> UpdateData<T>(ApiResponse<T> response)
         {
-            if (response.Result)
+            if (response.Result == ResponseStatus.Ok)
             {
                 Snackbar.Add(response.Message, Severity.Success);
                 return true;
@@ -88,7 +88,7 @@ namespace ZetaDashboard.Services
         #region Delete
         public async Task<bool> DeleteData<T>(ApiResponse<T> response)
         {
-            if (response.Result)
+            if (response.Result == ResponseStatus.Ok)
             {
                 Snackbar.Add(response.Message, Severity.Success);
                 return true;

@@ -4,6 +4,7 @@ using Microsoft.JSInterop;
 using MudBlazor;
 using ZetaCommon.Auth;
 using ZetaDashboard.Common.ZDB.Models;
+using ZetaDashboard.Common.ZDB.Services;
 using ZetaDashboard.Services;
 
 namespace ZetaDashboard.Components.Layout
@@ -12,6 +13,7 @@ namespace ZetaDashboard.Components.Layout
     {
         #region Injects
         [Inject] CommonServices CommonService { get; set; }
+        [Inject] BaseService ApiService { get; set; }
         [Inject] AuthenticationStateProvider AuthProvider { get; set; }
         [Inject] NavigationManager Navigator { get; set; }
         [Inject] CommonServices CService { get; set; }

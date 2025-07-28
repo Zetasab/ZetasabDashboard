@@ -14,5 +14,29 @@ auditoria
 crear backups
 
 arreglar home
+	-> poner titulo que salga de abajo o arriba
+	-> poner en el modelo de proyectos un icnon
 
 arreglar proyectos cohn url que no sea lower
+
+poner todos los pagina tittle
+
+arreglar responsive tablas de datos
+
+arreglar que en móvil el nav se cierre al cambiar 
+
+en móvil hay dos overflows
+
+cambiar fotos por buckets
+
+cambiar para que los permisos esten en la api
+
+api response con codigos de api
+
+Arreglar perfil de github
+
+
+proyectos
+notas (json poder editar)
+pelis
+juegos
