@@ -48,6 +48,7 @@ namespace ZetaDashboard.Components.Pages
         private async Task GetList()
         {
             DataList = await DController.GetData(await ApiService.Proyects.GetAllProyectsAsync(LoggedUser)) ?? new List<ProyectModel>();
+            DataList.Insert(0, new ProyectModel() { Code = "rlw", Name = "Railway", Url = "https://railway.com/dashboard" });
             await InvokeAsync(StateHasChanged);
         }
         #endregion
