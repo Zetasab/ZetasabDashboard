@@ -9,6 +9,9 @@ cambiar fotos por buckets
 loading en botones datagrids etc
 
 
+Error or notfound
+conectar en railway canva
+
 Siguiente ->
 proyectos
 notas (json poder editar)
