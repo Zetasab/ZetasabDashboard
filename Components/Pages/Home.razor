@@ -11,9 +11,9 @@
         
         @foreach (var proy in DataList)
         {
-            <div class="project-card" @onclick="@(() => OnClick(proy.Url))">
+            <div class="project-card">
                 <img class="project-img" width="500" height="300" src="@($"Img/proyects/{proy.Code}.png")" loading="lazy" />
-                <div class="project-title">@($"{proy.Icon} {proy.Name}")</div>
+                <div class="project-title"><a href="@proy.Url">@($"{proy.Icon} {proy.Name}")</a></div>
             </div>
         }
         <!-- Agrega más proyectos aquí -->

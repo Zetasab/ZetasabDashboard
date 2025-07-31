@@ -11,9 +11,9 @@
             <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
         </Found>
         <NotFound>
-            @{
-                NavigationManager.NavigateTo("/404", false);
-            }
+            <LayoutView Layout="@typeof(MainLayout)">
+                <ZetaDashboard.Shared.NotFound.Error404 />
+            </LayoutView>
         </NotFound>
     </Router>
 

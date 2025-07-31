@@ -8,9 +8,17 @@ ajustar nav con lo de que se hace la pantalla como el nav de mi portfolio
 cambiar fotos por buckets
 loading en botones datagrids etc
 
+probar todos los permisos
+
+poner lo de private const string Dato = "pregunta";
+            private const string Datos = "preguntas";
+            private const string ElLaDato = "La pregunta";
+            private const string LosLasDatos = "Las preguntas";
+
+
+    en audtis igual poner limit por fecha
 
 Error or notfound
-conectar en railway canva
 
 Siguiente ->
 proyectos

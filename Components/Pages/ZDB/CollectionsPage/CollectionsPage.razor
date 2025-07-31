@@ -18,10 +18,17 @@
 <MudPaper Style="margin-top:20px;background-color:transparent" Class="PaperCollections" Elevation="0">
     <MudDataGrid Items="@CollectionNames" Class="PaperCollections_datagrid" Elevation="0">
         <Columns>
+             <TemplateColumn CellClass="" Title="Selec en charts" >
+                <CellTemplate>
+                    <MudCheckBox T="bool" Value="@(SelectedNames.FirstOrDefault(x => x.Name == context.Item.Name) != null)"
+                                 ValueChanged="@(value => AddCollectionCheck(value, context.Item))">
+                    </MudCheckBox>
+                </CellTemplate>
+                </TemplateColumn>
             <PropertyColumn Property="x => x.Name" Title="Nombre" />
             <PropertyColumn Property="x => x.Count" Title="N registros" />
-            <PropertyColumn Property="x => x.StorageSize" Title="Tamaño Disco" />
-            <PropertyColumn Property="x => x.Size" Title="Tamaño" />
+            <PropertyColumn Property="x => FormatBytes(x.StorageSize)" Title="Tamaño Disco" />
+            <PropertyColumn Property="x => FormatBytes(x.Size)" Title="Tamaño" />
             <TemplateColumn CellClass="d-flex justify-end" Title="Acciones" >
                 <CellTemplate>
                     <MudStack Row style="width:100%">
@@ -86,6 +93,7 @@
 
     .PaperCollections_datagrid {
         height: 50% !important;
+        overflow-y:auto;
     }
 
     .PaperCollections_charts {

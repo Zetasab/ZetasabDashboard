@@ -1,0 +1,13 @@
+﻿@page "/404"
+
+@using MudBlazor
+
+@inject NavigationManager Navigation 
+
+<h3>Error404</h3>
+
+
+<MudText Typo="Typo.h4" Color="Color.Error">🚫 Página no encontrada</MudText>
+<MudButton Variant="Variant.Filled" OnClick="@(() => Navigation.NavigateTo("/"))">
+    Volver al inicio
+</MudButton>

@@ -31,6 +31,8 @@ namespace ZetaDashboard.Components.Pages.ZDB.AuditsPage
         #endregion
         private List<AuditModel> DataList = new();
 
+        private int _pageNumber = 0;
+        private int _pageSize = 100;
         #endregion
 
         #region LifeCycles
@@ -71,13 +73,17 @@ namespace ZetaDashboard.Components.Pages.ZDB.AuditsPage
         #region Get
         private async Task GetList()
         {
-            DataList = await DController.GetData(await ApiService.Audits.GetAllAuditsAsync(LoggedUser)) ?? new List<AuditModel>();
+            var dataList = await DController.GetData(await ApiService.Audits.GetAllAuditsByPageAsync(_pageNumber, _pageSize,LoggedUser)) ?? new List<AuditModel>();
+            DataList.AddRange(dataList);
             await InvokeAsync(StateHasChanged);
         }
         #endregion
         #endregion
 
         #region Datagrid
+        private bool refreshLoading { get; set; } = false;
+        private bool moreDataLoading { get; set; } = false;
+        private bool datagridLoading { get; set; } = false;
         private MudDataGrid<AuditModel> _datagrid { get; set; }
         private string _searchString { get; set; }
         private Func<AuditModel, bool> _quickFilter => x =>
@@ -104,8 +110,40 @@ namespace ZetaDashboard.Components.Pages.ZDB.AuditsPage
             return false;
         };
 
+        private async Task OnRefreshData()
+        {
+            refreshLoading = true;
+            datagridLoading = true;
+            DataList = new List<AuditModel>();
+            await InvokeAsync(StateHasChanged);
+
+            try
+            {
+                await GetList();
+            }
+            finally
+            {
+                refreshLoading = false;
+                datagridLoading = false;
+                await InvokeAsync(StateHasChanged);
+            }
+        }
+
         #endregion
 
+        private async Task MoreData()
+        {
+            moreDataLoading = true;
+            datagridLoading = true;
+            await InvokeAsync(StateHasChanged);
 
+            _pageNumber++;
+            await GetList();
+
+            moreDataLoading = false;
+            datagridLoading = false;
+            await InvokeAsync(StateHasChanged);
+
+        }
     }
 }

@@ -4,6 +4,10 @@
 
 <PageTitle>Auditoria - ZetaDashboard</PageTitle>
 
+<div>
+
+</div>
+
 <!-- #region Title -->
 <div style="display:flex;align-items:center;justify-content:space-between">
     <div></div>
@@ -16,9 +20,27 @@
 <!-- #endregion -->
 <!-- #region DataGrid -->
 <MudPaper Style="margin-top:20px;" Elevation="0" >
-    <MudDataGrid Items="@DataList" T="AuditModel" @ref="_datagrid" Filterable="true" QuickFilter="_quickFilter" Hideable="true">
+    <MudDataGrid Items="@DataList" T="AuditModel" Loading="@datagridLoading" @ref="_datagrid" Filterable="true" QuickFilter="_quickFilter" Hideable="true">
         <ToolBarContent>
-            <MudText Typo="Typo.h6"></MudText>
+            <MudIconButton Icon="@Icons.Material.Filled.Refresh"
+            Variant="Variant.Filled" Color="Color.Primary"
+                           Disabled="@refreshLoading"
+                           OnClick="@OnRefreshData">
+                @if (refreshLoading)
+                {
+                    <MudProgressCircular Indeterminate="true" Class="ma-1" Color="Color.Primary" />
+                }
+            </MudIconButton>
+            <MudIconButton Icon="@Icons.Material.Filled.More"
+                           Variant="Variant.Filled" Color="Color.Primary"
+                           Disabled="@moreDataLoading"
+                           Style="margin-left:15px;"
+                           OnClick="@MoreData">
+                @if (moreDataLoading)
+                {
+                    <MudProgressCircular Indeterminate="true" Class="ma-1" Color="Color.Primary" />
+                }
+            </MudIconButton>
             <MudSpacer />
             <MudTextField @bind-Value="_searchString" Placeholder="Search" Adornment="Adornment.Start" Immediate="true"
                           AdornmentIcon="@Icons.Material.Filled.Search" Clearable="true" IconSize="Size.Medium" Class="mt-0"></MudTextField>

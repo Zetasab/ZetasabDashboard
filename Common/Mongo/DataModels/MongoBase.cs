@@ -22,6 +22,16 @@ namespace ZetaDashboard.Common.Mongo.DataModels
             {
                 return await _collection.Find(_ => true).ToListAsync();
             }
+            public async Task<List<T>> FindAllByPagedAsync(int pageNumber, int pageSize)
+            {
+                var sort = Builders<T>.Sort.Descending("When");
+                return await _collection
+                    .Find(_ => true)
+                    .Sort(sort)
+                    .Skip(pageNumber * pageSize)
+                    .Limit(pageSize)
+                    .ToListAsync();
+            }
 
             public async Task<T?> FindFirstAsync(FilterDefinition<T> filter)
             {

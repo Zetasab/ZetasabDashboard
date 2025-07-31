@@ -47,8 +47,20 @@ namespace ZetaDashboard.Components.Pages
         #region Get
         private async Task GetList()
         {
-            DataList = await DController.GetData(await ApiService.Proyects.GetAllProyectsAsync(LoggedUser)) ?? new List<ProyectModel>();
-            DataList.Insert(0, new ProyectModel() { Code = "rlw", Name = "Railway", Url = "https://railway.com/dashboard" });
+            var dataList = await DController.GetData(await ApiService.Proyects.GetAllProyectsAsync(LoggedUser)) ?? new List<ProyectModel>();
+
+            foreach(var data in dataList)
+            {
+                if((LoggedUser.Permissions.FirstOrDefault(x => x.Code == data.Code && x.UserType >= EUserPermissionType.Visor) != null) || LoggedUser.UserType == EUserType.SuperAdmin)
+                {
+                    DataList.Add(data);
+                }
+            }
+
+            if (LoggedUser.UserType == EUserType.SuperAdmin)
+            {
+                DataList.Insert(0, new ProyectModel() { Code = "rlw", Name = "Railway", Url = "https://railway.com/dashboard" });
+            }
             await InvokeAsync(StateHasChanged);
         }
         #endregion

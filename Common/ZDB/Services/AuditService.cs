@@ -47,6 +47,38 @@ namespace ZetaDashboard.Common.ZDB.Services
                 }
                 return response;
             }
+
+            public async Task<ApiResponse<List<AuditModel>>> GetAllAuditsByPageAsync(int pageNumber, int pageSize, UserModel loggeduser)
+            {
+                ApiResponse<List<AuditModel?>> response = new ApiResponse<List<AuditModel?>>();
+                try
+                {
+                    if (!HasPermissions(loggeduser, UserModel.EUserPermissionType.Visor, thispage))
+                    {
+                        response.Result = ResponseStatus.Unauthorized;
+                        response.Message = "No tienes permisos";
+                        return response;
+                    }
+                    var result = await FindAllByPagedAsync(pageNumber, pageSize);
+                    if (result != null)
+                    {
+                        response.Result = ResponseStatus.Ok;
+                        response.Data = result;
+                    }
+                    else
+                    {
+                        response.Result = ResponseStatus.NotFound;
+                        response.Message = "Error obteniendo adutorias";
+                    }
+                }
+                catch (Exception ex)
+                {
+                    response.Result = ResponseStatus.InternalError;
+                    response.Message = "Ha ocurrido un problema al obtener las auditorias";
+                    Console.WriteLine(ex.ToString());
+                }
+                return response;
+            }
             #endregion
 
             #region Post

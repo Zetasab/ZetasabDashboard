@@ -50,6 +50,7 @@ namespace ZetaDashboard.Components.Pages.ZDB.CollectionsPage
         };
         #endregion
         private List<MongoCollectionModel> CollectionNames = new();
+        private List<MongoCollectionModel> SelectedNames = new();
         #endregion
 
         #region LifeCycles
@@ -91,6 +92,13 @@ namespace ZetaDashboard.Components.Pages.ZDB.CollectionsPage
         private async Task GetCollectionList()
         {
             CollectionNames = await MongoService.GetCollectionInfoAsync();
+            SelectedNames = CollectionNames.Select(x => new MongoCollectionModel
+            {
+                Name = x.Name,
+                Count = x.Count,
+                Size = x.Size,
+                StorageSize = x.StorageSize
+            }).ToList(); 
             UpdateDataCharts();
             await InvokeAsync(StateHasChanged);
         }
@@ -125,6 +133,38 @@ namespace ZetaDashboard.Components.Pages.ZDB.CollectionsPage
         }
         #endregion
         #endregion
+        private string FormatBytes(double bytes)
+        {
+            string[] sizes = { "B", "KB", "MB", "GB", "TB" };
+            int order = 0;
+            while (bytes >= 1024 && order < sizes.Length - 1)
+            {
+                order++;
+                bytes /= 1024;
+            }
+
+            return $"{bytes:0.##} {sizes[order]}";
+        }
+        private double ToKilobytes(double bytes)
+        {
+            return Math.Round(bytes / 1024.0, 0); 
+        }
+
+        private void AddCollectionCheck(bool isChecked, MongoCollectionModel item)
+        {
+            if (isChecked)
+            {
+                SelectedNames.Add(item);
+                UpdateDataCharts();
+                StateHasChanged();
+            }
+            else
+            {
+                SelectedNames.RemoveAll(x => x.Name == item.Name);
+                UpdateDataCharts();
+                StateHasChanged();
+            }
+        }
 
         #region Event
         private async Task BackUpCollection(string name)
@@ -148,11 +188,11 @@ namespace ZetaDashboard.Components.Pages.ZDB.CollectionsPage
                 .Select(_ => $"rgb({rnd.Next(256)}, {rnd.Next(256)}, {rnd.Next(256)})")
                 .ToArray();
 
-            _donutData = CollectionNames.Select(x => x.Count).ToArray();
-            _donut_labels = CollectionNames.Select(x => x.Name).ToArray();
+            _donutData = SelectedNames.Select(x => x.Count).ToArray();
+            _donut_labels = SelectedNames.Select(x => x.Name).ToArray();
 
-            _pieData = CollectionNames.Select(x => x.Size).ToArray();
-            _pie_labels = CollectionNames.Select(x => x.Name).ToArray();
+            _pieData = SelectedNames.Select(x => ToKilobytes(x.Size)).ToArray();
+            _pie_labels = SelectedNames.Select(x => x.Name).ToArray();
             StateHasChanged();
         }
         #endregion
