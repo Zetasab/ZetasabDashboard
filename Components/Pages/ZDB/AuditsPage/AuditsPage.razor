@@ -67,7 +67,7 @@
             <PropertyColumn Property="x => x.Where" Title="¿Donde?" />
             <PropertyColumn Property="x => x.Description" Title="Descripcion" />
             <PropertyColumn Property="x => x.Details" Title="Detalles" />
-            <PropertyColumn Property="@(x => x.When.ToString("dd/MM/yyyy HH:mm:ss"))" InitialDirection="SortDirection.Descending"  Title="¿Cuando?" />
+            <PropertyColumn Property="@(x => x.When.ToLocalTime().ToString("dd/MM/yyyy HH:mm:ss"))" InitialDirection="SortDirection.Descending"  Title="¿Cuando?" />
             <PropertyColumn Property="x => x.Status.ToString()" Title="Resultado" />
             
         </Columns>

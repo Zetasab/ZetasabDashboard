@@ -16,8 +16,6 @@ poner lo de private const string Dato = "pregunta";
             private const string LosLasDatos = "Las preguntas";
 
 
-    en audtis igual poner limit por fecha
-
 Error or notfound
 
 Siguiente ->
