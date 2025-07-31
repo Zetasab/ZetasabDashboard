@@ -16,6 +16,11 @@ namespace ZetaDashboard.Common.ZDB.Services
             public ProyectService(MongoContext context)
                 : base(context, "proyects") { }
 
+            public string _dato = "proyecto";
+            public string _datos = "proyectos";
+            public string _ellaDato = "el proyecto";
+            public string _loslasDatos = "los proyectos";
+
             #region Get
             public async Task<ApiResponse<List<ProyectModel>>> GetAllProyectsAsync(UserModel loggeduser)
             {
@@ -38,7 +43,7 @@ namespace ZetaDashboard.Common.ZDB.Services
                     else
                     {
                         response.Result = ResponseStatus.NotFound;
-                        response.Message = "Error obteniendo proyectos";
+                        response.Message = $"Error obteniendo {_loslasDatos}";
                     }
                 }
                 catch (Exception ex)
@@ -68,12 +73,12 @@ namespace ZetaDashboard.Common.ZDB.Services
                     }
                     await InsertAsync(model);
                     response.Result = ResponseStatus.Ok;
-                    response.Message = "El proyecto se ha insertado correctamente";
+                    response.Message = $"{char.ToUpper(_ellaDato[0]) + _ellaDato.Substring(1).ToLower()} se ha insertado correctamente";
                 }
                 catch(Exception ex)
                 {
                     response.Result = ResponseStatus.InternalError;
-                    response.Message = "Ha ocurrido un error al insertar el proyecto";
+                    response.Message = $"Ha ocurrido un error al insertar {_ellaDato}";
                     Console.WriteLine($"Error: {ex.Message}");
                 }
                 return response;
@@ -95,12 +100,12 @@ namespace ZetaDashboard.Common.ZDB.Services
                     }
                     await UpdateAsync(model);
                     response.Result = ResponseStatus.Ok;
-                    response.Message = "El proyecto se ha editado correctamente";
+                    response.Message = $"{char.ToUpper(_ellaDato[0]) + _ellaDato.Substring(1).ToLower()} se ha editado correctamente";
                 }
                 catch (Exception ex)
                 {
                     response.Result = ResponseStatus.InternalError;
-                    response.Message = "Ha ocurrido un error al editar el proyecto";
+                    response.Message = $"Ha ocurrido un error al editar {_ellaDato}";
                     Console.WriteLine($"Error: {ex.Message}");
                 }
                 return response;
@@ -122,12 +127,12 @@ namespace ZetaDashboard.Common.ZDB.Services
                     }
                     await DeleteAsync(model);
                     response.Result = ResponseStatus.Ok;
-                    response.Message = "El proyecto se ha borrado correctamente";
+                    response.Message = $"{char.ToUpper(_ellaDato[0]) + _ellaDato.Substring(1).ToLower()} se ha borrado correctamente";
                 }
                 catch (Exception ex)
                 {
                     response.Result = ResponseStatus.InternalError;
-                    response.Message = "Ha ocurrido un error al borrar el proyecto";
+                    response.Message = $"Ha ocurrido un error al borrar {_ellaDato}";
                     Console.WriteLine($"Error: {ex.Message}");
                 }
                 return response;

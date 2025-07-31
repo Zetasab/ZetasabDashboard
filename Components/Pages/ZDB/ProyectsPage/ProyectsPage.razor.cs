@@ -59,7 +59,7 @@ namespace ZetaDashboard.Components.Pages.ZDB.ProyectsPage
                 LoggedUser.Id,
                 LoggedUser.Name,
                 AuditWhat.See,
-                "Proyects",
+                $"Entrando en {ApiService.Proyects._datos}",
                 "Entrando en proyectos",
                 Common.Mongo.ResponseStatus.Ok
                 );
@@ -103,7 +103,7 @@ namespace ZetaDashboard.Components.Pages.ZDB.ProyectsPage
             UpdateModel = await DController.DeepCoopy(model);
             var parameters = new DialogParameters
             {
-                { "Message", $"¿Estás seguro de que quieres eliminar el proyecto {model.FullName}?" }
+                { "Message", $"¿Estás seguro de que quieres eliminar {ApiService.Proyects._ellaDato} {model.FullName}?" }
             };
 
             var options = new DialogOptions { CloseOnEscapeKey = true };
@@ -129,8 +129,8 @@ namespace ZetaDashboard.Components.Pages.ZDB.ProyectsPage
             var result = await DController.InsertData(
                 await ApiService.Proyects.InsertProyectAsync(InsertModel, LoggedUser),
                 LoggedUser,
-                $"Proyects:{nameof(OnInsertData)}",
-                $"Insertando proyecto {InsertModel.FullName}"
+                $"ProyectsPage:{nameof(OnInsertData)}",
+                $"Insertando {ApiService.Proyects._ellaDato} {InsertModel.FullName}"
                 );
             if (result)
             {

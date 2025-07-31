@@ -14,6 +14,10 @@ namespace ZetaDashboard.Common.ZDB.Services
             public AuditService(MongoContext context)
                 : base(context, "audits") { }
 
+            public string _dato = "auditoria";
+            public string _datos = "auditorias";
+            public string _ellaDato = "la auditoria";
+            public string _loslasDatos = "las auditorias";
 
             #region Get
             public async Task<ApiResponse<List<AuditModel>>> GetAllAuditsAsync(UserModel loggeduser)
@@ -36,13 +40,13 @@ namespace ZetaDashboard.Common.ZDB.Services
                     else
                     {
                         response.Result = ResponseStatus.NotFound;
-                        response.Message = "Error obteniendo adutorias";
+                        response.Message = $"Error obteniendo {_loslasDatos}";
                     }
                 }
                 catch (Exception ex)
                 {
                     response.Result = ResponseStatus.InternalError;
-                    response.Message = "Ha ocurrido un problema al obtener las auditorias";
+                    response.Message = $"Ha ocurrido un error al recuperar {_loslasDatos}";
                     Console.WriteLine(ex.ToString());
                 }
                 return response;
@@ -68,13 +72,13 @@ namespace ZetaDashboard.Common.ZDB.Services
                     else
                     {
                         response.Result = ResponseStatus.NotFound;
-                        response.Message = "Error obteniendo adutorias";
+                        response.Message = $"Error obteniendo {_loslasDatos}";
                     }
                 }
                 catch (Exception ex)
                 {
                     response.Result = ResponseStatus.InternalError;
-                    response.Message = "Ha ocurrido un problema al obtener las auditorias";
+                    response.Message = $"Ha ocurrido un error al recuperar {_loslasDatos}";
                     Console.WriteLine(ex.ToString());
                 }
                 return response;
@@ -90,12 +94,12 @@ namespace ZetaDashboard.Common.ZDB.Services
                 {
                     await InsertAsync(model);
                     response.Result = ResponseStatus.Ok;
-                    response.Message = "La auditoria se ha insertado correctamente";
+                    response.Message = $"{char.ToUpper(_ellaDato[0]) + _ellaDato.Substring(1).ToLower()} se ha insertado correctamente";
                 }
                 catch (Exception ex)
                 {
                     response.Result = ResponseStatus.InternalError;
-                    response.Message = "Ha ocurrido un error al insertar la auditoria";
+                    response.Message = $"Ha ocurrido un error al insertar {_ellaDato}";
                     Console.WriteLine($"Error: {ex.Message}");
                 }
                 return response;

@@ -63,7 +63,7 @@ namespace ZetaDashboard.Components.Pages.ZDB.UserPage
                 LoggedUser.Name,
                 AuditWhat.See,
                 "Users",
-                "Entrando en usuarios",
+                $"Entrando en {ApiService.Users._datos}",
                 Common.Mongo.ResponseStatus.Ok
                 );
             await ApiService.Audits.InsertAsync(audit);
@@ -119,7 +119,7 @@ namespace ZetaDashboard.Components.Pages.ZDB.UserPage
             UpdateModel = await DController.DeepCoopy(model);
             var parameters = new DialogParameters
             {
-                { "Message", $"¿Estás seguro de que quieres eliminar el usuario {model.Name}?" }
+                { "Message", $"¿Estás seguro de que quieres eliminar {ApiService.Users._ellaDato} {model.Name}?" }
             };
 
             var options = new DialogOptions { CloseOnEscapeKey = true };
@@ -197,7 +197,7 @@ namespace ZetaDashboard.Components.Pages.ZDB.UserPage
                 await ApiService.Users.InsertUserAsync(InsertModel, LoggedUser),
                 LoggedUser,
                 $"UserPage: {nameof(OnInsertData)}",
-                $"Insertando usuario {InsertModel.Name}");
+                $"Insertando {ApiService.Users._ellaDato} {InsertModel.Name}");
             if (result)
             {
                 InsertModal = false;

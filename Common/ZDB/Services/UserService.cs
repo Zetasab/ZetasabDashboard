@@ -14,6 +14,10 @@ namespace ZetaDashboard.Common.ZDB.Services
             public UserService(MongoContext context)
                 : base(context, "users") { }
 
+            public string _dato = "usuario";
+            public string _datos = "usuarios";
+            public string _ellaDato = "el usuario";
+            public string _loslasDatos = "los usuarios";
 
             #region Get
             public async Task<ApiResponse<List<UserModel>>> GetAllUsersAsync(UserModel loggeduser)
@@ -36,13 +40,13 @@ namespace ZetaDashboard.Common.ZDB.Services
                     else
                     {
                         response.Result = ResponseStatus.NotFound;
-                        response.Message = "Error obteniendo usuarios";
+                        response.Message = $"Error obteniendo {_loslasDatos}";
                     }
                 }
                 catch (Exception ex)
                 {
                     response.Result = ResponseStatus.InternalError;
-                    response.Message = "Ha ocurrido un error al recuperar los usuarios";
+                    response.Message = $"Ha ocurrido un error al recuperar {_loslasDatos}";
                     Console.WriteLine(ex.ToString());
                 }
                 return response;
@@ -95,12 +99,12 @@ namespace ZetaDashboard.Common.ZDB.Services
                     }
                     await InsertAsync(model);
                     response.Result = ResponseStatus.Ok;
-                    response.Message = "El usuario se ha insertado correctamente";
+                    response.Message = $"{char.ToUpper(_ellaDato[0]) + _ellaDato.Substring(1).ToLower()} se ha insertado correctamente";
                 }
                 catch (Exception ex)
                 {
                     response.Result = ResponseStatus.InternalError;
-                    response.Message = "Ha ocurrido un error al insertar el usuario";
+                    response.Message = $"Ha ocurrido un error al insertar {_ellaDato}";
                     Console.WriteLine($"Error: {ex.Message}");
                 }
                 return response;
@@ -122,12 +126,12 @@ namespace ZetaDashboard.Common.ZDB.Services
                     }
                     await UpdateAsync(model);
                     response.Result = ResponseStatus.Ok;
-                    response.Message = "El usuario se ha editado correctamente";
+                    response.Message = $"{char.ToUpper(_ellaDato[0]) + _ellaDato.Substring(1).ToLower()} se ha editado correctamente";
                 }
                 catch (Exception ex)
                 {
                     response.Result = ResponseStatus.InternalError;
-                    response.Message = "Ha ocurrido un error al editar el usuario";
+                    response.Message = $"Ha ocurrido un error al editar {_ellaDato}";
                     Console.WriteLine($"Error: {ex.Message}");
                 }
                 return response;
@@ -149,12 +153,12 @@ namespace ZetaDashboard.Common.ZDB.Services
                     }
                     await DeleteAsync(model);
                     response.Result = ResponseStatus.Ok;
-                    response.Message = "El usuario se ha borrado correctamente";
+                    response.Message = $"{char.ToUpper(_ellaDato[0]) + _ellaDato.Substring(1).ToLower()} se ha borrado correctamente";
                 }
                 catch (Exception ex)
                 {
                     response.Result = ResponseStatus.InternalError;
-                    response.Message = "Ha ocurrido un error al borrar el usuario";
+                    response.Message = $"Ha ocurrido un error al borrar {_ellaDato}";
                     Console.WriteLine($"Error: {ex.Message}");
                 }
                 return response;
