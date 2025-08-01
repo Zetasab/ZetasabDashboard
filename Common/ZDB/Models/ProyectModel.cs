@@ -9,6 +9,7 @@
         public string Icon { get; set; }
 
         public string Url { get; set; }
+        public bool IsHere { get; set; } = false;
 
         public ProyectModel() 
         {

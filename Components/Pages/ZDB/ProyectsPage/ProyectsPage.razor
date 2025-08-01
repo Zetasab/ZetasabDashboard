@@ -84,6 +84,10 @@
             <div style="margin-top:25px;">
                 <MudTextField @bind-Value="InsertModel.Url" Label="Url" ></MudTextField>
             </div>
+
+            <div style="margin-top:25px;">
+                <MudSwitch @bind-Value="InsertModel.IsHere" Color="Color.Primary" />
+            </div>
             
             <div style="display:flex;justify-content:center;">
                 <div style="display:flex;justify-content:space-around;width:70%">
@@ -147,6 +151,10 @@
             </div>
             <div style="margin-top:25px;">
                 <MudTextField @bind-Value="UpdateModel.Url" Label="Url" ></MudTextField>
+            </div>
+
+            <div style="margin-top:25px;">
+                <MudSwitch @bind-Value="UpdateModel.IsHere" Color="Color.Primary" />
             </div>
 
             <div style="display:flex;justify-content:center;">
