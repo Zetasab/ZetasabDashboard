@@ -1,5 +1,6 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using MudBlazor;
 
 namespace ZetaDashboard.Common.ZDB.Models
 {
@@ -26,6 +27,7 @@ namespace ZetaDashboard.Common.ZDB.Models
         public EUserType UserType { get; set; } = EUserType.Restricted;
         public List<UserPermissions> Permissions { get; set; } = new List<UserPermissions>();
 
+        public string MudCustomTheme { get; set; } = "default";
 
         public UserModel()
         {

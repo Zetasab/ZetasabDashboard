@@ -58,6 +58,11 @@ namespace ZetaCommon.Auth
 
         }
 
+        public async Task UpdateUser(UserModel newUser)
+        {
+            await storage.SetAsync("user", newUser);
+        }
+
         public async void Logout(NavigationManager Navigator)
         {
             try

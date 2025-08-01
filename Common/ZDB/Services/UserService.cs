@@ -136,6 +136,31 @@ namespace ZetaDashboard.Common.ZDB.Services
                 }
                 return response;
             }
+
+            public async Task<ApiResponse<bool>> UpdateProfileAsync(UserModel model, UserModel loggeduser)
+            {
+                ApiResponse<bool> response = new ApiResponse<bool>();
+
+                try
+                {
+                    if (!HasPermissions(loggeduser, UserModel.EUserPermissionType.Visor, thispage))
+                    {
+                        response.Result = ResponseStatus.Unauthorized;
+                        response.Message = "No tienes permisos";
+                        return response;
+                    }
+                    await UpdateAsync(model);
+                    response.Result = ResponseStatus.Ok;
+                    response.Message = $"{char.ToUpper(_ellaDato[0]) + _ellaDato.Substring(1).ToLower()} se ha editado correctamente";
+                }
+                catch (Exception ex)
+                {
+                    response.Result = ResponseStatus.InternalError;
+                    response.Message = $"Ha ocurrido un error al editar {_ellaDato}";
+                    Console.WriteLine($"Error: {ex.Message}");
+                }
+                return response;
+            }
             #endregion
 
             #region Delete

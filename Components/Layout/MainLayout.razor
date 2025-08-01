@@ -37,11 +37,14 @@
                     <div style="display:flex;align-items:center;margin-right:20px">
                             <div style="margin-right:30px;display:flex;align-items:center">
                                 <MudTooltip Text="@LoggedUser.UserType.ToString()">
-                                <MudIcon Icon="@CService.EUserTypeIcon(LoggedUser.UserType)">
+                                <MudButton StartIcon="@CService.EUserTypeIcon(LoggedUser.UserType)"
+                                    Variant="Variant.Outlined"
+                                    Href="/profile"
+                                               >
 
-                                </MudIcon>
+                                    <MudText Style="font-size:19px;margin-left:5px">@LoggedUser.Name</MudText>
+                                </MudButton>
                             </MudTooltip>
-                                <MudText Style="font-size:19px;margin-left:5px">@LoggedUser.Name</MudText>
                         </div>
                         <MudTooltip Text="Cerrar Sesión">
                             <MudIconButton Icon="@Icons.Material.Filled.Logout"

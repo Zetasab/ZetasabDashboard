@@ -1,0 +1,105 @@
+﻿@page "/profile"
+
+<PageTitle>Perfil - ZetaDashboard</PageTitle>
+
+<!-- #region Title -->
+<div style="display:flex;align-items:center;justify-content:space-between">
+    <div></div>
+    <div>
+        <h2>👤 Perfil</h2>
+    </div>
+    <div style="padding-right:30px;">
+       
+    </div>
+</div>
+<!-- #endregion -->
+
+<MudPaper Style="display:flex;justify-content:space-around;padding:40px;">
+    <MudGrid>
+        <MudItem Xs="12" Md="5" Style="display:flex;justify-content:center;">
+            <MudPaper Class="pa-4" Elevation="0">
+                 
+                <text style="font-size:13px;">Usuario:</text> <text style="font-size:18px;">  @LoggedUser.Name</text>
+                <br />
+                <br />
+                <br />
+
+                <text style="font-size:13px;">Permisos:</text>
+                <br />
+                <br />
+                @foreach (var prm in LoggedUser.Permissions)
+                {
+                    if(prm.UserType > Common.ZDB.Models.UserModel.EUserPermissionType.None)
+                    {
+                        <p>@prm.Code : @prm.UserType</p>
+                        
+                       
+                    }
+                }
+            </MudPaper>
+        </MudItem>
+
+        <MudItem Xs="12" Md="2">
+            <div style="height:100%; display:flex; align-items:center; justify-content:center;">
+                <MudDivider Vertical="true" Class="my-2" />
+            </div>
+        </MudItem>
+
+        <MudItem Xs="12" Md="5">
+            <MudPaper Class="pa-4" Elevation="0" Style="display:flex;justify-content:center;flex-direction:column">
+                    <div style="display:flex;justify-content:center;">
+                        Seleccione un color:
+                    </div>
+                    <div style="display:flex;justify-content:center;padding:20px">
+                        <MudGrid Justify="Justify.Center" Style="margin-top:20px;" >
+                        <MudItem Style="width:50px;padding:0px;margin:5px" @onclick="@(() => UpdateTheme("purple"))">
+                            <div class="colorContainer" style="background-color:#463E8B;">
+
+                                </div>
+                            </MudItem>
+                        <MudItem Style="width:50px;padding:0px;margin:5px" @onclick="@(() => UpdateTheme("blue"))">
+                            <div class="colorContainer" style="background-color:#1E88E5;">
+
+                                </div>
+                            </MudItem>
+                        <MudItem Style="width:50px;padding:0px;margin:5px" @onclick="@(() => UpdateTheme("green"))">
+                            <div class="colorContainer" style="background-color:#00C853;">
+
+                                </div>
+                            </MudItem>
+                        <MudItem Style="width:50px;padding:0px;margin:5px" @onclick="@(() => UpdateTheme("orange"))">
+                            <div class="colorContainer" style="background-color:#FF7043;">
+
+                                </div>
+                            </MudItem>
+                        <MudItem Style="width:50px;padding:0px;margin:5px" @onclick="@(() => UpdateTheme("red"))">
+                            <div class="colorContainer" style="background-color:#E53935;">
+
+                                </div>
+                            </MudItem>
+                        <MudItem Style="width:50px;padding:0px;margin:5px" @onclick="@(() => UpdateTheme("yellow"))">
+                            <div class="colorContainer" style="background-color:#FBC02D;">
+
+                                </div>
+                            </MudItem>
+                        </MudGrid>
+                    </div>
+                
+            </MudPaper>
+        </MudItem>
+    </MudGrid>
+</MudPaper>
+
+<style>
+    .colorContainer{
+        width:50px;
+        height:50px;
+        border-radius:100px;
+        transition: 0.3s ease-in-out;
+    }
+
+    .colorContainer:hover{
+        transform:scale(1.1);
+        cursor:pointer;
+    }
+</style>

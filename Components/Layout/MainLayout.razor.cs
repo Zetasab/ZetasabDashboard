@@ -34,6 +34,7 @@ namespace ZetaDashboard.Components.Layout
                 if (IsAuthentificated)
                 {
                     LoggedUser = (AuthProvider as CustomAuthenticationStateProvider).LoggedUser;
+                    MyTheme = await GetTheme();
                     await JS.InvokeVoidAsync("hideSplash");
                     StateHasChanged();
                 }
@@ -51,18 +52,14 @@ namespace ZetaDashboard.Components.Layout
 
         private string DarkModeIcon => IsDarkMode ? Icons.Material.Filled.DarkMode : Icons.Material.Filled.LightMode;
 
-        private MudTheme MyTheme = new MudTheme()
-        {
-            PaletteDark = new PaletteDark()
-            {
-                PrimaryDarken = "463e8b"
-            }
-        };
+        
 
         private void ToggleDarkMode()
         {
             IsDarkMode = !IsDarkMode;
         }
+
+        
         #endregion
 
         #region LogOut
@@ -70,6 +67,83 @@ namespace ZetaDashboard.Components.Layout
         {
             (AuthProvider as CustomAuthenticationStateProvider).Logout(Navigator);
         }
+        #endregion
+
+        #region Theme
+
+        private async Task<MudTheme> GetTheme()
+        {
+            var theme = LoggedUser.MudCustomTheme switch
+            {
+                "default" => new MudTheme()
+                {
+                    PaletteDark = new PaletteDark()
+                    {
+                        PrimaryDarken = "463E8B"
+                    }
+                },
+                "purple" => new MudTheme()
+                {
+                    PaletteDark = new PaletteDark()
+                    {
+                        PrimaryDarken = "463E8B"
+                    }
+                },
+                "blue" => new MudTheme()
+                {
+                    PaletteDark = new PaletteDark()
+                    {
+                        Primary = "064984", // azul vivo
+                    }
+                },
+                "green" => new MudTheme()
+                {
+                    PaletteDark = new PaletteDark()
+                    {
+                        Primary = "055e2a", // verde menta
+                    }
+                },
+                "orange" => new MudTheme()
+                {
+                    PaletteDark = new PaletteDark()
+                    {
+                        Primary = "7a3823", // naranja pastel moderno
+                    }
+                },
+                "red" => new MudTheme()
+                {
+                    PaletteDark = new PaletteDark()
+                    {
+                        Primary = "661e1d", // rojo vivo coral
+                    }
+                },
+                "yellow" => new MudTheme()
+                {
+                    PaletteDark = new PaletteDark()
+                    {
+                        Primary = "6e5310", // dorado cálido
+                    }
+                },
+            };
+
+            return theme;
+        }
+        //public MudTheme MyTheme = new MudTheme()
+        //{
+        //    PaletteDark = new PaletteDark()
+        //    {
+        //        PrimaryDarken = "463e8b"
+        //        //PrimaryDarken = "ffffff"
+        //    }
+        //};
+
+        public MudTheme MyTheme = new MudTheme()
+        {
+            PaletteDark = new PaletteDark()
+            {
+                Primary = "463E8B",
+            }
+        };
         #endregion
     }
 }

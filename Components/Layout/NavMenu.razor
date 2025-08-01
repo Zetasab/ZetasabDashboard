@@ -26,7 +26,7 @@
                 <MudText Style="margin-left:5px;font-size:18px">Inicio</MudText>
             </div>
         </MudNavLink>
-        @if (CService.CheckIfPermissions(LoggedUser,ThisPage))
+        @if (CService.CheckIfPermissions(LoggedUser,ThisPageAdmin))
         {
             <MudNavGroup Title="ZDB" Icon="@Icons.Material.Filled.Dashboard" Class="mb-2 mud-nav-link-groupNoBefore" Expanded="true">
                 <MudNavLink Href="/user" Match="NavLinkMatch.All" Style="margin-top:5px;" Class="mud-nav-link-c2">

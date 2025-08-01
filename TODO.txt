@@ -3,20 +3,15 @@ BreadcrumItems (mah o menoh)
 
 Mejoras->
 
-ajustar theme crear perfil
+ajustar theme crear perfil -> ajustar colores
+poner boton de perfil en movil
+
 ajustar nav con lo de que se hace la pantalla como el nav de mi portfolio
 cambiar fotos por buckets
 loading en botones datagrids etc
 
 probar todos los permisos
 
-poner lo de private const string Dato = "pregunta";
-            private const string Datos = "preguntas";
-            private const string ElLaDato = "La pregunta";
-            private const string LosLasDatos = "Las preguntas";
-
-
-audits time pasar a localtime españa
 
 Error or notfound
 
