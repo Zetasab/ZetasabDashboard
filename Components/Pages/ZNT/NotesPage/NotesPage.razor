@@ -1,0 +1,279 @@
+﻿@page "/notes"
+
+@if (!IsNoteEditShow)
+{
+    <!-- #region Title -->
+    <div style="display:flex;align-items:center;justify-content:space-between">
+        <div></div>
+        <div>
+            <h2>📒 Notas</h2>
+        </div>
+        <div style="padding-right:30px;">
+            @if (CService.CheckIfPermissions(LoggedUser, ThisPageEdit))
+            {
+                <MudTooltip Text="Insertar Nota">
+                    <MudIconButton Variant="Variant.Filled"
+                                   Icon="@Icons.Material.Filled.Add"
+                                   Size="Size.Large"
+                                   Color="Color.Primary"
+                                   OnClick="@OnInsertData"></MudIconButton>
+                </MudTooltip>
+            }
+        </div>
+    </div>
+    <!-- #endregion -->
+    @if (DataList.Count > 0)
+    {
+       
+
+        @* archivadas *@
+        <div style="display:flex;align-items:center;margin-top:30px;">
+
+            <h6 style="margin:8px;">🗄 Notas Archivadas (@DataList.Count(p => p.IsArchivaded))</h6>
+            <MudIconButton 
+            Style="margin-left:4px;"
+            Size="Size.Small"
+                           Class="@(archivatedShow ? "icon_rotate" : "")"
+            Icon="@Icons.Material.Filled.ChevronRight"
+            Variant="Variant.Outlined"
+            OnClick="ChangeArchivatedShow">
+
+        </MudIconButton>
+        </div>
+
+        <MudCollapse Expanded="archivatedShow" Style="">
+            <MudGrid Justify="Justify.FlexStart" Style="margin-top:10px;padding:10px 30px" Class="note_grid">
+                @foreach (var note in DataList.Where(p => p.IsArchivaded))
+                {
+                    <MudItem>
+                        <NoteComponent note="note" update="ClickNoteOrGet" ApiService="ApiService" DController="DController" LoggedUser="LoggedUser">
+
+                        </NoteComponent>
+                    </MudItem>
+                }
+            </MudGrid>
+        </MudCollapse>
+
+        @* borradas *@
+        <div style="display:flex;align-items:center;margin-top:30px;">
+
+            <h6 style="margin:8px;">🗑 Notas Borradas (@DataList.Count(p => p.IsDeleted))</h6>
+            <MudIconButton Style="margin-left:4px;"
+                           Size="Size.Small"
+                           Class="@(deletedShow ? "icon_rotate" : "")"
+                           Icon="@Icons.Material.Filled.ChevronRight"
+                           Variant="Variant.Outlined"
+                           OnClick="ChangeDeletedShow">
+
+            </MudIconButton>
+        </div>
+        <MudCollapse Expanded="deletedShow">
+            <MudGrid Justify="Justify.FlexStart" Style="margin-top:10px;padding:10px 30px" Class="note_grid">
+                @foreach (var note in DataList.Where(p => p.IsDeleted))
+                {
+                    <MudItem>
+                        <NoteComponent note="note" update="ClickNoteOrGet" ApiService="ApiService" DController="DController" LoggedUser="LoggedUser">
+
+                        </NoteComponent>
+                    </MudItem>
+                }
+            </MudGrid>
+        </MudCollapse>
+
+        @* fijadas *@
+        <div style="display:flex;align-items:center;margin-top:30px;">
+
+            <h6 style="margin:8px;">📌 Notas Fijadas (@DataList.Count(p => p.IsPinned))</h6>
+            <MudIconButton Style="margin-left:4px;"
+                           Size="Size.Small"
+                           Class="@(pinnedShow ? "icon_rotate" : "")"
+                           Icon="@Icons.Material.Filled.ChevronRight"
+                           Variant="Variant.Outlined"
+                           OnClick="ChangePinnerShow">
+
+            </MudIconButton>
+        </div>
+        <MudCollapse Expanded="pinnedShow">
+            <MudGrid Justify="Justify.FlexStart" Style="margin-top:10px;padding:10px 30px" Class="note_grid">
+            @foreach (var note in DataList.Where(p => p.IsPinned))
+            {
+                <MudItem>
+                        <NoteComponent note="note" update="ClickNoteOrGet" ApiService="ApiService" DController="DController" LoggedUser="LoggedUser">
+
+                        </NoteComponent>
+                </MudItem>
+            }
+            </MudGrid>
+        </MudCollapse>
+
+
+        @* notas *@
+        <h6 style="margin-top:30px;">📝 Notas (@DataList.Count(p => !p.IsPinned && !p.IsDeleted && !p.IsArchivaded))</h6>
+        <MudGrid Justify="Justify.FlexStart" Style="margin-top:10px;padding:10px 30px" Class="note_grid">
+            @foreach (var note in DataList.Where(p => !p.IsPinned && !p.IsDeleted && !p.IsArchivaded && p.IsFavorite))
+            {
+                <MudItem>
+                    <NoteComponent note="note" update="ClickNoteOrGet" ApiService="ApiService" DController="DController" LoggedUser="LoggedUser">
+
+                    </NoteComponent>
+                </MudItem>
+            }
+            @foreach (var note in DataList.Where(p => !p.IsPinned && !p.IsDeleted && !p.IsArchivaded && !p.IsFavorite))
+            {
+                <MudItem>
+                    <NoteComponent note="note" update="ClickNoteOrGet" ApiService="ApiService" DController="DController" LoggedUser="LoggedUser">
+
+                    </NoteComponent>
+                </MudItem>
+            }
+        </MudGrid>
+    }
+    else
+    {
+        <h5>No tienes ninguna nota</h5>
+    }
+}
+else
+{
+    <MudPaper Style="color:#d4d4d4; padding:22px;position:relative;width:100%;height:100%;" Elevation="0">
+        
+        <div style="position:absolute;right:0;top:0px;display:flex;margin-top:13px;margin-right:13px;">
+            <div>
+                <MudTooltip Text="Guardar">
+                    <MudIconButton
+                        Icon="@Icons.Material.Filled.Save"
+                    Color="Color.Primary"
+                    OnClick="SaveNote"
+                    Style="margin-right:10px;"
+                    Variant="Variant.Filled">
+
+                    </MudIconButton>
+                </MudTooltip>
+            </div>
+            <div>
+                <MudTooltip Text="Cerrar">
+                    <MudIconButton Icon="@Icons.Material.Filled.Close"
+                                   OnClick="@(() => IsNoteEditShow = false)"
+                                   Color="Color.Error"
+                                   Variant="Variant.Filled">
+
+                    </MudIconButton>
+                </MudTooltip>
+            </div>
+        </div>
+        @if (isEditing)
+        {
+            <MudTextField @bind-Value="SelectedNote.Title"
+                          Class="code-editor"
+                          AutoFocus="true"
+                          Lines="1"
+                          Style="font-size:20px;margin-top:45px;background-color:#1e1e1e;border-radius:10px "
+                          Variant="Variant.Outlined"
+                          Immediate="true"
+                          OnBlur="ExitEdit" />
+        }
+        else
+        {
+            <div @onclick="() => isEditing = true"
+                 style="padding:18.5px 14px ;cursor: pointer;font-size:20px;margin-top:45px;height:60px;display:flex;;align-items:center;background-color:#1e1e1e; border-radius:10px;">
+                @((string.IsNullOrWhiteSpace(SelectedNote.Title) ? "<i>Haz clic para editar</i>" : SelectedNote.Title))
+            </div>
+        }
+        @if (isEditing2)
+        {
+            <MudTextField @bind-Value="SelectedNote.Content"
+                          Class="code-editor"
+                          AutoFocus="true"
+                          Lines="35"
+                          Style="font-size:16px;height:calc(100vh - 360px);background-color:#1e1e1e;margin-top:30px;border-radius:10px "
+                          Variant="Variant.Outlined"
+                          Immediate="true"
+                          OnBlur="ExitEdit2" />
+        }
+        else
+        {
+            <div @onclick="() => isEditing2 = true"
+                 style="line-height:18.5px; padding:10px 14px;cursor: pointer;font-size:16px;height:calc(100vh - 360px);background-color:#1e1e1e;margin-top:30px;border-radius:10px ">
+                @CService.FormatNoteContent(SelectedNote.Content)
+            </div>
+        }
+
+    </MudPaper>
+}
+
+<style>
+    .code-editor textarea {
+        background-color: #1e1e1e; /* fondo negro estilo VSCode */
+        color: #d4d4d4; /* texto claro */
+        font-family: Consolas, monospace;
+        font-size: 14px;
+        padding: 16px;
+        border: none;
+        height: 100% !important;
+        resize: none;
+        line-height: 1.5;
+    }
+
+    .code-editor .mud-input-root {
+        background-color: #1e1e1e;
+        border-radius: 8px;
+        border: 1px solid #333;
+    }
+    .note-container {
+        width: 500px;
+        height:300px;
+        transition:0.3s ease-in-out;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 0 10px rgba(255, 255, 255, 0.05);
+        border: 1px solid #333;
+        font-family: system-ui, sans-serif;
+    }
+    @@media screen and (max-width: 768px) {
+        .note-container{
+        max-width: 300px !important;
+        }
+        .note_grid {
+            justify-content:center !important;
+        }
+    }
+
+    .note-container:hover {
+        cursor:pointer;
+        
+    }
+
+        .note-container:hover > .note-content {
+        cursor: pointer;
+        filter: brightness(1.3);
+    }
+    .note-header {
+        background: linear-gradient(to bottom, #ffd60a, #ffcc00);
+        padding: 12px 36px;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .note-title {
+        margin: 0;
+        font-size: 18px;
+        color: #000;
+    }
+
+    .note-content {
+        background-image: url(/Img/utilities/notebg.png);
+        background-size: 100% 96px;
+        color: #efefef;
+        padding: 20px 62px;
+        font-size: 16px;
+        line-height: 3;
+        height: 100%;
+        transition:0.3s ease-in-out;
+    }
+
+    .mud-icon-button-label{
+        transition:0.3s ease-in-out;
+    }
+    .icon_rotate > .mud-icon-button-label {
+        transform:rotate(90deg);
+    }
+</style>

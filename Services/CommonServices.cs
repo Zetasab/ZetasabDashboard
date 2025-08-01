@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using MudBlazor;
+using System.Text.RegularExpressions;
 using ZetaDashboard.Common.ZDB.Models;
 using static ZetaDashboard.Common.ZDB.Models.UserModel;
 
@@ -161,5 +162,19 @@ namespace ZetaDashboard.Services
 
         #endregion
 
+        public MarkupString FormatNoteContent(string? content)
+        {
+            if (string.IsNullOrWhiteSpace(content))
+                return new MarkupString("");
+
+            // Detecta https:// y http://
+            string pattern = @"(https?:\/\/[^\s]+)";
+            string processed = Regex.Replace(content, pattern, "<a href=\"$1\" target=\"_blank\" style=\"color:#4EA1D3;text-decoration:underline;\">$1</a>");
+
+            // Reemplaza \n por <br>
+            processed = processed.Replace("\n", "<br>");
+
+            return new MarkupString(processed);
+        }
     }
 }

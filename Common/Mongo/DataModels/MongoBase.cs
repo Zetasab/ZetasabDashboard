@@ -22,6 +22,12 @@ namespace ZetaDashboard.Common.Mongo.DataModels
             {
                 return await _collection.Find(_ => true).ToListAsync();
             }
+            public async Task<List<T>> FindAllAsync(FilterDefinition<T>? filter = null)
+            {
+                filter ??= Builders<T>.Filter.Empty; 
+                return await _collection.Find(filter).ToListAsync();
+            }
+
             public async Task<List<T>> FindAllByPagedAsync(int pageNumber, int pageSize)
             {
                 var sort = Builders<T>.Sort.Descending("When");

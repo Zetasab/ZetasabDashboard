@@ -23,6 +23,11 @@ namespace ZetaDashboard.Services
             {
                 return response.Data;
             }
+            else if (response.Result == ResponseStatus.NotFound)
+            {
+                Snackbar.Add(response.Message, Severity.Warning);
+                return default;
+            }
             else
             {
                 Snackbar.Add(response.Message, Severity.Error);
@@ -34,6 +39,11 @@ namespace ZetaDashboard.Services
             if (response.Result == ResponseStatus.Ok)
             {
                 return response.Data;
+            }
+            else if(response.Result == ResponseStatus.NotFound)
+            {
+                Snackbar.Add(response.Message, Severity.Warning);
+                return default;
             }
             else
             {

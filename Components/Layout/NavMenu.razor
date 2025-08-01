@@ -62,12 +62,21 @@
         @if (CService.CheckIfPermissions(LoggedUser, ThisNotesPage))
         {
             <MudNavGroup Title="ZNT" Icon="@Icons.Material.Filled.Note" Class="mb-2 mud-nav-link-groupNoBefore" Expanded="true">
-                <MudNavLink Href="/user" Match="NavLinkMatch.All" Style="margin-top:5px;" Class="mud-nav-link-c2">
+                <MudNavLink Href="/notes" Match="NavLinkMatch.All" Style="margin-top:5px;" Class="mud-nav-link-c2">
                     <div style="display:flex;align-items:center;" onclick="changetoggler()">
                         <text style="font-size:24px">📒</text>
                         <MudText Style="margin-left:5px;font-size:18px">Notas</MudText>
                     </div>
                 </MudNavLink>
+                @if (CService.CheckIfPermissions(LoggedUser, ThisNotesPageAdmin))
+                {
+                    <MudNavLink Href="/notes-grid" Match="NavLinkMatch.All" Style="margin-top:5px;" Class="mud-nav-link-c2">
+                        <div style="display:flex;align-items:center;" onclick="changetoggler()">
+                            <text style="font-size:24px">🗒</text>
+                            <MudText Style="margin-left:5px;font-size:18px">Notas-Grid</MudText>
+                        </div>
+                    </MudNavLink>
+                }
             </MudNavGroup>
         }
 

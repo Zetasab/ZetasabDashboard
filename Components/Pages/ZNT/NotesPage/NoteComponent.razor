@@ -1,0 +1,93 @@
+﻿<div class="note-container" @onclick="OnNoteClick">
+    <div class="note-header">
+        <MudGrid>
+            <MudItem xs="12" sm="6">
+                <h2 class="note-title">@note.Title</h2>
+            </MudItem>
+            <MudItem xs="12" sm="6">
+                <div style="display:flex;justify-content:end">
+                    @if (!note.IsDeleted)
+                    {
+                        
+                    <div style="margin-right:5px;">
+                        <MudTooltip Text="@(note.IsFavorite ? "Quitar de favoritos" : "Añadir a favoritos")">
+                            <MudIconButton Icon="@Icons.Material.Filled.HeartBroken"
+                                     Color="Color.Error"
+                                           OnClick="AddRemoveFavourite"
+                                           Variant="@(note.IsFavorite ? Variant.Filled : Variant.Outlined)"
+                                           Size="Size.Small">
+
+                            </MudIconButton>
+                        </MudTooltip>
+                    </div>
+                        <div style="margin-right:5px;">
+                            <MudTooltip Text="@(note.IsDeleted ? "Quitar de borrados" : "Añadir a borrados")">
+                                <MudIconButton Icon="@Icons.Material.Filled.Delete"
+                                               Color="Color.Tertiary"
+                                               OnClick="AddRemoveDelete"
+                                               Variant="@(note.IsDeleted ? Variant.Filled : Variant.Outlined)"
+                                               Size="Size.Small">
+
+                                </MudIconButton>
+                            </MudTooltip>
+                        </div>
+                    <div style="margin-right:5px;">
+                        <MudTooltip Text="@(note.IsArchivaded ? "Quitar de archivados" : "Añadir a archivados")">
+                            <MudIconButton Icon="@Icons.Material.Filled.Archive"
+                                               OnClick="AddRemoveArchivated"
+                                           Color="Color.Tertiary"
+                            Variant="@(note.IsArchivaded ? Variant.Filled : Variant.Outlined)"
+                                            Size="Size.Small">
+
+                            </MudIconButton>
+                        </MudTooltip>
+                    </div>
+                    <div style="margin-right:5px;">
+                        <MudTooltip Text="@(note.IsPinned ? "Quitar de fijados" : "Añadir a fijados")">
+                            <MudIconButton Icon="@Icons.Material.Filled.PushPin"
+                                           Color="Color.Tertiary"
+                                               OnClick="AddRemovePinned"
+                            Variant="@(note.IsPinned ? Variant.Filled : Variant.Outlined)"
+                                            Size="Size.Small">
+
+                            </MudIconButton>
+                        </MudTooltip>
+                        </div>
+                    }
+                    else
+                    {
+                        <div style="margin-right:5px;">
+                            <MudTooltip Text="Quitar de borrados">
+                                <MudIconButton Icon="@Icons.Material.Filled.Delete"
+                                               Color="Color.Tertiary"
+                                               OnClick="AddRemoveDelete"
+                                               Variant="Variant.Outlined"
+                                               Size="Size.Small">
+
+                                </MudIconButton>
+                            </MudTooltip>
+                        </div>
+                        <div style="margin-right:5px;">
+                            <MudTooltip Text="Borrar del todo">
+                                <MudIconButton Icon="@Icons.Material.Filled.Delete"
+                                               Color="Color.Error"
+                                               OnClick="RemoveConfirm"
+                                               Variant="Variant.Filled"
+                                               Size="Size.Small">
+
+                                </MudIconButton>
+                            </MudTooltip>
+                        </div>
+                    }
+                </div>
+            </MudItem>
+        </MudGrid>
+        
+        
+    </div>
+    <div class="note-content">
+        <p>
+            @((note.Content.Length) > 70 ? (MarkupString)$"{CService.FormatNoteContent(note.Content.Substring(0, 70))}..." : (MarkupString)CService.FormatNoteContent(note.Content))
+        </p>
+    </div>
+</div>

@@ -1,0 +1,247 @@
+﻿@page "/notes-grid"
+
+@using ZetaDashboard.Common.ZNT.Models
+
+<PageTitle>Notas - ZetaDashboard</PageTitle>
+
+<!-- #region Title -->
+<div style="display:flex;align-items:center;justify-content:space-between">
+    <div></div>
+    <div>
+        <h2>🗒 Notas</h2>
+    </div>
+    <div style="padding-right:30px;">
+        @if (CService.CheckIfPermissions(LoggedUser, ThisPageEdit))
+        {
+            <MudTooltip Text="Insertar Nota">
+                <MudIconButton Variant="Variant.Filled"
+                               Icon="@Icons.Material.Filled.Add"
+                               Size="Size.Large"
+                               Color="Color.Primary"
+                               OnClick="@OnOpenInsertModal"></MudIconButton>
+            </MudTooltip>
+        }
+    </div>
+</div>
+<!-- #endregion -->
+<!-- #region Insert Modal -->
+<MudDialog @bind-Visible="InsertModal" Class="dialog-modal-custom">
+    <TitleContent>
+        <div style="display:flex;align-items:center;justify-content:space-between;">
+            <div></div>
+            <div style="display:flex;align-items:center;">
+                <MudIcon Icon="@Icons.Material.Filled.AddCircle">
+                </MudIcon>
+                <h3 style="margin-left:10px">Insertar Noteo</h3>
+            </div>
+            <div>
+                <MudIconButton Icon="@Icons.Material.Filled.Close"
+                               Variant="Variant.Filled"
+                               Color="Color.Error"
+                               OnClick="@(() => InsertModal = false)">
+                </MudIconButton>
+            </div>
+        </div>
+    </TitleContent>
+    <DialogContent>
+        <EditForm Model="InsertModel" OnValidSubmit="OnInsertData">
+            <div style="margin-top:25px;">
+                <MudTextField @bind-Value="InsertModel.Title"
+                              Immediate="true"
+                              Label="Titulo"
+                              Required="true">
+                </MudTextField>
+            </div>
+            <div style="margin-top:25px;">
+                <MudTextField @bind-Value="InsertModel.Content"
+                              Immediate="true"
+                              Lines="5"
+                              Label="Contenido"
+                              >
+                </MudTextField>
+            </div>
+            <div style="margin-top:25px;">
+                <MudTextField @bind-Value="InsertModel.UserId"
+                              
+                              Immediate="true"
+                              Label="UserId"
+                              Required="true">
+                </MudTextField>
+            </div>
+            <div style="margin-top:25px;">
+                <MudSwitch @bind-Value="InsertModel.IsPinned" Label="Esta fijado?" Color="Color.Primary" />
+            </div>
+
+            <div style="margin-top:25px;">
+                <MudSwitch @bind-Value="InsertModel.IsFavorite" Label="Es favorito?" Color="Color.Primary" />
+            </div>
+
+            <div style="margin-top:25px;">
+                <MudSwitch @bind-Value="InsertModel.IsArchivaded" Label="Esta archivado?" Color="Color.Primary" />
+            </div>
+
+            <div style="margin-top:25px;">
+                <MudSwitch @bind-Value="InsertModel.IsDeleted" Label="Esta borrado?" Color="Color.Primary" />
+            </div>
+
+            <div style="display:flex;justify-content:center;">
+                <div style="display:flex;justify-content:space-around;width:70%">
+                    <MudButton ButtonType="ButtonType.Submit" Color="Color.Primary"
+                               Style="margin-top:25px;" Disabled="@insertDataLoading" Variant="Variant.Filled">
+                        @if (insertDataLoading)
+                        {
+                            <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                            <MudText Class="ms-2">Procesando</MudText>
+                        }
+                        else
+                        {
+                            <MudText>Aceptar</MudText>
+                        }
+                    </MudButton>
+                    <MudButton Color="Color.Error" Style="margin-top:25px;" Variant="Variant.Filled" OnClick="@(() => InsertModal = false)">Cerrar</MudButton>
+                </div>
+            </div>
+        </EditForm>
+    </DialogContent>
+</MudDialog>
+<!-- #endregion -->
+<!-- #region Update Modal -->
+<MudDialog @bind-Visible="UpdateModal" Class="dialog-modal-custom">
+    <TitleContent>
+        <div style="display:flex;align-items:center;justify-content:space-between;">
+            <div></div>
+            <div style="display:flex;align-items:center;">
+                <MudIcon Icon="@Icons.Material.Filled.Edit">
+                </MudIcon>
+                <h3 style="margin-left:10px">Editar @UpdateModel.Title Noteo</h3>
+            </div>
+            <div>
+                <MudIconButton Icon="@Icons.Material.Filled.Close"
+                               Variant="Variant.Filled"
+                               Color="Color.Error"
+                               OnClick="@(() => UpdateModal = false)">
+                </MudIconButton>
+            </div>
+        </div>
+    </TitleContent>
+    <DialogContent>
+        <EditForm Model="UpdateModel" OnValidSubmit="OnUpdateData">
+            <div style="margin-top:25px;">
+                <MudTextField @bind-Value="UpdateModel.Title"
+                              Immediate="true"
+                              Label="Titulo"
+                              Required="true">
+                </MudTextField>
+            </div>
+            <div style="margin-top:25px;">
+                <MudTextField @bind-Value="UpdateModel.Content"
+                              Immediate="true"
+                              Lines="5"
+                              Label="Contenido"
+                              >
+                </MudTextField>
+            </div>
+            <div style="margin-top:25px;">
+                <MudTextField @bind-Value="UpdateModel.UserId"
+                              Immediate="true"
+                              Label="UserId"
+                              Required="true">
+                </MudTextField>
+            </div>
+            <div style="margin-top:25px;">
+                <MudSwitch @bind-Value="UpdateModel.IsPinned" Label="Esta fijado?" Color="Color.Primary" />
+            </div>
+
+            <div style="margin-top:25px;">
+                <MudSwitch @bind-Value="UpdateModel.IsFavorite" Label="Es favorito?" Color="Color.Primary" />
+            </div>
+
+            <div style="margin-top:25px;">
+                <MudSwitch @bind-Value="UpdateModel.IsArchivaded" Label="Esta archivado?" Color="Color.Primary" />
+            </div>
+
+            <div style="margin-top:25px;">
+                <MudSwitch @bind-Value="UpdateModel.IsDeleted" Label="Esta borrado?" Color="Color.Primary" />
+            </div>
+
+            <div style="display:flex;justify-content:center;">
+                <div style="display:flex;justify-content:space-around;width:70%">
+                    <MudButton ButtonType="ButtonType.Submit" Color="Color.Primary"
+                               Style="margin-top:25px;" Disabled="@updateDataLoading" Variant="Variant.Filled">
+                        @if (updateDataLoading)
+                        {
+                            <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                            <MudText Class="ms-2">Procesando</MudText>
+                        }
+                        else
+                        {
+                            <MudText>Aceptar</MudText>
+                        }
+                        </MudButton>
+                    <MudButton Color="Color.Error" Style="margin-top:25px;" Variant="Variant.Filled" OnClick="@(() => InsertModal = false)">Cerrar</MudButton>
+                </div>
+            </div>
+        </EditForm>
+    </DialogContent>
+</MudDialog>
+<!-- #endregion -->
+<!-- #region DataGrid -->
+<MudPaper Style="margin-top:20px;" Elevation="0">
+    <MudDataGrid Items="@DataList" T="NoteModel" Loading="deleteDataLoading" Filterable="true" QuickFilter="_quickFilter" Hideable="true">
+        <ToolBarContent>
+            <MudText Typo="Typo.h6"></MudText>
+            <MudSpacer />
+            <MudTextField @bind-Value="_searchString" Placeholder="Search" Adornment="Adornment.Start" Immediate="true"
+                          AdornmentIcon="@Icons.Material.Filled.Search" Clearable="true" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+        </ToolBarContent>
+        <Columns>
+            <TemplateColumn>
+                <CellTemplate>
+                    <MudTooltip Text="@(context.Item.Id)">
+                        <MudIcon Icon="@Icons.Material.Filled.Info">
+                        </MudIcon>
+                    </MudTooltip>
+                </CellTemplate>
+            </TemplateColumn>
+            <PropertyColumn Property="x => x.Title" Title="Titulo" />
+            <PropertyColumn Property="@(x => x.Title.Length > 40 ? $"{x.Title.Substring(0, 40)}..." : x.Title)" Title="Contenido" />
+            <PropertyColumn Property="x => x.IsPinned" Title="Esta fijado" />
+            <PropertyColumn Property="x => x.IsArchivaded" Title="Esta archivado" />
+            <PropertyColumn Property="x => x.IsDeleted" Title="Esta borrado" />
+            <PropertyColumn Property="x => x.IsFavorite" Title="Es favorito" />
+            @if (CService.CheckIfPermissions(LoggedUser, ThisPageEdit))
+            {
+                <TemplateColumn Title="Acciones">
+                    <CellTemplate>
+                        <MudStack Row style="width:100%">
+                            <div class="modal-buttons-actions">
+                                <MudTooltip Text="@($"Editar Nota {context.Item.Title}")">
+                                    <MudIconButton Variant="@Variant.Filled"
+                                                   Color="@Color.Primary"
+                                                   OnClick="@(() => OnOpenUpdateModal(context.Item))"
+                                                   Icon="@Icons.Material.Filled.Edit"></MudIconButton>
+                                </MudTooltip>
+
+                                @if (CService.CheckIfPermissions(LoggedUser, ThisPageAdmin))
+                                {
+                                    <MudTooltip Text="@($"Borrar Nota {context.Item.Title}")">
+                                        <MudIconButton Variant="@Variant.Filled"
+                                                       Style="margin-left:7px;"
+                                                       OnClick="@(() => OnOpenDeleteModal(context.Item))"
+                                                       Color="@Color.Error"
+                                                       Icon="@Icons.Material.Filled.Delete">
+                                        </MudIconButton>
+                                    </MudTooltip>
+                                }
+                            </div>
+                        </MudStack>
+                    </CellTemplate>
+                </TemplateColumn>
+            }
+        </Columns>
+        <PagerContent>
+            <MudDataGridPager T="NoteModel" />
+        </PagerContent>
+    </MudDataGrid>
+</MudPaper>
+<!-- #endregion -->
