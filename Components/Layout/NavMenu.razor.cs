@@ -26,6 +26,21 @@ namespace ZetaDashboard.Components.Layout
             Code = "zdb",
             UserType = EUserPermissionType.Admin
         };
+        private UserPermissions ThisNotesPage { get; set; } = new UserPermissions()
+        {
+            Code = "znt",
+            UserType = EUserPermissionType.Visor
+        };
+        private UserPermissions ThisNotesPageEditor { get; set; } = new UserPermissions()
+        {
+            Code = "znt",
+            UserType = EUserPermissionType.Editor
+        };
+        private UserPermissions ThisNotesPageAdmin { get; set; } = new UserPermissions()
+        {
+            Code = "znt",
+            UserType = EUserPermissionType.Admin
+        };
         #endregion
 
         #region LifeCycles

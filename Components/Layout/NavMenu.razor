@@ -6,6 +6,7 @@
 @inject CommonServices CommonService
 @inject AuthenticationStateProvider AuthProvider
 @inject NavigationManager Navigator
+@inject IJSRuntime JS
 
 <div class="top-row ps-3 navbar navbar-dark"
      style="@($"background-color: {CommonService.GetCssVar(Color.Primary, ColorType.Darken)};height:56px !important;")">
@@ -18,7 +19,7 @@
 
 <input type="checkbox" title="Navigation menu" class="navbar-toggler" id="navbar-toggler" />
 
-<div class="nav-scrollable navbar-gradientBg">
+<div class="nav-scrollable navbar-gradientBg" style="overflow-y:auto !important;">
     <MudNavMenu Class="pa-4" >
         <MudNavLink Href="/" Match="NavLinkMatch.All" Style="margin-top:5px;" Class="mud-nav-link-c1" >
             <div style="display:flex;align-items:center;" onclick="changetoggler()">
@@ -58,6 +59,17 @@
                 }
             </MudNavGroup>
         }
+        @if (CService.CheckIfPermissions(LoggedUser, ThisNotesPage))
+        {
+            <MudNavGroup Title="ZNT" Icon="@Icons.Material.Filled.Note" Class="mb-2 mud-nav-link-groupNoBefore" Expanded="true">
+                <MudNavLink Href="/user" Match="NavLinkMatch.All" Style="margin-top:5px;" Class="mud-nav-link-c2">
+                    <div style="display:flex;align-items:center;" onclick="changetoggler()">
+                        <text style="font-size:24px">📒</text>
+                        <MudText Style="margin-left:5px;font-size:18px">Notas</MudText>
+                    </div>
+                </MudNavLink>
+            </MudNavGroup>
+        }
 
         @* <MudNavGroup Title="Management" Icon="@Icons.Material.Filled.Settings" Class="mb-2">
             <MudNavLink Href="/users" Icon="@Icons.Material.Filled.Group">
@@ -70,6 +82,16 @@
 
         <MudHidden Invert="true" Breakpoint="Breakpoint.Xs">
         <MudDivider Class="my-2" />
+            <div class="nav-item px-3">
+                <MudButton StartIcon="@CService.EUserTypeIcon(LoggedUser.UserType)"
+                           Variant="Variant.Outlined"
+                           @onclick="@(async () => await JS.InvokeVoidAsync("changetoggler"))"
+                           FullWidth="true"
+                           Href="/profile">
+
+                    <MudText Style="font-size:19px;margin-left:5px">@LoggedUser.Name</MudText>
+                </MudButton>
+            </div>
             <div class="nav-item px-3">
                 <MudButton OnClick="LogOutClicked"
                            Color="Color.Error"

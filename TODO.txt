@@ -3,7 +3,6 @@ BreadcrumItems (mah o menoh)
 
 Mejoras->
 
-ajustar theme crear perfil -> ajustar colores
 poner boton de perfil en movil
 
 ajustar nav con lo de que se hace la pantalla como el nav de mi portfolio

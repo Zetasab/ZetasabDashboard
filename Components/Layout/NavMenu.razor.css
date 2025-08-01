@@ -109,7 +109,8 @@
     }
     .navbar-gradientBg {
         background: linear-gradient(34deg,var(--mud-palette-primary-lighten) 10%, var(--mud-palette-primary-darken) 50%) !important;
-    }
+        
+        }
 }
 
 .navbar-gradientBg {

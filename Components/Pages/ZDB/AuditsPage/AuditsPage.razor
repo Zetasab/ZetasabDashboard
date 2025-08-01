@@ -72,7 +72,7 @@
             
         </Columns>
         <PagerContent>
-            <MudDataGridPager T="AuditModel" />
+            <MudDataGridPager T="AuditModel" PageSizeOptions="@(new int[] { 10, 100, 700 })" />
         </PagerContent>
     </MudDataGrid>
 </MudPaper>
