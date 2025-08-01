@@ -3,8 +3,6 @@ BreadcrumItems (mah o menoh)
 
 Mejoras->
 
-en proyectos los proyectos quye sean dentro no hacer target blank
-
 ajustar nav con lo de que se hace la pantalla como el nav de mi portfolio
 cambiar fotos por buckets
 loading en botones datagrids etc
