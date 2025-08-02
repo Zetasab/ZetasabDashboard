@@ -73,17 +73,14 @@ namespace ZetaDashboard.Components.Pages.ZNT.NotesPage
         {
             if (firstRender)
             {
-                await CService.UpdateCrumbItems("🛠️ Noteos", "/proyects", 2);
-                CService.OnBreadcrumbChanged += OnBreadcrumbsChanged;
+                StateHasChanged();
             }
         }
-        private void OnBreadcrumbsChanged()
-        {
-            InvokeAsync(StateHasChanged); // forzar que el layout se actualice
-        }
+
         public void Dispose()
         {
-            CService.OnBreadcrumbChanged -= OnBreadcrumbsChanged;
+            DataList?.Clear();
+            DataList = null;
         }
         #endregion
 

@@ -41,6 +41,11 @@ namespace ZetaDashboard.Components.Pages
                 await InvokeAsync(StateHasChanged);
             } 
         }
+        public void Dispose()
+        {
+            DataList?.Clear();
+            DataList = null;
+        }
         #endregion
 
         #region Crud

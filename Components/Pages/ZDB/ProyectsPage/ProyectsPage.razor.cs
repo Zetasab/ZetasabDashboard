@@ -70,17 +70,14 @@ namespace ZetaDashboard.Components.Pages.ZDB.ProyectsPage
         {
             if (firstRender)
             {
-                await CService.UpdateCrumbItems("🛠️ Proyectos", "/proyects",2);
-                CService.OnBreadcrumbChanged += OnBreadcrumbsChanged;
+                StateHasChanged();
             }
         }
-        private void OnBreadcrumbsChanged()
-        {
-            InvokeAsync(StateHasChanged); // forzar que el layout se actualice
-        }
+
         public void Dispose()
         {
-            CService.OnBreadcrumbChanged -= OnBreadcrumbsChanged;
+            DataList?.Clear();
+            DataList = null;
         }
         #endregion
 

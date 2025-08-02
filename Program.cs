@@ -56,6 +56,19 @@ builder.Services.AddSingleton<MongoInfoService>(provider =>
 builder.Services.AddScoped<CommonServices>();
 builder.Services.AddScoped<DataController>();
 
+
+//SignalR
+builder.Services.AddServerSideBlazor()
+    .AddHubOptions(options =>
+    {
+        options.ClientTimeoutInterval = TimeSpan.FromSeconds(60);     // Tiempo antes de marcar desconexión
+        options.KeepAliveInterval = TimeSpan.FromSeconds(15);         // Ping del servidor al cliente
+        options.MaximumReceiveMessageSize = 64 * 1024;                // 64 KB por mensaje
+        options.HandshakeTimeout = TimeSpan.FromSeconds(15);          // Negociación inicial
+    });
+
+
+
 var app = builder.Build();
 
 

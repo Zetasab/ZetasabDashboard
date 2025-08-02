@@ -1,12 +1,9 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.JSInterop;
-using MongoDB.Bson;
 using MongoDB.Driver;
 using MudBlazor;
-using System.Collections;
-using System.Runtime.CompilerServices;
+using System.Security.Cryptography.Xml;
 using ZetaCommon.Auth;
 using ZetaDashboard.Common.ZDB.Models;
 using ZetaDashboard.Common.ZDB.Services;
@@ -73,17 +70,16 @@ namespace ZetaDashboard.Components.Pages.ZDB.CollectionsPage
         {
             if (firstRender)
             {
-                await CService.UpdateCrumbItems("📉 Colecciones", "/collections",2);
-                CService.OnBreadcrumbChanged += OnBreadcrumbsChanged;
+                
             }
         }
-        private void OnBreadcrumbsChanged()
-        {
-            InvokeAsync(StateHasChanged); // forzar que el layout se actualice
-        }
+        
         public void Dispose()
         {
-            CService.OnBreadcrumbChanged -= OnBreadcrumbsChanged;
+            CollectionNames?.Clear();
+            SelectedNames.Clear();
+            CollectionNames = null;
+            SelectedNames = null;
         }
         #endregion
 
