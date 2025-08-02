@@ -12,10 +12,10 @@
         #region LifeCycles
         protected override void OnInitialized()
         {
-            _timer = new System.Timers.Timer(1000); // 1000 ms = 1 segundo
-            _timer.Elapsed += TimerElapsed;
-            _timer.AutoReset = true;
-            _timer.Start();
+            //_timer = new System.Timers.Timer(1000); // 1000 ms = 1 segundo
+            //_timer.Elapsed += TimerElapsed;
+            //_timer.AutoReset = true;
+            //_timer.Start();
         }
         #endregion
 
