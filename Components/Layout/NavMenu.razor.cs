@@ -60,5 +60,16 @@ namespace ZetaDashboard.Components.Layout
             (AuthProvider as CustomAuthenticationStateProvider).Logout(Navigator);
         }
         #endregion
+
+        private async Task ForceGarbageCollection()
+        {
+            long memoryInBytes = GC.GetTotalMemory(forceFullCollection: false);
+            Console.WriteLine($"Memoria usada: {memoryInBytes / 1024 / 1024} MB");
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+            GC.Collect();
+            long memoryInBytes2 = GC.GetTotalMemory(forceFullCollection: false);
+            Console.WriteLine($"Memoria liberada: {memoryInBytes2 / 1024 / 1024} MB");
+        }
     }
 }

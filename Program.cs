@@ -17,7 +17,14 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
-    .AddInteractiveServerComponents();
+    .AddInteractiveServerComponents()
+    .AddHubOptions(options =>
+    {
+        options.ClientTimeoutInterval = TimeSpan.FromSeconds(60);
+        options.KeepAliveInterval = TimeSpan.FromSeconds(15);
+        options.HandshakeTimeout = TimeSpan.FromSeconds(15);
+        options.MaximumReceiveMessageSize = 64 * 1024;
+    });
 
 //Auth
 builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
