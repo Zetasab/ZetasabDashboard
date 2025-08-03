@@ -63,7 +63,7 @@ namespace ZetaDashboard.Components.Layout
 
         private async Task ForceGarbageCollection()
         {
-            Environment.Exit(0);
+            Environment.Exit(1);
         }
     }
 }
