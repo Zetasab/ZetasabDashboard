@@ -40,7 +40,7 @@ namespace ZetaDashboard.Components.Pages.ZDB.Login
                     await OnLogin();
                 }
                 SetGridSize();
-                StartRandomHighlighting();
+                //StartRandomHighlighting();
             }
         }
 
@@ -155,18 +155,18 @@ namespace ZetaDashboard.Components.Pages.ZDB.Login
             }
         }
 
-        private async void StartRandomHighlighting()
-        {
-            while (true)
-            {
-                var idx = _rnd.Next(0, Rows * Cols);
-                ActiveCells.Add(idx);
-                StateHasChanged();
-                await Task.Delay(_rnd.Next(120, 500));
-                ActiveCells.Remove(idx);
-                StateHasChanged();
-            }
-        }
+        //private async void StartRandomHighlighting()
+        //{
+        //    while (true)
+        //    {
+        //        var idx = _rnd.Next(0, Rows * Cols);
+        //        ActiveCells.Add(idx);
+        //        StateHasChanged();
+        //        await Task.Delay(_rnd.Next(120, 500));
+        //        ActiveCells.Remove(idx);
+        //        StateHasChanged();
+        //    }
+        //}
 
         private void ActivateCell(int idx)
         {
