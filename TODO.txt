@@ -1,6 +1,8 @@
 Todo: ->
 BreadcrumItems (mah o menoh)
 
+profile no funcioan
+
 Mejoras->
 
 ajustar nav con lo de que se hace la pantalla como el nav de mi portfolio
@@ -17,3 +19,4 @@ pelis
 juegos
 planes
 
+u
