@@ -83,7 +83,7 @@ var app = builder.Build();
 if (!await CheckMongoConnectionAsync(config))
 {
     Console.WriteLine("?? La aplicación no se iniciará sin conexión a MongoDB.");
-    //return; // Evita que la app arranque si no hay conexión
+    return; // Evita que la app arranque si no hay conexión
 }
 
 async Task<bool> CheckMongoConnectionAsync(MongoConfig? config)
