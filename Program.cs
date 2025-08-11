@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Components.Server.Circuits;
 using Microsoft.Extensions.Options;
 using MongoDB.Bson;
 using MongoDB.Driver;
@@ -74,7 +75,7 @@ builder.Services.AddServerSideBlazor()
         options.HandshakeTimeout = TimeSpan.FromSeconds(15);          // Negociación inicial
     });
 
-
+builder.Services.AddSingleton<CircuitHandler, UserCountCircuitHandler>();
 
 var app = builder.Build();
 
