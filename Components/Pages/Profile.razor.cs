@@ -47,10 +47,7 @@ namespace ZetaDashboard.Components.Pages
             await ApiService.Audits.InsertAsync(audit);
         }
         #endregion
-        public void Dispose()
-        {
-            
-        }
+        
         private async Task UpdateTheme(string theme)
         {
             LoggedUser.MudCustomTheme = theme;

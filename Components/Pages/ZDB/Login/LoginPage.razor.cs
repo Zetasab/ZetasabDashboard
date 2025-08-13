@@ -1,8 +1,11 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.JSInterop;
+using MongoDB.Bson;
+using MongoDB.Driver;
 using MudBlazor;
 using ZetaCommon.Auth;
+using ZetaDashboard.Common.Mongo.Config;
 using ZetaDashboard.Common.ZDB.Models;
 using ZetaDashboard.Common.ZDB.Services;
 using ZetaDashboard.Services;
@@ -22,12 +25,36 @@ namespace ZetaDashboard.Components.Pages.ZDB.Login
         [Inject] BaseService ApiService { get; set; }
         [Inject] DataController DController { get; set; }
         [Inject] CommonServices CService { get; set; }
+        [Inject] IConfiguration Config { get; set; }
+
+        
         #endregion
 
         #region Vars
         private bool error { get; set; } = false;
         private UserModel UserAccountModel = new();
         #endregion
+
+        protected override async Task OnInitializedAsync()
+        {
+            try
+            {
+                var config = Config.GetSection("Mongo").Get<MongoConfig>();
+
+                var client = new MongoClient(config.ConnectionString);
+                var database = client.GetDatabase(config.DatabaseName);
+
+                // Comando simple para verificar conexión
+                var result = await database.RunCommandAsync((Command<BsonDocument>)"{ ping: 1 }");
+
+                Console.WriteLine("? Conexión a MongoDB exitosa.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("? Error conectando a MongoDB:");
+                Console.WriteLine(ex.Message);
+            }
+        }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {

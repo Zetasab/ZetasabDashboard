@@ -29,7 +29,7 @@
         </MudNavLink>
         @if (CService.CheckIfPermissions(LoggedUser,ThisPageAdmin))
         {
-            <MudNavGroup Title="ZDB" Icon="@Icons.Material.Filled.Dashboard" Class="mb-2 mud-nav-link-groupNoBefore" Expanded="true">
+            <MudNavGroup Title="💻 ZDB" Class="mb-2 mud-nav-link-groupNoBefore" Expanded="true">
                 <MudNavLink Href="/user" Match="NavLinkMatch.All" Style="margin-top:5px;" Class="mud-nav-link-c2">
                     <div style="display:flex;align-items:center;" onclick="changetoggler()">
                         <text style="font-size:24px">👨‍👩‍👦‍👦</text>
@@ -61,7 +61,7 @@
         }
         @if (CService.CheckIfPermissions(LoggedUser, ThisNotesPage))
         {
-            <MudNavGroup Title="ZNT" Icon="@Icons.Material.Filled.Note" Class="mb-2 mud-nav-link-groupNoBefore" Expanded="true">
+            <MudNavGroup Title="📝 ZNT" Icon="@Icons.Material.Filled.Note" Class="mb-2 mud-nav-link-groupNoBefore" Expanded="true">
                 <MudNavLink Href="/notes" Match="NavLinkMatch.All" Style="margin-top:5px;" Class="mud-nav-link-c2">
                     <div style="display:flex;align-items:center;" onclick="changetoggler()">
                         <text style="font-size:24px">📒</text>
@@ -89,10 +89,7 @@
             </MudNavLink>
         </MudNavGroup> *@
 
-        <MudButton 
-            OnClick="ForceGarbageCollection">
-            asdadas
-        </MudButton>
+        
 
         <MudHidden Invert="true" Breakpoint="Breakpoint.Xs">
         <MudDivider Class="my-2" />

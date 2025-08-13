@@ -19,8 +19,5 @@ pelis
 juegos
 planes
 
-cambiar cosas de las notas
-çponerlas blancas sin img
-quitar lo de substring
-poner breakword
-overflow
+
+

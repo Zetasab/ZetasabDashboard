@@ -16,6 +16,7 @@
     <Folder Include="Common\XKB\" />
     <Folder Include="Components\Pages\XKB\" />
     <Folder Include="wwwroot\Img\proyects\" />
+    <Folder Include="wwwroot\Img\utilities\" />
   </ItemGroup>
 
 </Project>

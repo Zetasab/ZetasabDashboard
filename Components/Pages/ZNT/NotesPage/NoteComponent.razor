@@ -87,7 +87,7 @@
     </div>
     <div class="note-content">
         <p>
-            @((note.Content.Length) > 70 ? (MarkupString)$"{CService.FormatNoteContent(note.Content.Substring(0, 70))}..." : (MarkupString)CService.FormatNoteContent(note.Content))
+            @((MarkupString)CService.FormatNoteContent(note.Content))
         </p>
     </div>
 </div>
