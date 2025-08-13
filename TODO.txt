@@ -3,6 +3,9 @@ Todo: ->
 profile no funcioan
 poner lista de planes y notas por colores
 
+
+icono iphone
+
 planes ->
 
 
