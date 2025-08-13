@@ -16,7 +16,7 @@
 
 <MudPaper Style="display:flex;justify-content:space-around;padding:40px;">
     <MudGrid>
-        <MudItem Xs="12" Md="5" Style="display:flex;justify-content:center;">
+        <MudItem Xs="@((int)12)" Md="@((int)5)" Style="display:flex;justify-content:center;">
             <MudPaper Class="pa-4" Elevation="0">
                  
                 <text style="font-size:13px;">Usuario:</text> <text style="font-size:18px;">  @LoggedUser.Name</text>
@@ -39,13 +39,13 @@
             </MudPaper>
         </MudItem>
 
-        <MudItem Xs="12" Md="2">
+        <MudItem Xs="@((int)12)" Md="@((int)2)">
             <div style="height:100%; display:flex; align-items:center; justify-content:center;">
                 <MudDivider Vertical="true" Class="my-2" />
             </div>
         </MudItem>
 
-        <MudItem Xs="12" Md="5">
+        <MudItem Xs="@((int)12)" Md="@((int)5)">
             <MudPaper Class="pa-4" Elevation="0" Style="display:flex;justify-content:center;flex-direction:column">
                     <div style="display:flex;justify-content:center;">
                         Seleccione un color:
