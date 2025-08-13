@@ -18,7 +18,7 @@
 
 <!-- #region DataGrid -->
 <MudPaper Style="margin-top:20px;background-color:transparent" Class="PaperCollections" Elevation="0">
-    <MudDataGrid Items="@CollectionNames" Class="PaperCollections_datagrid" Elevation="0">
+    <MudDataGrid Loading="@datagridloading" Items="@CollectionNames" Class="PaperCollections_datagrid" Elevation="0">
         <Columns>
              <TemplateColumn CellClass="" Title="Selec en charts" >
                 <CellTemplate>

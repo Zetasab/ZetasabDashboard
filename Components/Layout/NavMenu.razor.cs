@@ -41,6 +41,21 @@ namespace ZetaDashboard.Components.Layout
             Code = "znt",
             UserType = EUserPermissionType.Admin
         };
+        private UserPermissions ThisPlansPage { get; set; } = new UserPermissions()
+        {
+            Code = "pln",
+            UserType = EUserPermissionType.Visor
+        };
+        private UserPermissions ThisPlansPageEditor { get; set; } = new UserPermissions()
+        {
+            Code = "pln",
+            UserType = EUserPermissionType.Editor
+        };
+        private UserPermissions ThisPlansPageAdmin { get; set; } = new UserPermissions()
+        {
+            Code = "pln",
+            UserType = EUserPermissionType.Admin
+        };
         #endregion
 
         #region LifeCycles
@@ -61,9 +76,6 @@ namespace ZetaDashboard.Components.Layout
         }
         #endregion
 
-        private async Task ForceGarbageCollection()
-        {
-            Environment.Exit(1);
-        }
+       
     }
 }

@@ -48,6 +48,8 @@ namespace ZetaDashboard.Components.Pages.ZDB.CollectionsPage
         #endregion
         private List<MongoCollectionModel> CollectionNames = new();
         private List<MongoCollectionModel> SelectedNames = new();
+
+        private bool datagridloading = false;
         #endregion
 
         #region LifeCycles
@@ -87,6 +89,9 @@ namespace ZetaDashboard.Components.Pages.ZDB.CollectionsPage
         #region Get
         private async Task GetCollectionList()
         {
+            datagridloading = true;
+            await InvokeAsync(StateHasChanged);
+
             CollectionNames = await MongoService.GetCollectionInfoAsync();
             SelectedNames = CollectionNames.Select(x => new MongoCollectionModel
             {
@@ -96,6 +101,8 @@ namespace ZetaDashboard.Components.Pages.ZDB.CollectionsPage
                 StorageSize = x.StorageSize
             }).ToList(); 
             UpdateDataCharts();
+
+            datagridloading = false;
             await InvokeAsync(StateHasChanged);
         }
 

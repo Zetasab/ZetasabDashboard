@@ -1,0 +1,497 @@
+﻿@page "/plans-grid"
+
+@using ZetaDashboard.Common.PLN.Models
+
+<PageTitle>Plans - ZetaDashboard</PageTitle>
+
+<!-- #region Title -->
+<div style="display:flex;align-items:center;justify-content:space-between">
+    <div></div>
+    <div>
+        <h2>🍽️ Planes</h2>
+    </div>
+    <div style="padding-right:30px;">
+        @if (CService.CheckIfPermissions(LoggedUser, ThisPageEdit))
+        {
+            <MudTooltip Text="Insertar Plan">
+                <MudIconButton Variant="Variant.Filled"
+                               Icon="@Icons.Material.Filled.Add"
+                               Size="Size.Large"
+                               Color="Color.Primary"
+                               OnClick="@OnOpenInsertModal"></MudIconButton>
+            </MudTooltip>
+        }
+    </div>
+</div>
+<!-- #endregion -->
+<!-- #region Insert Modal -->
+<MudDialog @bind-Visible="InsertModal" Class="dialog-modal-custom">
+    <TitleContent>
+        <div style="display:flex;align-items:center;justify-content:space-between;">
+            <div></div>
+            <div style="display:flex;align-items:center;">
+                <MudIcon Icon="@Icons.Material.Filled.AddCircle">
+                </MudIcon>
+                <h3 style="margin-left:10px">Insertar Plan</h3>
+            </div>
+            <div>
+                <MudIconButton Icon="@Icons.Material.Filled.Close"
+                               Variant="Variant.Filled"
+                               Color="Color.Error"
+                               OnClick="@(() => InsertModal = false)">
+                </MudIconButton>
+            </div>
+        </div>
+    </TitleContent>
+    <DialogContent>
+        <EditForm Model="InsertModel" OnValidSubmit="OnInsertData">
+            <div style="margin-top:25px;">
+                <MudTextField @bind-Value="InsertModel.Name"
+                              Immediate="true"
+                              Label="Nombre"
+                              Required="true">
+                </MudTextField>
+            </div>
+            <div style="margin-top:25px;">
+                <MudTextField @bind-Value="InsertModel.Description"
+                              Immediate="true"
+                              Label="Descripcion"
+                              Required="false">
+                </MudTextField>
+            </div>
+            <div style="margin-top:25px;">
+                <MudSelect @bind-Value="InsertModel.OwnerId" Label="Owner" >
+                    @foreach (var user in UsersToSelect)
+                    {
+                        <MudSelectItem Value="@(user.Id)">@user.Name</MudSelectItem>
+                    }
+                </MudSelect>
+            </div>
+            <div style="margin-top:25px;">
+                <MudSelect MultiSelectionTextFunc="@(new Func<List<string>, string>(GetMultiSelectionText))" MultiSelection="true" @bind-SelectedValues="UserIds" Label="Participantes">
+                    @foreach (var user in UsersToSelect)
+                    {
+                        <MudSelectItem T="string" Value="@(user.Id)">@user.Name</MudSelectItem>
+                    }
+                </MudSelect>
+            </div>
+            <div style="display:flex;justify-content:center;">
+                <div style="display:flex;justify-content:space-around;width:70%">
+                    <MudButton ButtonType="ButtonType.Submit" Color="Color.Primary"
+                               Style="margin-top:25px;" Disabled="@insertDataLoading" Variant="Variant.Filled">
+                        @if (insertDataLoading)
+                        {
+                            <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                            <MudText Class="ms-2">Procesando</MudText>
+                        }
+                        else
+                        {
+                            <MudText>Aceptar</MudText>
+                        }
+                    </MudButton>
+                    <MudButton Color="Color.Error" Style="margin-top:25px;" Variant="Variant.Filled" OnClick="@(() => InsertModal = false)">Cerrar</MudButton>
+                </div>
+            </div>
+        </EditForm>
+    </DialogContent>
+</MudDialog>
+<!-- #endregion -->
+<!-- #region Update Modal -->
+<MudDialog @bind-Visible="UpdateModal" Class="dialog-modal-custom">
+    <TitleContent>
+        <div style="display:flex;align-items:center;justify-content:space-between;">
+            <div></div>
+            <div style="display:flex;align-items:center;">
+                <MudIcon Icon="@Icons.Material.Filled.Edit">
+                </MudIcon>
+                <h3 style="margin-left:10px">Editar @UpdateModel.Name Plan</h3>
+            </div>
+            <div>
+                <MudIconButton Icon="@Icons.Material.Filled.Close"
+                               Variant="Variant.Filled"
+                               Color="Color.Error"
+                               OnClick="@(() => UpdateModal = false)">
+                </MudIconButton>
+            </div>
+        </div>
+    </TitleContent>
+    <DialogContent>
+        <EditForm Model="UpdateModel" OnValidSubmit="OnUpdateData">
+            <div style="margin-top:25px;">
+                <MudTextField @bind-Value="UpdateModel.Name"
+                              Immediate="true"
+                              Label="Nombre"
+                              Required="true">
+                </MudTextField>
+            </div>
+            <div style="margin-top:25px;">
+                <MudTextField @bind-Value="UpdateModel.Description"
+                              Immediate="true"
+                              Label="Descripcion"
+                              Required="false">
+                </MudTextField>
+            </div>
+            <div style="margin-top:25px;">
+                <MudSelect @bind-Value="UpdateModel.OwnerId" Label="Owner">
+                    @foreach (var user in UsersToSelect)
+                    {
+                        <MudSelectItem Value="@(user.Id)">@user.Name</MudSelectItem>
+                    }
+                </MudSelect>
+            </div>
+            <div style="margin-top:25px;">
+                <MudSelect MultiSelectionTextFunc="@(new Func<List<string>, string>(GetMultiSelectionText))" MultiSelection="true" @bind-SelectedValues="UserIds" Label="Participantes">
+                    @foreach (var user in UsersToSelect)
+                    {
+                        <MudSelectItem T="string" Value="@(user.Id)">@user.Name</MudSelectItem>
+                    }
+                </MudSelect>
+            </div>
+            <div style="display:flex;justify-content:center;">
+                <div style="display:flex;justify-content:space-around;width:70%">
+                    <MudButton ButtonType="ButtonType.Submit" Color="Color.Primary"
+                               Style="margin-top:25px;" Disabled="@insertDataLoading" Variant="Variant.Filled">
+                        @if (insertDataLoading)
+                        {
+                            <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                            <MudText Class="ms-2">Procesando</MudText>
+                        }
+                        else
+                        {
+                            <MudText>Aceptar</MudText>
+                        }
+                    </MudButton>
+                    <MudButton Color="Color.Error" Style="margin-top:25px;" Variant="Variant.Filled" OnClick="@(() => InsertModal = false)">Cerrar</MudButton>
+                </div>
+            </div>
+        </EditForm>
+    </DialogContent>
+</MudDialog>
+<!-- #endregion -->
+
+<MudPaper Style="margin-top:20px;" Class="PaperPlans" Elevation="0">
+<!-- #region DataGrid lista de planes -->
+    <MudDataGrid Items="@DataList" T="PlanListModel" Style="height:45%;" Loading="deleteDataLoading" Filterable="true" QuickFilter="_quickFilter" Hideable="true">
+        <ToolBarContent>
+            <MudText Typo="Typo.h6">Lista</MudText>
+            <MudSpacer />
+            <MudTextField @bind-Value="_searchString" Placeholder="Search" Adornment="Adornment.Start" Immediate="true"
+                          AdornmentIcon="@Icons.Material.Filled.Search" Clearable="true" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+        </ToolBarContent>
+        <Columns>
+            <TemplateColumn>
+                <CellTemplate>
+                    <MudTooltip Text="@(context.Item.Id)">
+                        <MudIcon Icon="@Icons.Material.Filled.Info">
+                        </MudIcon>
+                    </MudTooltip>
+                </CellTemplate>
+            </TemplateColumn>
+            <PropertyColumn Property="x => x.Name" Title="Nombre" />
+            <PropertyColumn Property="x => x.Description" Title="Descripcion" />
+            <PropertyColumn Property="x => UsersToSelect.FirstOrDefault(u => u.Id == x.OwnerId).Name ?? x.OwnerId" Title="Dueño" />
+            <PropertyColumn Property="@(x => string.Join(", ",
+                x.UsersIds
+                 .Select(id => UsersToSelect.FirstOrDefault(u => u.Id == id).Name ?? id)
+            ))" 
+            Title="Usuarios" />
+            <PropertyColumn Property="x => x.Plans.Count" Title="Planes" />
+           
+            @if (CService.CheckIfPermissions(LoggedUser, ThisPageEdit))
+            {
+                <TemplateColumn Title="Acciones">
+                    <CellTemplate>
+                        <MudStack Row style="width:100%">
+                            <div class="modal-buttons-actions">
+                                <MudTooltip Text="@($"Ver Planes de {context.Item.Name}")">
+                                    <MudIconButton Variant="@Variant.Filled"
+                                                   Color="@Color.Primary"
+                                                   OnClick="@(() => OnSeePlans(context.Item))"
+                                                   Icon="@Icons.Material.Filled.Visibility"></MudIconButton>
+                                </MudTooltip>
+
+                                <MudTooltip Text="@($"Editar lista {context.Item.Name}")">
+                                    <MudIconButton Variant="@Variant.Filled"
+                                                   Style="margin-left:7px;"
+                                                   Color="@Color.Primary"
+                                                   OnClick="@(() => OnOpenUpdateModal(context.Item))"
+                                                   Icon="@Icons.Material.Filled.Edit"></MudIconButton>
+                                </MudTooltip>
+
+                                @if (CService.CheckIfPermissions(LoggedUser, ThisPageAdmin))
+                                {
+                                    <MudTooltip Text="@($"Borrar lista {context.Item.Name}")">
+                                        <MudIconButton Variant="@Variant.Filled"
+                                                       Style="margin-left:7px;"
+                                                       OnClick="@(() => OnOpenDeleteModal(context.Item))"
+                                                       Color="@Color.Error"
+                                                       Icon="@Icons.Material.Filled.Delete">
+                                        </MudIconButton>
+                                    </MudTooltip>
+                                }
+                            </div>
+                        </MudStack>
+                    </CellTemplate>
+                </TemplateColumn>
+            }
+        </Columns>
+        <PagerContent>
+            <MudDataGridPager T="PlanListModel" />
+        </PagerContent>
+    </MudDataGrid>
+    <!-- #endregion -->
+    <!-- #region DataGrid planes -->
+    <MudDataGrid Items="@SelectedPlans" T="PlanModel" Style="height:45%;" Loading="deleteDataLoading" Filterable="true" QuickFilter="_quickFilter2" Hideable="true">
+        <ToolBarContent>
+            <MudText Typo="Typo.h6">Planes de @UpdateModel.Name</MudText>
+            @if (!string.IsNullOrEmpty(UpdateModel.Name))
+            {
+                <MudIconButton
+                    Icon="@Icons.Material.Filled.Add"
+                    Style="margin-left:7px;"
+                               OnClick="OnOpenInsertModalPlan"
+                Variant="Variant.Filled"
+                Color="Color.Primary">
+
+                </MudIconButton>
+            }
+            <MudSpacer />
+            <MudTextField @bind-Value="_searchString2" Placeholder="Search" Adornment="Adornment.Start" Immediate="true"
+                          AdornmentIcon="@Icons.Material.Filled.Search" Clearable="true" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+        </ToolBarContent>
+        <Columns>
+            <TemplateColumn>
+                <CellTemplate>
+                    <MudTooltip Text="@(context.Item.Id)">
+                        <MudIcon Icon="@Icons.Material.Filled.Info">
+                        </MudIcon>
+                    </MudTooltip>
+                </CellTemplate>
+            </TemplateColumn>
+            <PropertyColumn Property="x => x.Name" Title="Nombre" />
+            <PropertyColumn Property="x => x.Description" Title="Descripcion" />
+            <PropertyColumn Property="x => x.Status" Title="Estado" />
+            <PropertyColumn Property="x => x.Date.Value.ToLocalTime().ToShortDateString()" Title="Dia" />
+            <PropertyColumn Property="x => x.Img" Title="Img" />
+            <PropertyColumn Property="x => x.Place" Title="Place" />
+           
+
+            @if (CService.CheckIfPermissions(LoggedUser, ThisPageEdit))
+            {
+                <TemplateColumn Title="Acciones">
+                    <CellTemplate>
+                        <MudStack Row style="width:100%">
+                            <div class="modal-buttons-actions">
+
+                                <MudTooltip Text="@($"Editar plan {context.Item.Name}")">
+                                    <MudIconButton Variant="@Variant.Filled"
+                                                  
+                                                   Color="@Color.Primary"
+                                                   OnClick="@(() => OnOpenUpdateModalPlan(context.Item))"
+                                                   Icon="@Icons.Material.Filled.Edit"></MudIconButton>
+                                </MudTooltip>
+
+                                @if (CService.CheckIfPermissions(LoggedUser, ThisPageAdmin))
+                                {
+                                    <MudTooltip Text="@($"Borrar plan {context.Item.Name}")">
+                                        <MudIconButton Variant="@Variant.Filled"
+                                                       Style="margin-left:7px;"
+                                                       OnClick="@(() => OnOpenDeleteModalPlan(context.Item))"
+                                                       Color="@Color.Error"
+                                                       Icon="@Icons.Material.Filled.Delete">
+                                        </MudIconButton>
+                                    </MudTooltip>
+                                }
+                            </div>
+                        </MudStack>
+                    </CellTemplate>
+                </TemplateColumn>
+            }
+        </Columns>
+        <PagerContent>
+            <MudDataGridPager T="PlanModel" />
+        </PagerContent>
+    </MudDataGrid>
+</MudPaper>
+<!-- #endregion -->
+<!-- #region Insert Modal -->
+<MudDialog @bind-Visible="InsertModalPlan" Class="dialog-modal-custom">
+    <TitleContent>
+        <div style="display:flex;align-items:center;justify-content:space-between;">
+            <div></div>
+            <div style="display:flex;align-items:center;">
+                <MudIcon Icon="@Icons.Material.Filled.AddCircle">
+                </MudIcon>
+                <h3 style="margin-left:10px">Insertar Plan</h3>
+            </div>
+            <div>
+                <MudIconButton Icon="@Icons.Material.Filled.Close"
+                               Variant="Variant.Filled"
+                               Color="Color.Error"
+                               OnClick="@(() => InsertModalPlan = false)">
+                </MudIconButton>
+            </div>
+        </div>
+    </TitleContent>
+    <DialogContent>
+        <EditForm Model="InsertModelPlan" OnValidSubmit="OnInsertDataPlan">
+            <div style="margin-top:25px;">
+                <MudTextField @bind-Value="InsertModelPlan.Name"
+                              Immediate="true"
+                              Label="Nombre"
+                              Required="true">
+                </MudTextField>
+            </div>
+            <div style="margin-top:25px;">
+                <MudTextField @bind-Value="InsertModelPlan.Description"
+                              Immediate="true"
+                              Label="Descripcion"
+                              Required="false">
+                </MudTextField>
+            </div>
+            <div style="margin-top:25px;">
+                <MudTextField @bind-Value="InsertModelPlan.Img"
+                              Immediate="true"
+                              Label="Url Img"
+                              Required="false">
+                </MudTextField>
+            </div>
+            <div style="margin-top:25px;">
+                <MudDatePicker @bind-Date="InsertModelPlan.Date" Label="Dia">
+
+                </MudDatePicker>
+            </div>
+            <div style="margin-top:25px;">
+                <MudTextField @bind-Value="InsertModelPlan.Place"
+                              Immediate="true"
+                              Label="Lugar o url"
+                              Required="false">
+                </MudTextField>
+            </div>
+            <div style="margin-top:25px;">
+                <MudSelect T="PlanStatus"
+                           Label="Status"
+                           @bind-Value="InsertModelPlan.Status">
+                    @foreach (var status in Enum.GetValues<PlanStatus>())
+                    {
+                        <MudSelectItem Value="@status">@status</MudSelectItem>
+                    }
+                </MudSelect>
+
+            </div>
+            
+            <div style="display:flex;justify-content:center;">
+                <div style="display:flex;justify-content:space-around;width:70%">
+                    <MudButton ButtonType="ButtonType.Submit" Color="Color.Primary"
+                               Style="margin-top:25px;" Disabled="@insertDataLoading" Variant="Variant.Filled">
+                        @if (insertDataLoading)
+                        {
+                            <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                            <MudText Class="ms-2">Procesando</MudText>
+                        }
+                        else
+                        {
+                            <MudText>Aceptar</MudText>
+                        }
+                    </MudButton>
+                    <MudButton Color="Color.Error" Style="margin-top:25px;" Variant="Variant.Filled" OnClick="@(() => InsertModalPlan = false)">Cerrar</MudButton>
+                </div>
+            </div>
+        </EditForm>
+    </DialogContent>
+</MudDialog>
+<!-- #endregion -->
+<!-- #region Update Modal -->
+<MudDialog @bind-Visible="UpdateModalPlan" Class="dialog-modal-custom">
+    <TitleContent>
+        <div style="display:flex;align-items:center;justify-content:space-between;">
+            <div></div>
+            <div style="display:flex;align-items:center;">
+                <MudIcon Icon="@Icons.Material.Filled.Edit">
+                </MudIcon>
+                <h3 style="margin-left:10px">Editar @UpdateModel.Name Plan</h3>
+            </div>
+            <div>
+                <MudIconButton Icon="@Icons.Material.Filled.Close"
+                               Variant="Variant.Filled"
+                               Color="Color.Error"
+                               OnClick="@(() => UpdateModal = false)">
+                </MudIconButton>
+            </div>
+        </div>
+    </TitleContent>
+    <DialogContent>
+        <EditForm Model="UpdateModelPlan" OnValidSubmit="OnUpdateDataPlan">
+            <div style="margin-top:25px;">
+                <MudTextField @bind-Value="UpdateModelPlan.Name"
+                              Immediate="true"
+                              Label="Nombre"
+                              Required="true">
+                </MudTextField>
+            </div>
+            <div style="margin-top:25px;">
+                <MudTextField @bind-Value="UpdateModelPlan.Description"
+                              Immediate="true"
+                              Label="Descripcion"
+                              Required="false">
+                </MudTextField>
+            </div>
+            <div style="margin-top:25px;">
+                <MudTextField @bind-Value="UpdateModelPlan.Img"
+                              Immediate="true"
+                              Label="Url Img"
+                              Required="false">
+                </MudTextField>
+            </div>
+            <div style="margin-top:25px;">
+                <MudDatePicker @bind-Date="UpdateModelPlan.Date" Label="Dia">
+
+                </MudDatePicker>
+            </div>
+            <div style="margin-top:25px;">
+                <MudTextField @bind-Value="UpdateModelPlan.Place"
+                              Immediate="true"
+                              Label="Lugar o url"
+                              Required="false">
+                </MudTextField>
+            </div>
+            <div style="margin-top:25px;">
+                <MudSelect T="PlanStatus"
+                           Label="Status"
+                           @bind-Value="UpdateModelPlan.Status">
+                    @foreach (var status in Enum.GetValues<PlanStatus>())
+                    {
+                        <MudSelectItem Value="@status">@status</MudSelectItem>
+                    }
+                </MudSelect>
+
+            </div>
+            
+            <div style="display:flex;justify-content:center;">
+                <div style="display:flex;justify-content:space-around;width:70%">
+                    <MudButton ButtonType="ButtonType.Submit" Color="Color.Primary"
+                               Style="margin-top:25px;" Disabled="@insertDataLoading" Variant="Variant.Filled">
+                        @if (insertDataLoading)
+                        {
+                            <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                            <MudText Class="ms-2">Procesando</MudText>
+                        }
+                        else
+                        {
+                            <MudText>Aceptar</MudText>
+                        }
+                    </MudButton>
+                    <MudButton Color="Color.Error" Style="margin-top:25px;" Variant="Variant.Filled" OnClick="@(() => InsertModal = false)">Cerrar</MudButton>
+                </div>
+            </div>
+        </EditForm>
+    </DialogContent>
+</MudDialog>
+<!-- #endregion -->
+
+<style>
+    @@media screen and (min-width: 1024px) {
+        .PaperPlans {
+            height:calc(100vh - 241px) !important;
+        }
+</style>

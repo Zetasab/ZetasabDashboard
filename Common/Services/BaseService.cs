@@ -14,6 +14,7 @@ namespace ZetaDashboard.Common.ZDB.Services
             Proyects = new ProyectService(context);
             Audits = new AuditService(context);
             Notes = new NoteService(context);
+            Plans = new PlanListService(context);
         }
 
         private readonly MongoContext _context;
@@ -22,5 +23,6 @@ namespace ZetaDashboard.Common.ZDB.Services
         public ProyectService Proyects { get; }
         public AuditService Audits { get; }
         public NoteService Notes { get; }
+        public PlanListService Plans { get; }
     }
 }

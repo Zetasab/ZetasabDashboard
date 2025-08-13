@@ -61,7 +61,7 @@
         }
         @if (CService.CheckIfPermissions(LoggedUser, ThisNotesPage))
         {
-            <MudNavGroup Title="📝 ZNT" Icon="@Icons.Material.Filled.Note" Class="mb-2 mud-nav-link-groupNoBefore" Expanded="true">
+            <MudNavGroup Title="📝 ZNT" Class="mb-2 mud-nav-link-groupNoBefore" Expanded="true">
                 <MudNavLink Href="/notes" Match="NavLinkMatch.All" Style="margin-top:5px;" Class="mud-nav-link-c2">
                     <div style="display:flex;align-items:center;" onclick="changetoggler()">
                         <text style="font-size:24px">📒</text>
@@ -74,6 +74,27 @@
                         <div style="display:flex;align-items:center;" onclick="changetoggler()">
                             <text style="font-size:24px">🗒</text>
                             <MudText Style="margin-left:5px;font-size:18px">Notas-Grid</MudText>
+                        </div>
+                    </MudNavLink>
+                }
+            </MudNavGroup>
+        }
+
+        @if (CService.CheckIfPermissions(LoggedUser, ThisPlansPage))
+        {
+            <MudNavGroup Title="🍻 PLN" Class="mb-2 mud-nav-link-groupNoBefore" Expanded="true">
+                <MudNavLink Href="/plans" Match="NavLinkMatch.All" Style="margin-top:5px;" Class="mud-nav-link-c2">
+                    <div style="display:flex;align-items:center;" onclick="changetoggler()">
+                        <text style="font-size:24px">🧗🏻‍</text>
+                        <MudText Style="margin-left:5px;font-size:18px">Planes</MudText>
+                    </div>
+                </MudNavLink>
+                @if (CService.CheckIfPermissions(LoggedUser, ThisPlansPageAdmin))
+                {
+                    <MudNavLink Href="/plans-grid" Match="NavLinkMatch.All" Style="margin-top:5px;" Class="mud-nav-link-c2">
+                        <div style="display:flex;align-items:center;" onclick="changetoggler()">
+                            <text style="font-size:24px">🍽️</text>
+                            <MudText Style="margin-left:5px;font-size:18px">Planes-Grid</MudText>
                         </div>
                     </MudNavLink>
                 }
