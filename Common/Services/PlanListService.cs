@@ -95,6 +95,44 @@ namespace ZetaDashboard.Common.ZDB.Services
 
                 return response;
             }
+            public async Task<ApiResponse<PlanListModel>> GetPlanListByIdAsync(string id, UserModel loggeduser)
+            {
+                var response = new ApiResponse<PlanListModel>();
+
+                try
+                {
+                    // Verificar permisos
+                    if (!HasPermissions(loggeduser, UserModel.EUserPermissionType.Visor, thispage))
+                    {
+                        response.Result = ResponseStatus.Unauthorized;
+                        response.Message = "No tienes permisos";
+                        return response;
+                    }
+
+                    // Buscar en Mongo por Id
+                    var filter = Builders<PlanListModel>.Filter.Eq(x => x.Id, id);
+                    var result = await _collection.Find(filter).FirstOrDefaultAsync();
+
+                    if (result != null)
+                    {
+                        response.Result = ResponseStatus.Ok;
+                        response.Data = result;
+                    }
+                    else
+                    {
+                        response.Result = ResponseStatus.NotFound;
+                        response.Message = $"No existe el plan con Id {id}";
+                    }
+                }
+                catch (Exception ex)
+                {
+                    response.Result = ResponseStatus.InternalError;
+                    response.Message = "Ha ocurrido un error al obtener el plan";
+                    Console.WriteLine(ex.ToString());
+                }
+
+                return response;
+            }
             #endregion
 
 

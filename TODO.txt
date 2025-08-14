@@ -25,7 +25,7 @@ Siguiente ->
 pelis
 juegos
 planes
-
+cocina(platos,semana)
 
 mejoras laargo plazo ->
 ajustar nav con lo de que se hace la pantalla como el nav de mi portfolio

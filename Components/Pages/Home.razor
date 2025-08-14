@@ -16,7 +16,7 @@
         @foreach (var proy in DataList)
         {
             <div class="project-card">
-                <img class="project-img" width="500" height="300" src="@($"Img/proyects/{proy.Code}.png")" loading="lazy" />
+                <img class="project-img" width="500" height="300" src="@(string.IsNullOrEmpty(proy.Img) ?  $"Img/proyects/{proy.Code}.png" : proy.Img)" loading="lazy" />
                 <div class="project-title"><a target="@(proy.IsHere ? "_self" : "_blank")" href="@proy.Url">@($"{proy.Icon} {proy.Name}")</a></div>
             </div>
         }

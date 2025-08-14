@@ -76,8 +76,8 @@ namespace ZetaDashboard.Components.Pages.PLN.PlansPageGrid
                 LoggedUser.Id,
                 LoggedUser.Name,
                 AuditWhat.See,
-                $"Entrando en {ApiService.Plans._datos}",
-                "Entrando en notas",
+                $"Entrando en {ApiService.Plans._datos} grid",
+                $"Entrando en {ApiService.Plans._datos} grid",
                 Common.Mongo.ResponseStatus.Ok
                 );
             await ApiService.Audits.InsertAsync(audit);
@@ -89,16 +89,7 @@ namespace ZetaDashboard.Components.Pages.PLN.PlansPageGrid
             if (firstRender)
             {
                 await CService.UpdateCrumbItems("🛠️ PlanListos", "/proyects", 2);
-                CService.OnBreadcrumbChanged += OnBreadcrumbsChanged;
             }
-        }
-        private void OnBreadcrumbsChanged()
-        {
-            InvokeAsync(StateHasChanged); // forzar que el layout se actualice
-        }
-        public void Dispose()
-        {
-            CService.OnBreadcrumbChanged -= OnBreadcrumbsChanged;
         }
         #endregion
 

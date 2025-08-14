@@ -1,0 +1,540 @@
+﻿@page "/planlist/{planlistid}"
+@using ZetaDashboard.Common.PLN.Models
+
+<PageTitle>@PlansListPage.Name Planes - ZetaDashboard</PageTitle>
+
+<!-- #region Title -->
+<div style="display:flex;align-items:center;justify-content:space-between">
+    <div></div>
+    <div>
+        <h2>🧗🏻‍ Lista de planes de @PlansListPage.Name</h2>
+    </div>
+    <div style="padding-right:30px;">
+        @if (CService.CheckIfPermissions(LoggedUser, ThisPageEdit))
+        {
+            <MudTooltip Text="Insertar Plan">
+                <MudIconButton Variant="Variant.Filled"
+                               Icon="@Icons.Material.Filled.Add"
+                               Size="Size.Large"
+                               Color="Color.Primary"
+                               OnClick="@OnOpenInsertModal"></MudIconButton>
+            </MudTooltip>
+        }
+    </div>
+</div>
+<!-- #endregion -->
+
+<!-- #region Insert Modal -->
+<MudDialog @bind-Visible="InsertModal" Class="dialog-modal-custom">
+    <TitleContent>
+        <div style="display:flex;align-items:center;justify-content:space-between;">
+            <div></div>
+            <div style="display:flex;align-items:center;">
+                <MudIcon Icon="@Icons.Material.Filled.AddCircle">
+                </MudIcon>
+                <h3 style="margin-left:10px">Insertar Plan</h3>
+            </div>
+            <div>
+                <MudIconButton Icon="@Icons.Material.Filled.Close"
+                               Variant="Variant.Filled"
+                               Color="Color.Error"
+                               OnClick="@(() => InsertModal = false)">
+                </MudIconButton>
+            </div>
+        </div>
+    </TitleContent>
+    <DialogContent>
+        <EditForm Model="InsertModel" OnValidSubmit="OnInsertData">
+            <div style="margin-top:25px;">
+                <MudTextField @bind-Value="InsertModel.Name"
+                              Immediate="true"
+                              Label="Nombre"
+                              Required="true">
+                </MudTextField>
+            </div>
+            <div style="margin-top:25px;">
+                <MudTextField @bind-Value="InsertModel.Description"
+                              Immediate="true"
+                              Label="Descripcion"
+                              Required="false">
+                </MudTextField>
+            </div>
+            <div style="margin-top:25px;">
+                <MudTextField @bind-Value="InsertModel.Img"
+                              Immediate="true"
+                              Label="Url de la imagen"
+                              Required="false">
+                </MudTextField>
+            </div>
+            <div style="margin-top:25px;">
+                <MudTextField @bind-Value="InsertModel.Place"
+                              Immediate="true"
+                              Label="Url de maps del lugar"
+                              Required="false">
+                </MudTextField>
+            </div>
+            <div style="margin-top:25px;">
+                <MudSelect T="PlanMode"
+                           @bind-Value="InsertModel.PlanMode"
+                           Label="Modo del plan">
+                    @foreach (var m in Enum.GetValues<PlanMode>())
+                    {
+                        <MudSelectItem Value="m">
+                            <div class="select-row">
+                                <MudIcon Icon="@GetModeIconn(m)" Color="@GetModeColorr(m)" Class="mr-2" />
+                                <span>@m</span>
+                            </div>
+                        </MudSelectItem>
+                    }
+                </MudSelect>
+            </div>
+            
+            <div style="display:flex;justify-content:center;">
+                <div style="display:flex;justify-content:space-around;width:70%">
+                    <MudButton ButtonType="ButtonType.Submit" Color="Color.Primary"
+                               Style="margin-top:25px;" Disabled="@insertDataLoading" Variant="Variant.Filled">
+                        @if (insertDataLoading)
+                        {
+                            <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                            <MudText Class="ms-2">Procesando</MudText>
+                        }
+                        else
+                        {
+                            <MudText>Aceptar</MudText>
+                        }
+                    </MudButton>
+                    <MudButton Color="Color.Error" Style="margin-top:25px;" Variant="Variant.Filled" OnClick="@(() => InsertModal = false)">Cerrar</MudButton>
+                </div>
+            </div>
+        </EditForm>
+    </DialogContent>
+</MudDialog>
+<!-- #endregion -->
+<!-- #region Update Modal -->
+<MudDialog @bind-Visible="UpdateModal" Class="dialog-modal-custom">
+    <TitleContent>
+        <div style="display:flex;align-items:center;justify-content:space-between;">
+            <div></div>
+            <div style="display:flex;align-items:center;">
+                <MudIcon Icon="@Icons.Material.Filled.Edit">
+                </MudIcon>
+                <h3 style="margin-left:10px">Editar @UpdateModel.Name</h3>
+            </div>
+            <div>
+                <MudIconButton Icon="@Icons.Material.Filled.Close"
+                               Variant="Variant.Filled"
+                               Color="Color.Error"
+                               OnClick="@(() => UpdateModal = false)">
+                </MudIconButton>
+            </div>
+        </div>
+    </TitleContent>
+    <DialogContent>
+        <EditForm Model="UpdateModel" OnValidSubmit="OnUpdateData">
+            <div style="margin-top:25px;">
+                <MudTextField @bind-Value="UpdateModel.Name"
+                              Immediate="true"
+                              Label="Nombre"
+                              Required="true">
+                </MudTextField>
+            </div>
+            <div style="margin-top:25px;">
+                <MudTextField @bind-Value="UpdateModel.Description"
+                              Immediate="true"
+                              Label="Descripcion"
+                              Required="false">
+                </MudTextField>
+            </div>
+            <div style="margin-top:25px;">
+                <MudTextField @bind-Value="UpdateModel.Img"
+                              Immediate="true"
+                              Label="Url de la imagen"
+                              Required="false">
+                </MudTextField>
+            </div>
+            <div style="margin-top:25px;">
+                <MudTextField @bind-Value="UpdateModel.Place"
+                              Immediate="true"
+                              Label="Url de maps del lugar"
+                              Required="false">
+                </MudTextField>
+            </div>
+            <div style="margin-top:25px;">
+                <MudSelect T="PlanMode"
+                           @bind-Value="UpdateModel.PlanMode"
+                           Label="Modo del plan">
+                    @foreach (var m in Enum.GetValues<PlanMode>())
+                    {
+                        <MudSelectItem Value="m">
+                            <div class="select-row">
+                                <MudIcon Icon="@GetModeIconn(m)" Color="@GetModeColorr(m)" Class="mr-2" />
+                                <span>@m</span>
+                            </div>
+                        </MudSelectItem>
+                    }
+                </MudSelect>
+            </div>
+
+            <div style="display:flex;justify-content:center;">
+                <div style="display:flex;justify-content:space-around;width:70%">
+                    <MudButton ButtonType="ButtonType.Submit" Color="Color.Primary"
+                               Style="margin-top:25px;" Disabled="@insertDataLoading" Variant="Variant.Filled">
+                        @if (insertDataLoading)
+                        {
+                            <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                            <MudText Class="ms-2">Procesando</MudText>
+                        }
+                        else
+                        {
+                            <MudText>Aceptar</MudText>
+                        }
+                    </MudButton>
+                    <MudButton Color="Color.Error" Style="margin-top:25px;" Variant="Variant.Filled" OnClick="@(() => UpdateModal = false)">Cerrar</MudButton>
+                </div>
+            </div>
+        </EditForm>
+    </DialogContent>
+</MudDialog>
+<!-- #endregion -->
+<!-- #region mark as seen Modal -->
+<MudDialog @bind-Visible="MarkAsSeenModal" Class="dialog-modal-custom">
+    <TitleContent>
+        <div style="display:flex;align-items:center;justify-content:space-between;">
+            <div></div>
+            <div style="display:flex;align-items:center;">
+                <MudIcon Icon="@Icons.Material.Filled.Check">
+                </MudIcon>
+                <h3 style="margin-left:10px">Marcar como hecho @UpdateModel.Name</h3>
+            </div>
+            <div>
+                <MudIconButton Icon="@Icons.Material.Filled.Close"
+                               Variant="Variant.Filled"
+                               Color="Color.Error"
+                               OnClick="@(() => MarkAsSeenModal = false)">
+                </MudIconButton>
+            </div>
+        </div>
+    </TitleContent>
+    <DialogContent>
+        <EditForm Model="UpdateModel" OnValidSubmit="OnUpdateData">
+            
+            <div style="margin-top:25px;display:flex;justify-content:center">
+                <MudText>¡Puntualo!</MudText>
+            </div>
+            <div style="margin-top:25px;display:flex;justify-content:center">
+                <MudRating MaxValue="5" @bind-SelectedValue="UpdateModel.Score" />
+            </div>
+
+            <div style="display:flex;justify-content:center;">
+                <div style="display:flex;justify-content:space-around;width:70%">
+                    <MudButton ButtonType="ButtonType.Submit" Color="Color.Primary"
+                               Style="margin-top:25px;" Disabled="@insertDataLoading" Variant="Variant.Filled">
+                        @if (insertDataLoading)
+                        {
+                            <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                            <MudText Class="ms-2">Procesando</MudText>
+                        }
+                        else
+                        {
+                            <MudText>Aceptar</MudText>
+                        }
+                    </MudButton>
+                    <MudButton Color="Color.Error" Style="margin-top:25px;" Variant="Variant.Filled" OnClick="@(() => MarkAsSeenModal = false)">Cerrar</MudButton>
+                </div>
+            </div>
+        </EditForm>
+    </DialogContent>
+</MudDialog>
+<!-- #endregion -->
+
+
+<!-- #region Tabs -->
+<MudTabs Elevation="0"  Rounded="true" ApplyEffectsToContainer="false" PanelClass="pa-6">
+    <MudTabPanel Text="Para hacer">
+        <!-- #region para hacer -->
+        <MudContainer MaxWidth="MaxWidth.False" Class="plan-grid-container">
+            <MudGrid GutterSize="3" Justify="Justify.FlexStart" AlignItems="AlignItems.Stretch">
+                @if (PlansListPage.Plans == null || !PlansListPage.Plans.Any())
+                {
+                    <MudItem Xs="12">
+                        <MudAlert Severity="Severity.Info" Dense="true" Variant="Variant.Filled">
+                            No hay planes.
+                        </MudAlert>
+                    </MudItem>
+                }
+                else
+                {
+                    @foreach (var p in PlansListPage.Plans)
+                    {
+                        <MudItem Xs="12" Sm="6" Md="4" Lg="3" Xl="3" Class="plan-item">
+                            <MudCard Class="plan-card">
+                        
+                                <div class="plan-card-cover" style="@($"background-image:url('{(string.IsNullOrWhiteSpace(p.Img) ? DefaultImg : p.Img)}')")">
+                                    <div class="cover-gradient">
+                                        <div class="cover-text">
+                                            <MudText Typo="Typo.h6" Class="plan-title">@p.Name</MudText>
+                                            @if (!string.IsNullOrWhiteSpace(p.Description))
+                                            {
+                                                <MudText Typo="Typo.body2" Class="plan-desc" Title="@p.Description">
+                                                    @p.Description
+                                                </MudText>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+
+                       
+                                @if (!string.IsNullOrWhiteSpace(p.Place) || p.Date.HasValue)
+                                {
+                                    <MudCardContent Class="plan-content">
+                                        <div class="meta-line">
+                                            @if (!string.IsNullOrWhiteSpace(p.Place))
+                                            {
+                                                <MudChip T="string" Variant="Variant.Outlined" Href="@p.Place" Target="_blank" Icon="@Icons.Material.Filled.Map" Size="Size.Small" >
+                                                    Mapa
+                                                </MudChip>
+                                            }
+                                                    <MudChip T="string" Variant="Variant.Outlined" Icon="@p.GetModeIcon()" Color="@p.GetModeColor()" Size="Size.Small">
+                                                    @p.PlanMode
+                                                </MudChip>
+                                        </div>
+                                    </MudCardContent>
+                                }
+
+                        
+                                <MudCardActions Class="plan-actions">
+                                    @if (p.Status != PlanStatus.Done)
+                                    {
+                                         <div>
+                                            <MudTooltip Text="Marcar como hecho">
+                                                <MudIconButton Icon="@Icons.Material.Filled.Check" Color="Color.Success"
+                                                                       OnClick="@(() => OnMarkAsSeenModal(p))" />
+                                            </MudTooltip>
+                                         </div>       
+                                    }
+                                    else
+                                    {
+                                        <div></div>
+                                    }
+                                    <div style="display:flex;">
+                                        <div style="margin-right:4px;">
+                                            <MudTooltip Text="Editar">
+                                                <MudIconButton Icon="@Icons.Material.Filled.Edit" Color="Color.Primary"
+                                                                       OnClick="@(() => OnOpenUpdateModal(p))" />
+                                            </MudTooltip>
+                                        </div>
+                                        <div>
+                                            <MudTooltip Text="Borrar">
+
+                                                <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error"
+                                                                       OnClick="@(() => OnOpenDeleteModal(p))" />
+                                            </MudTooltip>
+                                        </div>
+                                    </div>
+                            
+                                </MudCardActions>
+                            </MudCard>
+                        </MudItem>
+                    }
+                }
+            </MudGrid>
+        </MudContainer>
+    </MudTabPanel>
+    <!-- #endregion -->
+    <!-- #region para repetir -->
+    <MudTabPanel Text="Para repetir">
+        <MudContainer MaxWidth="MaxWidth.False" Class="plan-grid-container">
+            <MudGrid GutterSize="3" Justify="Justify.FlexStart" AlignItems="AlignItems.Stretch">
+                @if (PlansListPage.Plans.Where(x => x.Status == PlanStatus.Done).ToList() == null || !PlansListPage.Plans.Where(x => x.Status == PlanStatus.Done).ToList().Any())
+                {
+                    <MudItem Xs="12">
+                        <MudAlert Severity="Severity.Info" Dense="true" Variant="Variant.Filled">
+                            No hay planes hechos.
+                        </MudAlert>
+                    </MudItem>
+                }
+                else
+                {
+                    @foreach (var p in PlansListPage.Plans.Where(x => x.Status == PlanStatus.Done).ToList())
+                    {
+                        <MudItem Xs="12" Sm="6" Md="4" Lg="3" Xl="3" Class="plan-item">
+                            <MudCard Class="plan-card">
+
+                                <div class="plan-card-cover" style="@($"background-image:url('{(string.IsNullOrWhiteSpace(p.Img) ? DefaultImg : p.Img)}')")">
+                                    <div class="cover-gradient">
+                                        <div class="cover-text">
+                                            <MudText Typo="Typo.h6" Class="plan-title">@p.Name</MudText>
+                                            @if (!string.IsNullOrWhiteSpace(p.Description))
+                                            {
+                                                <MudText Typo="Typo.body2" Class="plan-desc" Title="@p.Description">
+                                                    @p.Description
+                                                </MudText>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                @if (!string.IsNullOrWhiteSpace(p.Place) || p.Date.HasValue)
+                                {
+                                    <MudCardContent Class="plan-content">
+                                        <div class="meta-line">
+                                            @if (!string.IsNullOrWhiteSpace(p.Place))
+                                            {
+                                                <MudChip T="string" Variant="Variant.Outlined" Href="@p.Place" Target="_blank" Icon="@Icons.Material.Filled.Map" Size="Size.Small">
+                                                    Mapa
+                                                </MudChip>
+                                            }
+                                            <MudChip T="string" Variant="Variant.Outlined" Icon="@p.GetModeIcon()" Color="@p.GetModeColor()" Size="Size.Small">
+                                                @p.PlanMode
+                                            </MudChip>
+                                            <MudChip T="string" Variant="Variant.Outlined" Size="Size.Small">
+                                                <MudRating ReadOnly="true" SelectedValue="@p.Score" />
+                                            </MudChip>
+                                        </div>
+                                    </MudCardContent>
+                                }
+
+
+                                <MudCardActions Class="plan-actions">
+                                    @if (p.Status == PlanStatus.Done)
+                                    {
+                                        <div>
+                                            <MudTooltip Text="Desmarcar como hecho">
+                                                <MudIconButton Icon="@Icons.Material.Filled.Error" Color="Color.Error"
+                                                               OnClick="@(() => OnUnMarkAsSeenModal(p))" />
+                                            </MudTooltip>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div></div>
+                                    }
+
+                                    <div style="margin-right:4px;">
+                                        <MudTooltip Text="Editar puntuacion">
+                                            <MudIconButton Icon="@Icons.Material.Filled.Edit" Color="Color.Primary"
+                                                           OnClick="@(() => OnMarkAsSeenModal(p))" />
+                                        </MudTooltip>
+                                    </div>
+
+                                </MudCardActions>
+                            </MudCard>
+                        </MudItem>
+                    }
+                }
+            </MudGrid>
+        </MudContainer>
+    </MudTabPanel>
+    <!-- #endregion -->
+</MudTabs>
+<!-- #endregion -->
+
+<style>
+    .mud-tabs-tabbar{background-color:transparent !important;}
+
+    /* Container spacing */
+    .plan-grid-container {
+        padding-inline: .25rem;
+    }
+
+    /* Each item should stretch so actions stay at bottom */
+    .plan-item, .plan-item > .mud-item {
+        height: 100%;
+    }
+
+    /* Card base */
+    .plan-card {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 8px 24px rgba(0,0,0,.18);
+        transition: transform .22s ease, box-shadow .22s ease, outline-color .22s ease;
+        outline: 1px solid rgba(255,255,255,.08);
+        background: rgba(255,255,255,0.06);
+        backdrop-filter: blur(8px);
+    }
+
+        .plan-card:hover {
+            
+            box-shadow: 0 18px 42px rgba(0,0,0,.28);
+            outline-color: var(--mud-palette-primary);
+        }
+
+    /* Cover image */
+    .plan-card-cover {
+        position: relative;
+        height: 180px;
+        background-size: cover;
+        background-position: center;
+    }
+
+    /* Gradient overlay and text */
+    .cover-gradient {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(180deg, rgba(0,0,0,.15) 25%, rgba(0,0,0,.65) 100%);
+        display: flex;
+        align-items: flex-end;
+        padding: 14px;
+    }
+
+    .cover-text {
+        color: #fff;
+    }
+
+    .plan-title {
+        font-weight: 800;
+        line-height: 1.2;
+        margin-bottom: 2px;
+    }
+
+    .plan-desc {
+        font-size: .9rem;
+        opacity: .9;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    /* Content meta */
+    .plan-content {
+        padding-top: .6rem;
+        padding-bottom: .6rem;
+    }
+
+    .meta-line {
+        display: flex;
+        gap: .4rem;
+        flex-wrap: wrap;
+    }
+
+    /* Bottom actions bar sticks to bottom */
+    .plan-actions {
+        margin-top: auto;
+        padding: 4px 8px;
+        display: flex;
+        justify-content:space-between;
+        align-items: center;
+        border-top: 1px rgba(255,255,255,.14);
+        backdrop-filter: blur(4px);
+    }
+
+    /* Light mode support */
+    @@media (prefers-color-scheme: light) {
+        .plan-card
+
+    {
+        background: rgba(255,255,255,0.7);
+        outline-color: rgba(0,0,0,.06);
+    }
+
+    .plan-actions {
+        border-top-color: rgba(0,0,0,.12);
+    }
+
+    }
+</style>
