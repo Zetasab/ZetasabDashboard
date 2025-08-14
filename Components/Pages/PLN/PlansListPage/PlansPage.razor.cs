@@ -29,17 +29,17 @@ namespace ZetaDashboard.Components.Pages.PLN.PlansListPage
         private UserModel LoggedUser { get; set; }
         private UserPermissions ThisPage { get; set; } = new UserPermissions()
         {
-            Code = "znt",
+            Code = "pln",
             UserType = EUserPermissionType.Visor
         };
         private UserPermissions ThisPageEdit { get; set; } = new UserPermissions()
         {
-            Code = "znt",
+            Code = "pln",
             UserType = EUserPermissionType.Editor
         };
         private UserPermissions ThisPageAdmin { get; set; } = new UserPermissions()
         {
-            Code = "znt",
+            Code = "pln",
             UserType = EUserPermissionType.Admin
         };
         #endregion
@@ -58,6 +58,8 @@ namespace ZetaDashboard.Components.Pages.PLN.PlansListPage
         //loaadings
         private bool insertDataLoading = false;
         private bool updateDataLoading = false;
+
+        private List<PlanModel> PlanesList { get; set; } = new List<PlanModel>();
         #endregion
 
         protected override async Task OnInitializedAsync()
@@ -84,6 +86,20 @@ namespace ZetaDashboard.Components.Pages.PLN.PlansListPage
             await InvokeAsync(StateHasChanged);
 
             PlansListPage = await DController.GetData(await ApiService.Plans.GetPlanListByIdAsync(planlistid,LoggedUser)) ?? new PlanListModel();
+
+            var modeOrder = new Dictionary<PlanMode, int>
+            {
+                { PlanMode.Chill, 1 },
+                { PlanMode.Casa, 2 },
+                { PlanMode.Salir, 3 },
+                { PlanMode.Planificar, 4 }
+            };
+
+            PlanesList = PlansListPage.Plans
+            .OrderBy(p => p.Status == PlanStatus.Done ? 1 : 0)                // primero ordena por PlanMode según orden manual
+            .ThenBy(p => modeOrder[p.PlanMode]) // luego manda Done al final (0 = resto, 1 = Done)
+            .ToList();
+            
 
             //datagridLoading = false;
             await InvokeAsync(StateHasChanged);

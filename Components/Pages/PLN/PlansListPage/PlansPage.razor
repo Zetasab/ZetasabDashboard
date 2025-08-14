@@ -254,7 +254,7 @@
         <!-- #region para hacer -->
         <MudContainer MaxWidth="MaxWidth.False" Class="plan-grid-container">
             <MudGrid GutterSize="3" Justify="Justify.FlexStart" AlignItems="AlignItems.Stretch">
-                @if (PlansListPage.Plans == null || !PlansListPage.Plans.Any())
+                @if (PlanesList == null || !PlanesList.Any())
                 {
                     <MudItem Xs="12">
                         <MudAlert Severity="Severity.Info" Dense="true" Variant="Variant.Filled">
@@ -264,7 +264,7 @@
                 }
                 else
                 {
-                    @foreach (var p in PlansListPage.Plans)
+                    @foreach (var p in PlanesList)
                     {
                         <MudItem Xs="12" Sm="6" Md="4" Lg="3" Xl="3" Class="plan-item">
                             <MudCard Class="plan-card">
@@ -303,35 +303,37 @@
 
                         
                                 <MudCardActions Class="plan-actions">
-                                    @if (p.Status != PlanStatus.Done)
+                                    @if (CService.CheckIfPermissions(LoggedUser, ThisPageEdit))
                                     {
-                                         <div>
-                                            <MudTooltip Text="Marcar como hecho">
-                                                <MudIconButton Icon="@Icons.Material.Filled.Check" Color="Color.Success"
-                                                                       OnClick="@(() => OnMarkAsSeenModal(p))" />
-                                            </MudTooltip>
-                                         </div>       
-                                    }
-                                    else
-                                    {
-                                        <div></div>
-                                    }
-                                    <div style="display:flex;">
-                                        <div style="margin-right:4px;">
-                                            <MudTooltip Text="Editar">
-                                                <MudIconButton Icon="@Icons.Material.Filled.Edit" Color="Color.Primary"
-                                                                       OnClick="@(() => OnOpenUpdateModal(p))" />
-                                            </MudTooltip>
-                                        </div>
-                                        <div>
-                                            <MudTooltip Text="Borrar">
+                                        @if (p.Status != PlanStatus.Done)
+                                        {
+                                             <div>
+                                                <MudTooltip Text="Marcar como hecho">
+                                                    <MudIconButton Icon="@Icons.Material.Filled.Check" Color="Color.Success"
+                                                                           OnClick="@(() => OnMarkAsSeenModal(p))" />
+                                                </MudTooltip>
+                                             </div>       
+                                        }
+                                        else
+                                        {
+                                            <div></div>
+                                        }
+                                        <div style="display:flex;">
+                                            <div style="margin-right:4px;">
+                                                <MudTooltip Text="Editar">
+                                                    <MudIconButton Icon="@Icons.Material.Filled.Edit" Color="Color.Primary"
+                                                                           OnClick="@(() => OnOpenUpdateModal(p))" />
+                                                </MudTooltip>
+                                            </div>
+                                            <div>
+                                                <MudTooltip Text="Borrar">
 
-                                                <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error"
-                                                                       OnClick="@(() => OnOpenDeleteModal(p))" />
-                                            </MudTooltip>
+                                                    <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error"
+                                                                           OnClick="@(() => OnOpenDeleteModal(p))" />
+                                                </MudTooltip>
+                                            </div>
                                         </div>
-                                    </div>
-                            
+                                    }
                                 </MudCardActions>
                             </MudCard>
                         </MudItem>
@@ -345,7 +347,7 @@
     <MudTabPanel Text="Para repetir">
         <MudContainer MaxWidth="MaxWidth.False" Class="plan-grid-container">
             <MudGrid GutterSize="3" Justify="Justify.FlexStart" AlignItems="AlignItems.Stretch">
-                @if (PlansListPage.Plans.Where(x => x.Status == PlanStatus.Done).ToList() == null || !PlansListPage.Plans.Where(x => x.Status == PlanStatus.Done).ToList().Any())
+                @if (PlanesList.Where(x => x.Status == PlanStatus.Done).ToList() == null || !PlanesList.Where(x => x.Status == PlanStatus.Done).ToList().Any())
                 {
                     <MudItem Xs="12">
                         <MudAlert Severity="Severity.Info" Dense="true" Variant="Variant.Filled">
@@ -355,7 +357,7 @@
                 }
                 else
                 {
-                    @foreach (var p in PlansListPage.Plans.Where(x => x.Status == PlanStatus.Done).ToList())
+                    @foreach (var p in PlanesList.Where(x => x.Status == PlanStatus.Done).ToList())
                     {
                         <MudItem Xs="12" Sm="6" Md="4" Lg="3" Xl="3" Class="plan-item">
                             <MudCard Class="plan-card">
@@ -397,27 +399,29 @@
 
 
                                 <MudCardActions Class="plan-actions">
-                                    @if (p.Status == PlanStatus.Done)
-                                    {
-                                        <div>
-                                            <MudTooltip Text="Desmarcar como hecho">
-                                                <MudIconButton Icon="@Icons.Material.Filled.Error" Color="Color.Error"
-                                                               OnClick="@(() => OnUnMarkAsSeenModal(p))" />
+                                @if (CService.CheckIfPermissions(LoggedUser, ThisPageEdit))
+                                {
+                                        @if (p.Status == PlanStatus.Done)
+                                        {
+                                            <div>
+                                                <MudTooltip Text="Desmarcar como hecho">
+                                                    <MudIconButton Icon="@Icons.Material.Filled.Error" Color="Color.Error"
+                                                                   OnClick="@(() => OnUnMarkAsSeenModal(p))" />
+                                                </MudTooltip>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div></div>
+                                        }
+
+                                        <div style="margin-right:4px;">
+                                            <MudTooltip Text="Editar puntuacion">
+                                                <MudIconButton Icon="@Icons.Material.Filled.Edit" Color="Color.Primary"
+                                                               OnClick="@(() => OnMarkAsSeenModal(p))" />
                                             </MudTooltip>
                                         </div>
-                                    }
-                                    else
-                                    {
-                                        <div></div>
-                                    }
-
-                                    <div style="margin-right:4px;">
-                                        <MudTooltip Text="Editar puntuacion">
-                                            <MudIconButton Icon="@Icons.Material.Filled.Edit" Color="Color.Primary"
-                                                           OnClick="@(() => OnMarkAsSeenModal(p))" />
-                                        </MudTooltip>
-                                    </div>
-
+                                }
                                 </MudCardActions>
                             </MudCard>
                         </MudItem>

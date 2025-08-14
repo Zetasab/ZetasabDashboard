@@ -27,17 +27,17 @@ namespace ZetaDashboard.Components.Pages.PLN.PlansListPage
         private UserModel LoggedUser { get; set; }
         private UserPermissions ThisPage { get; set; } = new UserPermissions()
         {
-            Code = "znt",
+            Code = "pln",
             UserType = EUserPermissionType.Visor
         };
         private UserPermissions ThisPageEdit { get; set; } = new UserPermissions()
         {
-            Code = "znt",
+            Code = "pln",
             UserType = EUserPermissionType.Editor
         };
         private UserPermissions ThisPageAdmin { get; set; } = new UserPermissions()
         {
-            Code = "znt",
+            Code = "pln",
             UserType = EUserPermissionType.Admin
         };
         #endregion
