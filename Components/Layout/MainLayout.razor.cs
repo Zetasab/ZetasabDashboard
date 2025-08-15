@@ -35,7 +35,7 @@ namespace ZetaDashboard.Components.Layout
                 {
                     LoggedUser = (AuthProvider as CustomAuthenticationStateProvider).LoggedUser;
                     MyTheme = await GetTheme();
-                    await JS.InvokeVoidAsync("clientErrorTap.init", _ref);
+                    //await JS.InvokeVoidAsync("clientErrorTap.init", _ref);
                     await JS.InvokeVoidAsync("hideSplash");
                     _ref = DotNetObjectReference.Create(this);
                     StateHasChanged();
