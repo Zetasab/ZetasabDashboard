@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using MudBlazor;
+using System.Globalization;
+using System.Text;
 using ZetaCommon.Auth;
 using ZetaDashboard.Common.PLN.Models;
 using ZetaDashboard.Common.ZDB.Models;
@@ -60,6 +62,9 @@ namespace ZetaDashboard.Components.Pages.PLN.PlansListPage
         private bool updateDataLoading = false;
 
         private List<PlanModel> PlanesList { get; set; } = new List<PlanModel>();
+
+        private string _search = "";
+        private PlanMode _searchMode = PlanMode.None;
         #endregion
 
         protected override async Task OnInitializedAsync()
@@ -87,22 +92,53 @@ namespace ZetaDashboard.Components.Pages.PLN.PlansListPage
 
             PlansListPage = await DController.GetData(await ApiService.Plans.GetPlanListByIdAsync(planlistid,LoggedUser)) ?? new PlanListModel();
 
-            var modeOrder = new Dictionary<PlanMode, int>
-            {
-                { PlanMode.Chill, 1 },
-                { PlanMode.Casa, 2 },
-                { PlanMode.Salir, 3 },
-                { PlanMode.Planificar, 4 }
-            };
-
-            PlanesList = PlansListPage.Plans
-            .OrderBy(p => p.Status == PlanStatus.Done ? 1 : 0)                // primero ordena por PlanMode según orden manual
-            .ThenBy(p => modeOrder[p.PlanMode]) // luego manda Done al final (0 = resto, 1 = Done)
-            .ToList();
-            
+            FilterList();
 
             //datagridLoading = false;
             await InvokeAsync(StateHasChanged);
+        }
+        private async Task ClearFilter()
+        {
+            _search = "";
+            FilterList();
+        }
+        private async Task FilterList()
+        {
+            var all = PlansListPage.Plans;
+            var modeOrder = new Dictionary<PlanMode, int>
+            { 
+                { PlanMode.Chill, 1 },
+                { PlanMode.Casa, 2 },
+                { PlanMode.Comidas, 3 },
+                { PlanMode.Salir, 4 },
+                { PlanMode.Planificar, 5 },
+                { PlanMode.None, 6 }
+            };
+
+            if (!string.IsNullOrWhiteSpace(_search))
+            {
+                var q = Normalize(_search);
+                bool Match(string? s) => !string.IsNullOrWhiteSpace(s) && Normalize(s!).Contains(q, StringComparison.OrdinalIgnoreCase);
+
+                PlanesList = all.Where(p => Match(p.Name) || Match(p.Description) || Match(p.Place)).ToList();
+            }
+            else 
+            {
+                PlanesList = all;
+            }
+
+            if(_searchMode != PlanMode.None)
+            {
+                PlanesList = PlanesList.Where(x => x.PlanMode == _searchMode).ToList();
+            }
+
+
+
+                PlanesList = PlanesList
+                .OrderBy(p => p.Status == PlanStatus.Done ? 1 : 0)
+                .ThenBy(p => modeOrder[p.PlanMode])
+                .ThenBy(p => p.Name)
+                .ToList();
         }
         #endregion
         #region Post
@@ -185,7 +221,6 @@ namespace ZetaDashboard.Components.Pages.PLN.PlansListPage
             if (!result.Canceled)
             {
                 await OnDeleteDataPlan();
-                Console.WriteLine("si");
             }
         }
         private async Task OnDeleteDataPlan()
@@ -243,6 +278,7 @@ namespace ZetaDashboard.Components.Pages.PLN.PlansListPage
                 PlanMode.Casa => Icons.Material.Filled.Home,
                 PlanMode.Salir => Icons.Material.Filled.Nightlife,
                 PlanMode.Planificar => Icons.Material.Filled.EditCalendar,
+                PlanMode.Comidas => Icons.Material.Filled.Fastfood,
                 _ => Icons.Material.Filled.HelpOutline
             };
         }
@@ -251,10 +287,24 @@ namespace ZetaDashboard.Components.Pages.PLN.PlansListPage
         {
             PlanMode.Chill => Color.Info,     // azul relajado
             PlanMode.Casa => Color.Success,  // verde "home"
-            PlanMode.Salir => Color.Warning,  // ámbar enérgico
+            PlanMode.Comidas => Color.Warning,  // ámbar enérgico
+            PlanMode.Salir => Color.Tertiary,  // ámbar enérgico
             PlanMode.Planificar => Color.Primary,  // color de marca/acción
             _ => Color.Default
         };
+        // Quita acentos para comparación
+        private static string Normalize(string input)
+        {
+            var formD = input.Normalize(NormalizationForm.FormD);
+            var sb = new StringBuilder(formD.Length);
+            foreach (var ch in formD)
+            {
+                var uc = CharUnicodeInfo.GetUnicodeCategory(ch);
+                if (uc != UnicodeCategory.NonSpacingMark)
+                    sb.Append(char.ToLowerInvariant(ch));
+            }
+            return sb.ToString().Normalize(NormalizationForm.FormC);
+        }
 
     }
 }
