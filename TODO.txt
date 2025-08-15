@@ -1,13 +1,6 @@
 Todo: ->
 
-profile no funcioan
 poner lista de planes y notas por colores
-
-
-icono iphone
-
-planes ->
-
 
 
 
@@ -24,7 +17,6 @@ Error or notfound
 Siguiente ->
 pelis
 juegos
-planes
 cocina(platos,semana)
 
 mejoras laargo plazo ->

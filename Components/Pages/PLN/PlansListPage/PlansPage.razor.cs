@@ -171,14 +171,14 @@ namespace ZetaDashboard.Components.Pages.PLN.PlansListPage
             updateDataLoading = true;
             await InvokeAsync(StateHasChanged);
 
-            if(UpdateModel.Score != -1)
-            {
-                UpdateModel.Status = PlanStatus.Done;
-            }
-            else
-            {
-                UpdateModel.Status = PlanStatus.Pending;
-            }
+            //if(UpdateModel.Score != -1)
+            //{
+            //    UpdateModel.Status = PlanStatus.Done;
+            //}
+            //else
+            //{
+            //    UpdateModel.Status = PlanStatus.Pending;
+            //}
 
                 var index = PlansListPage.Plans.FindIndex(p => p.Id == UpdateModel.Id);
             if (index != -1)
@@ -257,17 +257,34 @@ namespace ZetaDashboard.Components.Pages.PLN.PlansListPage
         private async void OnMarkAsSeenModal(PlanModel model)
         {
             UpdateModel = await DController.DeepCoopy(model);
+            UpdateModel.Status = PlanStatus.Done;
             MarkAsSeenModal = true;
+            StateHasChanged();
+        }
+        private async void OnMarkAsPlannedModal(PlanModel model)
+        {
+            UpdateModel = await DController.DeepCoopy(model);
+            UpdateModel.Status = PlanStatus.Planned;
+            OnUpdateData();
             StateHasChanged();
         }
         private async void OnUnMarkAsSeenModal(PlanModel model)
         {
             UpdateModel = await DController.DeepCoopy(model);
             UpdateModel.Score = -1;
+            UpdateModel.Status = PlanStatus.Pending;
+            OnUpdateData();
+            StateHasChanged();
+        }
+        private async void OnUnMarkAsPlannedModal(PlanModel model)
+        {
+            UpdateModel = await DController.DeepCoopy(model);
+            UpdateModel.Status = PlanStatus.Pending;
             OnUpdateData();
             StateHasChanged();
         }
         
+
         #endregion
 
         public string GetModeIconn(PlanMode plan)

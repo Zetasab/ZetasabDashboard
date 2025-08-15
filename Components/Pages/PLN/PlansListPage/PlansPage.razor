@@ -274,13 +274,13 @@
 </div>
 
 <MudTabs Elevation="0"  Rounded="true" ApplyEffectsToContainer="false" PanelClass="pa-6" Style="margin-top:20px;">
-    <MudTabPanel Text="Para hacer">
-        <!-- #region para hacer -->
+    <MudTabPanel Text="Planes">
+        <!-- #region planes -->
         <MudContainer MaxWidth="MaxWidth.False" Class="plan-grid-container">
             <MudGrid GutterSize="3" Justify="Justify.FlexStart" AlignItems="AlignItems.Stretch">
                 @if (PlanesList == null || !PlanesList.Any())
                 {
-                    <MudItem Xs="12">
+                    <MudItem Xs="@((int)12)">
                         <MudAlert Severity="Severity.Info" Dense="true" Variant="Variant.Filled">
                             No hay planes.
                         </MudAlert>
@@ -290,7 +290,7 @@
                 {
                     @foreach (var p in PlanesList)
                     {
-                        <MudItem Xs="12" Sm="6" Md="4" Lg="3" Xl="3" Class="plan-item">
+                        <MudItem Xs="@((int)12)" Sm="@((int)6)" Md="@((int)4)" Lg="@((int)3)" Xl="@((int)3)" Class="plan-item">
                             <MudCard Class="plan-card">
                         
                                 <div class="plan-card-cover" style="@($"background-image:url('{(string.IsNullOrWhiteSpace(p.Img) ? DefaultImg : p.Img)}')")">
@@ -329,14 +329,22 @@
                                 <MudCardActions Class="plan-actions">
                                     @if (CService.CheckIfPermissions(LoggedUser, ThisPageEdit))
                                     {
-                                        @if (p.Status != PlanStatus.Done)
+                                        @if (p.Status == PlanStatus.Pending)
                                         {
-                                             <div>
-                                                <MudTooltip Text="Marcar como hecho">
-                                                    <MudIconButton Icon="@Icons.Material.Filled.Check" Color="Color.Success"
-                                                                           OnClick="@(() => OnMarkAsSeenModal(p))" />
-                                                </MudTooltip>
-                                             </div>       
+                                            <div style="display:flex;">
+                                                <div style="margin-right:4px;">
+                                                    <MudTooltip Text="Marcar como planificado">
+                                                        <MudIconButton Icon="@Icons.Material.Filled.EditCalendar" Color="Color.Secondary"
+                                                                       OnClick="@(() => OnMarkAsPlannedModal(p))" />
+                                                    </MudTooltip>
+                                                </div>
+                                                 <div>
+                                                    <MudTooltip Text="Marcar como hecho">
+                                                        <MudIconButton Icon="@Icons.Material.Filled.Check" Color="Color.Success"
+                                                                               OnClick="@(() => OnMarkAsSeenModal(p))" />
+                                                    </MudTooltip>
+                                                 </div>
+                                            </div>
                                         }
                                         else
                                         {
@@ -367,13 +375,100 @@
         </MudContainer>
     </MudTabPanel>
     <!-- #endregion -->
+    <!-- #region planificado -->
+    <MudTabPanel Text="Planificado">
+        <MudContainer MaxWidth="MaxWidth.False" Class="plan-grid-container">
+            <MudGrid GutterSize="3" Justify="Justify.FlexStart" AlignItems="AlignItems.Stretch">
+                @if (PlanesList.Where(x => x.Status == PlanStatus.Planned).ToList() == null || !PlanesList.Where(x => x.Status == PlanStatus.Planned).ToList().Any())
+                {
+                    <MudItem Xs="@((int)12)">
+                        <MudAlert Severity="Severity.Info" Dense="true" Variant="Variant.Filled">
+                            No hay planes planificados.
+                        </MudAlert>
+                    </MudItem>
+                }
+                else
+                {
+                    @foreach (var p in PlanesList.Where(x => x.Status == PlanStatus.Planned).ToList())
+                    {
+                        <MudItem Xs="@((int)12)" Sm="@((int)6)" Md="@((int)4)" Lg="@((int)3)" Xl="@((int)3)" Class="plan-item">
+                            <MudCard Class="plan-card">
+
+                                <div class="plan-card-cover" style="@($"background-image:url('{(string.IsNullOrWhiteSpace(p.Img) ? DefaultImg : p.Img)}')")">
+                                    <div class="cover-gradient">
+                                        <div class="cover-text">
+                                            <MudText Typo="Typo.h6" Class="plan-title">@p.Name</MudText>
+                                            @if (!string.IsNullOrWhiteSpace(p.Description))
+                                            {
+                                                <MudText Typo="Typo.body2" Class="plan-desc" Title="@p.Description">
+                                                    @p.Description
+                                                </MudText>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                @if (!string.IsNullOrWhiteSpace(p.Place) || p.Date.HasValue)
+                                {
+                                    <MudCardContent Class="plan-content">
+                                        <div class="meta-line">
+                                            @if (!string.IsNullOrWhiteSpace(p.Place))
+                                            {
+                                                <MudChip T="string" Variant="Variant.Outlined" Href="@p.Place" Target="_blank" Icon="@Icons.Material.Filled.Map" Size="Size.Small">
+                                                    Mapa
+                                                </MudChip>
+                                            }
+                                            <MudChip T="string" Variant="Variant.Outlined" Icon="@p.GetModeIcon()" Color="@p.GetModeColor()" Size="Size.Small">
+                                                @p.PlanMode
+                                            </MudChip>
+                                            
+                                        </div>
+                                    </MudCardContent>
+                                }
+
+
+                                <MudCardActions Class="plan-actions">
+                                    @if (CService.CheckIfPermissions(LoggedUser, ThisPageEdit))
+                                    {
+                                        @if (p.Status == PlanStatus.Planned)
+                                        {
+                                            <div>
+                                                <MudTooltip Text="Desmarcar como planeado">
+                                                    <MudIconButton Icon="@Icons.Material.Filled.Error" Color="Color.Error"
+                                                                   OnClick="@(() => OnUnMarkAsPlannedModal(p))" />
+                                                </MudTooltip>
+                                            </div>
+                                            <div>
+                                                <MudTooltip Text="Marcar como hecho">
+                                                    <MudIconButton Icon="@Icons.Material.Filled.Check" Color="Color.Success"
+                                                                   OnClick="@(() => OnMarkAsSeenModal(p))" />
+                                                </MudTooltip>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div></div>
+                                        }
+
+                                       
+                                    }
+                                </MudCardActions>
+                            </MudCard>
+                        </MudItem>
+                    }
+                }
+            </MudGrid>
+        </MudContainer>
+    </MudTabPanel>
+    <!-- #endregion -->
     <!-- #region para repetir -->
     <MudTabPanel Text="Para repetir">
         <MudContainer MaxWidth="MaxWidth.False" Class="plan-grid-container">
             <MudGrid GutterSize="3" Justify="Justify.FlexStart" AlignItems="AlignItems.Stretch">
                 @if (PlanesList.Where(x => x.Status == PlanStatus.Done).ToList() == null || !PlanesList.Where(x => x.Status == PlanStatus.Done).ToList().Any())
                 {
-                    <MudItem Xs="12">
+                    <MudItem Xs="@((int)12)">
                         <MudAlert Severity="Severity.Info" Dense="true" Variant="Variant.Filled">
                             No hay planes hechos.
                         </MudAlert>
@@ -383,7 +478,7 @@
                 {
                     @foreach (var p in PlanesList.Where(x => x.Status == PlanStatus.Done).ToList())
                     {
-                        <MudItem Xs="12" Sm="6" Md="4" Lg="3" Xl="3" Class="plan-item">
+                        <MudItem Xs="@((int)12)" Sm="@((int)6)" Md="@((int)4)" Lg="@((int)3)" Xl="@((int)3)" Class="plan-item">
                             <MudCard Class="plan-card">
 
                                 <div class="plan-card-cover" style="@($"background-image:url('{(string.IsNullOrWhiteSpace(p.Img) ? DefaultImg : p.Img)}')")">
