@@ -250,8 +250,8 @@
 
 <!-- #region Tabs -->
 
-<div style="display:flex;width:100%;">
-    <div style="width:30%">
+<div style="display:flex;width:100%;justify-content:space-between">
+    <div style="width:38%">
         <MudSelect T="PlanMode"
                    @bind-Value="_searchMode"
                    SelectedValuesChanged="FilterList"
@@ -268,7 +268,7 @@
             }
         </MudSelect>
     </div>
-    <div style="width:50%">
+    <div style="width:58%">
         <MudTextField @bind-Value="_search" Adornment="Adornment.Start" OnClearButtonClick="ClearFilter" OnKeyUp="@(() => FilterList())" Clearable="true" AdornmentIcon="@Icons.Material.Filled.Search" Immediate="true" T="string" Label="Filtrar"></MudTextField>
     </div>
 </div>
