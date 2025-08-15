@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Server.Circuits;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
 using MongoDB.Bson;
 using MongoDB.Driver;
@@ -8,10 +9,15 @@ using MudBlazor.Services;
 using ZetaCommon.Auth;
 using ZetaDashboard.Common.Mongo.Config;
 using ZetaDashboard.Common.Mongo.DataModels;
-using ZetaDashboard.Common.ZDB.Models;
 using ZetaDashboard.Common.ZDB.Services;
 using ZetaDashboard.Components;
 using ZetaDashboard.Services;
+using System.Net;
+using Microsoft.Extensions.Caching.Memory;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Processing;
+using SixLabors.ImageSharp.Formats.Jpeg;
+using SixLabors.ImageSharp.Formats.Webp;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -77,8 +83,70 @@ builder.Services.AddServerSideBlazor()
 
 builder.Services.AddSingleton<CircuitHandler, UserCountCircuitHandler>();
 
+
+builder.Services.AddHttpClient("img").ConfigureHttpClient(c => c.Timeout = TimeSpan.FromSeconds(10));
+builder.Services.AddMemoryCache();
+
+
+
 var app = builder.Build();
 
+
+app.MapGet("/img", async (
+    string url, int? w, int? h, int? q, string? format,
+    IHttpClientFactory http, IMemoryCache cache) =>
+{
+    if (!Uri.TryCreate(url, UriKind.Absolute, out var uri) ||
+        (uri.Scheme != Uri.UriSchemeHttp && uri.Scheme != Uri.UriSchemeHttps))
+        return Results.BadRequest("Invalid url");
+
+    var key = $"img:{url}:w={w}:h={h}:q={q}:f={format}";
+    if (cache.TryGetValue(key, out byte[] bytes) && cache.TryGetValue(key + ":ct", out string ct))
+        return Results.File(bytes, ct, enableRangeProcessing: true);
+
+    var client = http.CreateClient("img");
+    using var resp = await client.GetAsync(uri, HttpCompletionOption.ResponseHeadersRead);
+    if (!resp.IsSuccessStatusCode) return Results.StatusCode((int)resp.StatusCode);
+
+    await using var src = await resp.Content.ReadAsStreamAsync();
+    using var image = await Image.LoadAsync(src);
+
+    if (w is not null || h is not null)
+    {
+        var size = new SixLabors.ImageSharp.Size(w ?? 0, h ?? 0);
+        image.Mutate(x => x.Resize(new SixLabors.ImageSharp.Processing.ResizeOptions
+        {
+            Mode = SixLabors.ImageSharp.Processing.ResizeMode.Crop, // Recorta para llenar el tamaño exacto
+            Size = new SixLabors.ImageSharp.Size(w ?? 0, h ?? 0)
+        }));
+    }
+
+    var quality = Math.Clamp(q ?? 70, 30, 95);
+    await using var ms = new MemoryStream();
+    string outCt;
+
+    if ((format ?? "webp").ToLowerInvariant() == "webp")
+    {
+        await image.SaveAsync(ms, new WebpEncoder { Quality = quality });
+        outCt = "image/webp";
+    }
+    else
+    {
+        await image.SaveAsync(ms, new JpegEncoder { Quality = quality });
+        outCt = "image/jpeg";
+    }
+
+    bytes = ms.ToArray();
+    var opts = new MemoryCacheEntryOptions
+    {
+        SlidingExpiration = TimeSpan.FromHours(6),
+        AbsoluteExpirationRelativeToNow = TimeSpan.FromDays(2)
+    };
+    cache.Set(key, bytes, opts);
+    cache.Set(key + ":ct", outCt, opts);
+
+    return Results.File(bytes, outCt, enableRangeProcessing: true, lastModified: DateTimeOffset.UtcNow);
+});
 
 //Mongo check
 //if (!await CheckMongoConnectionAsync(config))

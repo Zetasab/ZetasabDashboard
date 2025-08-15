@@ -296,7 +296,9 @@
                                 <div class="plan-card-cover">
                                 @if (!string.IsNullOrWhiteSpace(p.Img))
                                 {
-                                    <img style="object-fit:cover;width:100%;height:100%" loading="lazy" src="@p.Img">
+                                        <img style="object-fit:cover;width:100%;height:100%" width="300" height="180" decoding="async" fetchpriority="low" loading="lazy"
+                                             src="@($"/img?url={Uri.EscapeDataString(p.Img)}&w=300&h=180&q=70&format=webp")">
+                                    
                                 }
                             <div class="cover-gradient">
                                 <div class="cover-text">
@@ -401,7 +403,8 @@
                                 <div class="plan-card-cover">
                                     @if (!string.IsNullOrWhiteSpace(p.Img))
                                     {
-                                        <img style="object-fit:cover;width:100%;height:100%" loading="lazy" src="@p.Img">
+                                        <img style="object-fit:cover;width:100%;height:100%" width="300" height="180" loading="lazy"
+                                             src="@($"/img?url={Uri.EscapeDataString(p.Img)}&w=300&h=180&q=70&format=webp")">
                                     }
                             <div class="cover-gradient">
                                 <div class="cover-text">
@@ -492,7 +495,8 @@
                                 <div class="plan-card-cover">
                                     @if (!string.IsNullOrWhiteSpace(p.Img))
                                     {
-                                        <img style="object-fit:cover;width:100%;height:100%" loading="lazy" src="@p.Img">
+                                        <img style="object-fit:cover;width:100%;height:100%" width="300" height="180" loading="lazy"
+                                             src="@($"/img?url={Uri.EscapeDataString(p.Img)}&w=300&h=180&q=70&format=webp")">
                                     }
                             <div class="cover-gradient">
                                 <div class="cover-text">
