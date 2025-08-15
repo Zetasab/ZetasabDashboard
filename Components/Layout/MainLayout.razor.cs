@@ -24,7 +24,7 @@ namespace ZetaDashboard.Components.Layout
         private UserModel LoggedUser { get; set; }
         private bool IsAuthentificated { get; set; } = false;
         #endregion
-
+        DotNetObjectReference<MainLayout>? _ref;
         #region LifeCycles
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
@@ -36,6 +36,8 @@ namespace ZetaDashboard.Components.Layout
                     LoggedUser = (AuthProvider as CustomAuthenticationStateProvider).LoggedUser;
                     MyTheme = await GetTheme();
                     await JS.InvokeVoidAsync("hideSplash");
+                    _ref = DotNetObjectReference.Create(this);
+                    await JS.InvokeVoidAsync("clientErrorTap.init", _ref);
                     StateHasChanged();
                 }
                 else
@@ -45,6 +47,15 @@ namespace ZetaDashboard.Components.Layout
             }
         }
         #endregion
+        [JSInvokable]
+        public Task ReportClientError(string msg)
+        {
+            Console.WriteLine($"[ClientError][iOS] {msg}");
+            // TODO: también podrías guardar en Mongo para ver histórico
+            return Task.CompletedTask;
+        }
+
+        public void Dispose() => _ref?.Dispose();
 
         #region Theme
 

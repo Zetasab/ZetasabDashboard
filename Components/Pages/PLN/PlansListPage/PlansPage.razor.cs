@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.JSInterop;
 using MudBlazor;
 using System.Globalization;
 using System.Text;
@@ -7,6 +8,7 @@ using ZetaCommon.Auth;
 using ZetaDashboard.Common.PLN.Models;
 using ZetaDashboard.Common.ZDB.Models;
 using ZetaDashboard.Common.ZDB.Services;
+using ZetaDashboard.Components.Layout;
 using ZetaDashboard.Services;
 using ZetaDashboard.Shared.ConfirmDeleteDialog;
 using static ZetaDashboard.Common.ZDB.Models.UserModel;
@@ -24,6 +26,7 @@ namespace ZetaDashboard.Components.Pages.PLN.PlansListPage
         [Inject] private IDialogService DialogService { get; set; } = default!;
         [Inject] private CommonServices CService { get; set; } = default!;
         [Inject] private AuthenticationStateProvider Auth { get; set; } = default!;
+        [Inject] private IJSRuntime JS { get; set; } = default!;
         #endregion
 
         #region Vars
@@ -82,6 +85,7 @@ namespace ZetaDashboard.Components.Pages.PLN.PlansListPage
             await ApiService.Audits.InsertAsync(audit);
             GetList();
         }
+      
 
         #region CRUD
         #region GET

@@ -24,3 +24,21 @@ function downloadJsonFile(fileName, jsonContent) {
     a.click();
     URL.revokeObjectURL(url);
 }
+
+window.clientErrorTap = {
+    init: function (dotnetRef) {
+        window.addEventListener('error', function (e) {
+            try {
+                dotnetRef.invokeMethodAsync('ReportClientError',
+                    `${e.message} @ ${e.filename}:${e.lineno}:${e.colno}`);
+            } catch { }
+        });
+
+        window.addEventListener('unhandledrejection', function (e) {
+            try {
+                const msg = (e.reason && e.reason.stack) ? e.reason.stack : (e.reason || 'unhandledrejection');
+                dotnetRef.invokeMethodAsync('ReportClientError', msg.toString());
+            } catch { }
+        });
+    }
+}
