@@ -41,4 +41,4 @@ window.clientErrorTap = {
             } catch { }
         });
     }
-}
+};
