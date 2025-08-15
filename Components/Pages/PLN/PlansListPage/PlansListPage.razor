@@ -17,7 +17,7 @@
 <MudGrid GutterSize="3" Class="plans-grid" Style="margin-top:30px;">
     @foreach (var item in DataList)
     {
-        <MudItem Xs="12" Sm="6" Md="4" Lg="3">
+        <MudItem Xs="@((int)12)" Sm="@((int)6)" Md="@((int)4)" Lg="@((int)3)">
             <MudPaper Class="plan-card pa-4" Elevation="0" @onclick="@(() => NavigateTo(item.Id))">
                 <div class="card-border"></div>
 
