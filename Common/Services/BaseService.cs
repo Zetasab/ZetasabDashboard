@@ -1,5 +1,5 @@
 ﻿using ZetaDashboard.Common.Mongo.DataModels;
-using static ZetaDashboard.Common.Mongo.DataModels.MongoBase;
+using ZetaDashboard.Common.Http;
 
 namespace ZetaDashboard.Common.ZDB.Services
 {
@@ -18,11 +18,13 @@ namespace ZetaDashboard.Common.ZDB.Services
         }
 
         private readonly MongoContext _context;
+        private readonly HttpClient? _http;
 
         public UserService Users { get; }
         public ProyectService Proyects { get; }
         public AuditService Audits { get; }
         public NoteService Notes { get; }
         public PlanListService Plans { get; }
+        //public MovieService Movies { get; }
     }
 }

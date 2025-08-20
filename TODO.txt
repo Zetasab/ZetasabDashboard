@@ -3,7 +3,7 @@ Todo: ->
 poner lista de planes y notas por colores
 
 haacer que usuarios estan conectados
-
+poner que la pagina sea español
 
 Mejoras->
 

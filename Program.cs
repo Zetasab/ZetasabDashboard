@@ -1,23 +1,27 @@
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Server.Circuits;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using MudBlazor;
 using MudBlazor.Services;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Formats.Jpeg;
+using SixLabors.ImageSharp.Formats.Webp;
+using SixLabors.ImageSharp.Processing;
+using System.Net;
+using System.Net.Http.Headers;
 using ZetaCommon.Auth;
+using ZetaDashboard.Common.Http.Config;
 using ZetaDashboard.Common.Mongo.Config;
 using ZetaDashboard.Common.Mongo.DataModels;
+using ZetaDashboard.Common.Services;
 using ZetaDashboard.Common.ZDB.Services;
 using ZetaDashboard.Components;
 using ZetaDashboard.Services;
-using System.Net;
-using Microsoft.Extensions.Caching.Memory;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Processing;
-using SixLabors.ImageSharp.Formats.Jpeg;
-using SixLabors.ImageSharp.Formats.Webp;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -55,8 +59,17 @@ builder.Services.AddSingleton(sp =>
     return new MongoContext(settings);
 });
 
+
 builder.Services.AddScoped<BaseService>();
 
+
+var configMDB = builder.Configuration.GetSection("MovieDataBaseConfig").Get<MovieDataBaseConfig>();
+builder.Services.AddHttpClient<HttpService>(client =>
+{
+    client.BaseAddress = new Uri("https://api.themoviedb.org/3/");
+    client.DefaultRequestHeaders.Authorization =
+        new AuthenticationHeaderValue("Bearer", configMDB.Mdb_token); // muévelo a appsettings/secret
+});
 
 var config = builder.Configuration.GetSection("Mongo").Get<MongoConfig>();
 

@@ -101,6 +101,18 @@
             </MudNavGroup>
         }
 
+        @if (CService.CheckIfPermissions(LoggedUser, ThisMoviePage))
+        {
+            <MudNavGroup Title="🍿 MOV" Class="mb-2 mud-nav-link-groupNoBefore" Expanded="true">
+                <MudNavLink Href="/search-movie" Match="NavLinkMatch.All" Style="margin-top:5px;" Class="mud-nav-link-c2">
+                    <div style="display:flex;align-items:center;" onclick="changetoggler()">
+                        <text style="font-size:24px">🔎</text>
+                        <MudText Style="margin-left:5px;font-size:18px">Buscar Peliculas</MudText>
+                    </div>
+                </MudNavLink>
+            </MudNavGroup>
+        }
+
         @* <MudNavGroup Title="Management" Icon="@Icons.Material.Filled.Settings" Class="mb-2">
             <MudNavLink Href="/users" Icon="@Icons.Material.Filled.Group">
                 Users

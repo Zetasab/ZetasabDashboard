@@ -56,6 +56,21 @@ namespace ZetaDashboard.Components.Layout
             Code = "pln",
             UserType = EUserPermissionType.Admin
         };
+        private UserPermissions ThisMoviePage { get; set; } = new UserPermissions()
+        {
+            Code = "mov",
+            UserType = EUserPermissionType.Visor
+        };
+        private UserPermissions ThisMoviePageEditor { get; set; } = new UserPermissions()
+        {
+            Code = "mov",
+            UserType = EUserPermissionType.Editor
+        };
+        private UserPermissions ThisMoviePageAdmin { get; set; } = new UserPermissions()
+        {
+            Code = "mov",
+            UserType = EUserPermissionType.Admin
+        };
         #endregion
 
         #region LifeCycles
