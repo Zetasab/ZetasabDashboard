@@ -107,7 +107,7 @@ namespace ZetaDashboard.Common.Services
                     };
                 }
             }
-            public async Task<ApiResponse<List<MovieModel>>> GetAllDiscoverMoviesAsync(int page, UserModel loggeduser, CancellationToken ct = default)
+            public async Task<ApiResponse<List<MovieModel>>> GetAllDiscoverMoviesAsync(int page, UserModel loggeduser, Dictionary<string, string> queryparams = null, CancellationToken ct = default)
             {
                 var response = new ApiResponse<List<MovieModel?>>();
                 try
@@ -118,9 +118,17 @@ namespace ZetaDashboard.Common.Services
                         response.Message = "No tienes permisos";
                         return response!;
                     }
-
+                    string queryparamsstring = $"?page={page}&language=es-ES";
+                    if (queryparams != null)
+                    {
+                        foreach (var inn in queryparams)
+                        {
+                            queryparamsstring += $"&{inn.Key}={inn.Value}";
+                        }
+                    }
+                    
                     // Opción A) Tu API devuelve ApiResponse<List<AuditModel>>
-                    var (ok, apiRes, error, raw) = await TryGetAsync<ApiResponse<List<MovieModel>>>($"discover/movie?page={page}", ct);
+                    var (ok, apiRes, error, raw) = await TryGetAsync<ApiResponse<List<MovieModel>>>($"discover/movie{queryparamsstring}", ct);
 
                     if (ok && apiRes is not null)
                     {

@@ -13,8 +13,8 @@ namespace ZetaDashboard.Services
         // single delayed task controller
         private static CancellationTokenSource? _idleCts;
 
-        private readonly TimeSpan _grace = TimeSpan.FromMinutes(2);      // wait after last user leaves
-        private readonly TimeSpan _extraDelay = TimeSpan.FromMinutes(10); // additional delay before exit
+        private readonly TimeSpan _grace = TimeSpan.FromMinutes(1);      // wait after last user leaves
+        private readonly TimeSpan _extraDelay = TimeSpan.FromMinutes(1); // additional delay before exit
 
         public UserCountCircuitHandler()
         {

@@ -6,6 +6,7 @@ using ZetaDashboard.Common.MOV;
 using ZetaDashboard.Common.Services;
 using ZetaDashboard.Common.ZDB.Models;
 using ZetaDashboard.Common.ZDB.Services;
+using ZetaDashboard.Data.MOV;
 using ZetaDashboard.Services;
 using static ZetaDashboard.Common.ZDB.Models.UserModel;
 
@@ -45,6 +46,11 @@ namespace ZetaDashboard.Components.Pages.MOV.MovieSearchPage
         private List<MovieModel> DataList { get; set; } = new List<MovieModel>();
 
         private int _pag = 1;
+        private IReadOnlyCollection<Genre> SelectedGenres = new List<Genre>();
+        private List<Watch_provider> SelectedProviders = new List<Watch_provider>();
+        private Order SelectedOrder = MovieData.SortsBy[3];
+
+        private Dictionary<string, string> QueryParams = new Dictionary<string, string>();
         #endregion
         #region LifeCycles
         protected override async Task OnInitializedAsync()
@@ -78,7 +84,8 @@ namespace ZetaDashboard.Components.Pages.MOV.MovieSearchPage
             //await InvokeAsync(StateHasChanged);
             _pag = 1;
             
-            DataList.AddRange(await DController.GetData(await HttpApiService.Movies.GetAllDiscoverMoviesAsync(_pag, LoggedUser)));
+
+            DataList = await DController.GetData(await HttpApiService.Movies.GetAllDiscoverMoviesAsync(_pag, LoggedUser,QueryParams));
 
             //datagridLoading = false;
             await InvokeAsync(StateHasChanged);
@@ -97,8 +104,53 @@ namespace ZetaDashboard.Components.Pages.MOV.MovieSearchPage
         private async Task LoadMore()
         {
             _pag++;
-            DataList.AddRange(await DController.GetData(await HttpApiService.Movies.GetAllDiscoverMoviesAsync(_pag, LoggedUser)));
+            DataList.AddRange(await DController.GetData(await HttpApiService.Movies.GetAllDiscoverMoviesAsync(_pag, LoggedUser,QueryParams)));
         }
 
+        private void SelectProviders(Watch_provider provider)
+        {
+            if (SelectedProviders.Contains(provider))
+            {
+                SelectedProviders.Remove(provider);
+            }
+            else
+            {
+                SelectedProviders.Add(provider);
+            }
+            StateHasChanged();
+        }
+        private async Task SearchMovies()
+        {
+            QueryParams = new Dictionary<string, string>();
+            var querygenres = "";
+            if(SelectedGenres != null && SelectedGenres.Count > 0)
+            {
+                foreach (var i in SelectedGenres)
+                {
+                    querygenres += i.Id + ",";
+                }
+                querygenres = querygenres.Substring(0, querygenres.Length - 1);
+                QueryParams.Add("with_genres", querygenres);
+            }
+
+            var queryproviders = "";
+            if (SelectedProviders != null && SelectedProviders.Count > 0)
+            {
+                foreach (var i in SelectedProviders)
+                {
+                    queryproviders += i.provider_id + ",";
+                }
+                queryproviders = queryproviders.Substring(0, queryproviders.Length - 1);
+                QueryParams.Add("with_watch_providers", queryproviders);
+                QueryParams.Add("watch_region", "ES");
+            }
+
+            if(SelectedOrder != null)
+            {
+                QueryParams.Add("sort_by", SelectedOrder.eng_order);
+            }
+
+            GetList();
+        }
     }
 }
