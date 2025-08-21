@@ -1,4 +1,7 @@
 ﻿@page "/search-movie"
+@page "/search-movie/{mode}"
+@page "/search-movie/{mode}/{name}"
+
 @using ZetaDashboard.Data.MOV
 
 
@@ -6,7 +9,7 @@
 <div style="display:flex;align-items:center;justify-content:space-between">
     <div></div>
     <div>
-        <h2>🧗🏻‍ Planes</h2>
+        <h2>🔎 Descubre Peliculas</h2>
     </div>
     <div style="padding-right:30px;">
     </div>
@@ -15,83 +18,89 @@
 <MudContainer MaxWidth="MaxWidth.ExtraLarge">
     <MudGrid>
         <MudItem xs="@((int)12)" md="@((int)2)">
-            <MudButton EndIcon="@Icons.Material.Filled.Search"
-                Variant="Variant.Filled" FullWidth="true" 
-                Color="Color.Primary" Style="margin-bottom:15px;margin-top:5px;"
-                OnClick="SearchMovies">Buscar</MudButton>
-            <MudExpansionPanels MultiExpansion="true" >
-                <MudExpansionPanel Text="Ordenar">
-                    <MudSelect @bind-Value="SelectedOrder" Clearable="true" T="Order">
-                        @foreach (var item in MovieData.SortsBy)
-                        {
-                            <MudSelectItem Value="@item">@item.esp_order</MudSelectItem>
-                        }
-                    </MudSelect>
-                </MudExpansionPanel>
-                <MudExpansionPanel Text="Donde ver">
-                    <MudGrid Style="padding:4px;">
-                        @foreach (var item in MovieData.WhatProviders)
-                        {
-                            <MudItem >
-                                <div @onclick="@(() => SelectProviders(item))"
-                                     class="@(SelectedProviders.Contains(item) ? "whatprovider selectedprovider" : "whatprovider")">
-                                    <div class="selectedproviderbg">
-                                        <MudIcon Icon="@Icons.Material.Filled.Check"></MudIcon>
+            @if (string.IsNullOrEmpty(mode) || mode == "discover")
+            {
+                <MudButton EndIcon="@Icons.Material.Filled.Search"
+                    Variant="Variant.Filled" FullWidth="true" 
+                    Color="Color.Primary" Style="margin-bottom:15px;margin-top:5px;"
+                    OnClick="SearchMovies">Buscar</MudButton>
+                <MudExpansionPanels MultiExpansion="true" >
+                    <MudExpansionPanel Text="Ordenar">
+                        <MudSelect @bind-Value="SelectedOrder" Clearable="true" T="Order">
+                            @foreach (var item in MovieData.SortsBy)
+                            {
+                                <MudSelectItem Value="@item">@item.esp_order</MudSelectItem>
+                            }
+                        </MudSelect>
+                    </MudExpansionPanel>
+                    <MudExpansionPanel Text="Donde ver">
+                        <MudGrid Style="padding:4px;">
+                            @foreach (var item in MovieData.WhatProviders)
+                            {
+                                <MudItem >
+                                    <div @onclick="@(() => SelectProviders(item))"
+                                         class="@(SelectedProviders.Contains(item) ? "whatprovider selectedprovider" : "whatprovider")">
+                                        <div class="selectedproviderbg">
+                                            <MudIcon Icon="@Icons.Material.Filled.Check"></MudIcon>
+                                        </div>
+                                        <img src="@($"https://image.tmdb.org/t/p/w300{item.Logo_path}")" loading="lazy" />
                                     </div>
-                                    <img src="@($"https://image.tmdb.org/t/p/w300{item.Logo_path}")" loading="lazy" />
-                                </div>
-                            </MudItem>
-                        }
-                    </MudGrid>
-                </MudExpansionPanel>
-                <MudExpansionPanel Text="Filtros" >
-                    Generos:
-                    <MudChipSet @bind-SelectedValues="SelectedGenres" SelectionMode="SelectionMode.MultiSelection"
-                                CheckMark="true" Variant="Variant.Text" Color="Color.Primary">
-                        @foreach(var genre in MovieData.Genres)
-                        {
-                            <MudChip Value="@genre" >@genre.Esp_Name</MudChip>
-                        }
-                    </MudChipSet>
-                </MudExpansionPanel>
+                                </MudItem>
+                            }
+                        </MudGrid>
+                    </MudExpansionPanel>
+                    <MudExpansionPanel Text="Filtros" >
+                        Generos:
+                        <MudChipSet @bind-SelectedValues="SelectedGenres" SelectionMode="SelectionMode.MultiSelection"
+                                    CheckMark="true" Variant="Variant.Text" Color="Color.Primary">
+                            @foreach(var genre in MovieData.Genres)
+                            {
+                                <MudChip Value="@genre" >@genre.Esp_Name</MudChip>
+                            }
+                        </MudChipSet>
+                    </MudExpansionPanel>
             
-            </MudExpansionPanels>
+                </MudExpansionPanels>
+            }
+            else if(mode == "search")
+            {
+                <MudExpansionPanels MultiExpansion="true" >
+                    <MudExpansionPanel Text="Buscar por nombre" Expanded="true">
+                        <MudTextField T="string"
+                                      ValueChanged="OnQueryChanged"
+                                      Variant="Variant.Filled"
+                                      Adornment="Adornment.Start"
+                                      AdornmentIcon="@Icons.Material.Outlined.Search"
+                                      AdornmentColor="Color.Primary"
+                                      Clearable="true"
+                                      Immediate="true"
+                                      DebounceInterval="450"
+                                      Margin="Margin.Dense"
+                                      FullWidth="true" />
+                    </MudExpansionPanel>
+                </MudExpansionPanels>
+            }
         </MudItem>
         <MudItem xs="@((int)12)" md="@((int)10)">
+            @if (DataList.Count > 0) 
+            {
+                <div class="movie-grid-5" style="margin-top:15px;">
+                    @foreach (var movie in DataList)
+                    {
+                        <MovieCard movie="@movie"></MovieCard>
+                    }
+                    <div class="movie-grid-5" style="display:flex;justify-content:center;margin-top:10px;">
 
-            <div class="movie-grid-5">
-                @foreach (var movie in DataList)
-                {
-                    <div class="movie-grid-item">
-                        <MudPaper Class="movie-card" Elevation="3">
-                            <!-- your existing card -->
-                            <div class="movie-backdrop">
-                                <img style="width:100%;height:100%;object-fit:cover;object-position:center;"
-                                     src="@movie.GetPosterUrl("w500")" loading="lazy" />
-                                <div class="movie-overlay">
-                                    <MudText Typo="Typo.h6" Class="movie-title">@movie.Title</MudText>
-                                    <div class="movie-score">
-                                        <MudProgressCircular Size="Size.Medium"
-                                                             Value="@(movie.VoteAverage * 10)"
-                                                             Color="@GetScoreColor(movie.VoteAverage)"
-                                                             StrokeWidth="6" />
-                                        <span class="movie-score-text">@((int)(movie.VoteAverage * 10))</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="movie-actions">
-                                <MudIconButton Icon="@Icons.Material.Filled.FavoriteBorder" Color="Color.Primary" Size="Size.Small" />
-                                <MudIconButton Icon="@Icons.Material.Filled.Visibility" Color="Color.Success" Size="Size.Small" />
-                            </div>
-                        </MudPaper>
+                        <MudButton Variant="Variant.Filled" OnClick="LoadMore" Color="Color.Primary" Style="padding:15px 30px">Cargar mas</MudButton>
                     </div>
-                }
-                <div class="movie-grid-5" style="display:flex;justify-content:center;margin-top:10px;">
-
-                    <MudButton Variant="Variant.Filled" OnClick="LoadMore" Color="Color.Primary" Style="padding:15px 30px">Cargar mas</MudButton>
-                </div>
         
-            </div>
+                </div>
+            }
+            else
+            {
+                <MudText>No hay resultados</MudText>
+            }
+
             
         </MudItem>
     </MudGrid>
@@ -100,6 +109,7 @@
 <style>
     .movie-grid-5{
         grid-column: 1 / -1; /* ocupa de la primera a la última columna */
+        justify-items: center; /* centra horizontalmente los items */
     }
     /* exactly 5 items per row on desktop */
     .movie-grid-5 {
@@ -109,6 +119,7 @@
     }
 
     .movie-grid-item { /* optional hook */
+        width: 250px;
     }
 
     /* Optional responsiveness */
@@ -149,7 +160,7 @@
         position: relative;
         border-radius: 12px;
         overflow: hidden;
-        height: 490px;
+        
         cursor: pointer;
         display: flex;
         flex-direction: column;

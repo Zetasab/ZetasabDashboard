@@ -14,6 +14,11 @@ namespace ZetaDashboard.Components.Pages.MOV.MovieSearchPage
 {
     public partial class MovieSearchPage
     {
+        [Parameter]
+        public string mode { get; set; }
+        [Parameter]
+        public string name { get; set; }
+
         #region Injects
         [Inject] BaseService ApiService { get; set; }
         [Inject] HttpService HttpApiService { get; set; }
@@ -51,6 +56,8 @@ namespace ZetaDashboard.Components.Pages.MOV.MovieSearchPage
         private Order SelectedOrder = MovieData.SortsBy[3];
 
         private Dictionary<string, string> QueryParams = new Dictionary<string, string>();
+
+        private string _searchByName;
         #endregion
         #region LifeCycles
         protected override async Task OnInitializedAsync()
@@ -83,9 +90,31 @@ namespace ZetaDashboard.Components.Pages.MOV.MovieSearchPage
             //datagridLoading = true;
             //await InvokeAsync(StateHasChanged);
             _pag = 1;
-            
 
-            DataList = await DController.GetData(await HttpApiService.Movies.GetAllDiscoverMoviesAsync(_pag, LoggedUser,QueryParams));
+            if (mode == "nowplaying")
+            {
+                DataList = await DController.GetData(await HttpApiService.Movies.GetAllMoviesByNowPlayingAsync(_pag, LoggedUser));
+            }
+            else if (mode == "popular")
+            {
+                DataList = await DController.GetData(await HttpApiService.Movies.GetAllMoviesByPopularAsync(_pag, LoggedUser));
+            }
+            else if (mode == "toprated")
+            {
+                DataList = await DController.GetData(await HttpApiService.Movies.GetAllMoviesByTopRatedAsync(_pag, LoggedUser));
+            }
+            else if (mode == "upcoming")
+            {
+                DataList = await DController.GetData(await HttpApiService.Movies.GetAllMoviesByUpcomingAsync(_pag, LoggedUser));
+            }
+            else if (mode == "search")
+            {
+                DataList = await DController.GetData(await HttpApiService.Movies.GetAllMoviesByNameAsync(_searchByName,_pag, LoggedUser));
+            }
+            else{
+                DataList = await DController.GetData(await HttpApiService.Movies.GetAllDiscoverMoviesAsync(_pag, LoggedUser, QueryParams));
+            }
+
 
             //datagridLoading = false;
             await InvokeAsync(StateHasChanged);
@@ -93,18 +122,35 @@ namespace ZetaDashboard.Components.Pages.MOV.MovieSearchPage
         #endregion
         #endregion
 
-        private Color GetScoreColor(double voteAverage)
-        {
-            var percent = voteAverage * 10; // 0-100
-            if (percent >= 70) return Color.Success;   // verde
-            if (percent >= 40) return Color.Warning;   // amarillo
-            return Color.Error;                        // rojo
-        }
-
+      
         private async Task LoadMore()
         {
             _pag++;
-            DataList.AddRange(await DController.GetData(await HttpApiService.Movies.GetAllDiscoverMoviesAsync(_pag, LoggedUser,QueryParams)));
+            
+            if (mode == "nowplaying")
+            {
+                DataList.AddRange(await DController.GetData(await HttpApiService.Movies.GetAllMoviesByNowPlayingAsync(_pag, LoggedUser)));
+            }
+            else if (mode == "popular")
+            {
+                DataList.AddRange(await DController.GetData(await HttpApiService.Movies.GetAllMoviesByPopularAsync(_pag, LoggedUser)));
+            }
+            else if (mode == "toprated")
+            {
+                DataList.AddRange(await DController.GetData(await HttpApiService.Movies.GetAllMoviesByTopRatedAsync(_pag, LoggedUser)));
+            }
+            else if (mode == "upcoming")
+            {
+                DataList.AddRange(await DController.GetData(await HttpApiService.Movies.GetAllMoviesByUpcomingAsync(_pag, LoggedUser)));
+            }
+            else if (mode == "search")
+            {
+                DataList.AddRange(await DController.GetData(await HttpApiService.Movies.GetAllMoviesByNameAsync(_searchByName,_pag, LoggedUser)));
+            }
+            else
+            {
+                DataList.AddRange(await DController.GetData(await HttpApiService.Movies.GetAllDiscoverMoviesAsync(_pag, LoggedUser, QueryParams)));
+            }
         }
 
         private void SelectProviders(Watch_provider provider)
@@ -151,6 +197,30 @@ namespace ZetaDashboard.Components.Pages.MOV.MovieSearchPage
             }
 
             GetList();
+        }
+
+        private CancellationTokenSource? _cts;
+        private async Task OnQueryChanged(string text)
+        {
+            _cts?.Cancel();
+            _cts = new CancellationTokenSource();
+            var token = _cts.Token;
+
+            try
+            {
+                _searchByName = text;
+                GetList();
+            }
+            catch (OperationCanceledException)
+            {
+                // esperado al teclear rápido
+            }
+            catch (Exception ex)
+            {
+                // loguea si quieres
+                Console.WriteLine($"Search error: {ex.Message}");
+            }
+            
         }
     }
 }

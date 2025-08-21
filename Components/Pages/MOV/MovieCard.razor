@@ -1,0 +1,43 @@
+﻿<div class="movie-grid-item">
+    <MudPaper Class="movie-card" Elevation="3">
+        <!-- your existing card -->
+        <div class="movie-backdrop">
+            <img style="width:250px;height:375px;object-fit:cover;object-position:center;"
+                 src="@movie.GetPosterUrl("w500")" loading="lazy" />
+            <div class="movie-overlay">
+                <MudText Typo="Typo.h6" Class="movie-title">@movie.Title</MudText>
+                <div class="movie-score">
+                    <MudProgressCircular Size="Size.Medium"
+                                         Value="@(movie.VoteAverage * 10)"
+                                         Color="@GetScoreColor(movie.VoteAverage)"
+                                         StrokeWidth="6" />
+                    <span class="movie-score-text">@((int)(movie.VoteAverage * 10))</span>
+                </div>
+            </div>
+        </div>
+        <div class="movie-actions">
+
+            <!-- Visto -->
+            <MudTooltip Text="Marcar como visto">
+                <MudIconButton Icon="@(false? Icons.Material.Filled.Visibility : Icons.Material.Outlined.Visibility)"
+                               Color="Color.Success"
+                                />
+            </MudTooltip>
+
+            <!-- Añadir a lista -->
+            <MudTooltip Text="Añadir a lista">
+                <MudIconButton Icon="@(true? Icons.Material.Filled.PlaylistAddCheck : Icons.Material.Outlined.PlaylistAdd)"
+                               Color="Color.Secondary"
+                              />
+            </MudTooltip>
+
+            <!-- Watchlist -->
+            <MudTooltip Text="Guardar en whatchlist">
+                <MudIconButton Icon="@(true? Icons.Material.Filled.Bookmark : Icons.Material.Outlined.BookmarkBorder)"
+                               Color="Color.Primary"
+                                />
+            </MudTooltip>
+
+        </div>
+    </MudPaper>
+</div>
