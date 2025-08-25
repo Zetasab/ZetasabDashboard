@@ -9,7 +9,7 @@
 <div style="display:flex;align-items:center;justify-content:space-between">
     <div></div>
     <div>
-        <h2>🔎 Descubre Peliculas</h2>
+        <h2>@GetTitle(mode)</h2>
     </div>
     <div style="padding-right:30px;">
     </div>
@@ -89,7 +89,8 @@
                     {
                         <MovieCard movie="@movie" 
                                 ApiService="@ApiService" DController="@DController"
-                                   LoggedUser="@LoggedUser" SeenMovies="@SeenMovieList"></MovieCard>
+                                   LoggedUser="@LoggedUser" SeenMovies="@SeenMovieList" 
+                        LikedMovies="@LikedMovieList" WatchMovies="@WatchMovieList" CService="@CService"></MovieCard>
                     }
                     <div class="movie-grid-5" style="display:flex;justify-content:center;margin-top:10px;">
 

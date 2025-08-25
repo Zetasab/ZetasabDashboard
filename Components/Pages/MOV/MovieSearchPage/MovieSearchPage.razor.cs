@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using MudBlazor;
+using System.Text.RegularExpressions;
 using ZetaCommon.Auth;
 using ZetaDashboard.Common.MOV;
 using ZetaDashboard.Common.Services;
@@ -18,6 +19,7 @@ namespace ZetaDashboard.Components.Pages.MOV.MovieSearchPage
         public string mode { get; set; }
         [Parameter]
         public string name { get; set; }
+        
 
         #region Injects
         [Inject] BaseService ApiService { get; set; }
@@ -60,6 +62,9 @@ namespace ZetaDashboard.Components.Pages.MOV.MovieSearchPage
         private string _searchByName;
 
         private List<MovieModel> SeenMovieList { get; set; } = new List<MovieModel>();
+        private List<MovieModel> LikedMovieList { get; set; } = new List<MovieModel>();
+        private List<MovieModel> WatchMovieList { get; set; } = new List<MovieModel>();
+        private int Maxpages = 0;
         #endregion
         #region LifeCycles
         protected override async Task OnInitializedAsync()
@@ -75,8 +80,13 @@ namespace ZetaDashboard.Components.Pages.MOV.MovieSearchPage
                 Common.Mongo.ResponseStatus.Ok
                 );
             await ApiService.Audits.InsertAsync(audit);
+            
+        }
+        protected override async Task OnParametersSetAsync()
+        {
             GetList();
         }
+
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             if (firstRender)
@@ -118,6 +128,8 @@ namespace ZetaDashboard.Components.Pages.MOV.MovieSearchPage
             }
 
             SeenMovieList = DController.GetData(await ApiService.SeenMovies.GetAllSeenMoviesByUserIdAsync(LoggedUser)).Result ?? new List<MovieModel>();
+            LikedMovieList = DController.GetData(await ApiService.LikedMovies.GetAllLikedMoviesByUserIdAsync(LoggedUser)).Result ?? new List<MovieModel>();
+            WatchMovieList = DController.GetData(await ApiService.WatchMovies.GetAllWatchMoviesByUserIdAsync(LoggedUser)).Result ?? new List<MovieModel>();
 
 
             //datagridLoading = false;
@@ -226,5 +238,17 @@ namespace ZetaDashboard.Components.Pages.MOV.MovieSearchPage
             }
             
         }
+
+        public string GetTitle(string mode) => mode switch
+        {
+            null => "📍 Descubre Peliculas",
+            "" => "📍 Descubre Peliculas",
+            "discover" => "📍 Descubre Peliculas",
+            "nowplaying" => "⌛  Ahora mismo",
+            "popular" => "🔥 Populares",
+            "toprated" => "📈 Mas valoradas",
+            "upcoming" => "🆕  Nuevas",
+            "search" => "🔎 Buscar"
+        };
     }
 }

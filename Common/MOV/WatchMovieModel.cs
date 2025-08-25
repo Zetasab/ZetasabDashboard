@@ -1,13 +1,13 @@
 ﻿namespace ZetaDashboard.Common.MOV
 {
-    public class SeenMovieModel
+    public class WatchMovieModel
     {
         public string Id { get; set; }
         public string UserId { get; set; }
 
         public List<MovieModel> Movies { get; set; } = new List<MovieModel>();
 
-        public SeenMovieModel()
+        public WatchMovieModel()
         {
             Id = Guid.NewGuid().ToString();
         }

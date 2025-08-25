@@ -9,11 +9,11 @@ namespace ZetaDashboard.Common.ZDB.Services
 {
     public partial class BaseService
     {
-        public class SeenMovieService : MongoRepositoryBase<SeenMovieModel>
+        public class WatchMovieService : MongoRepositoryBase<WatchMovieModel>
         {
             private List<string> thispage = new List<string>() { "mov" };
-            public SeenMovieService(MongoContext context)
-                : base(context, "mov_seen") { }
+            public WatchMovieService(MongoContext context)
+                : base(context, "mov_watch") { }
 
             public string _dato = "lista de vistos";
             public string _datos = "listas de vistos";
@@ -21,9 +21,9 @@ namespace ZetaDashboard.Common.ZDB.Services
             public string _loslasDatos = "laas listas de vistos";
 
             #region Get
-            public async Task<ApiResponse<List<SeenMovieModel>>> GetAllSeenMoviesAsync(UserModel loggeduser)
+            public async Task<ApiResponse<List<WatchMovieModel>>> GetAllWatchMoviesAsync(UserModel loggeduser)
             {
-                ApiResponse<List<SeenMovieModel?>> response = new ApiResponse<List<SeenMovieModel?>>();
+                ApiResponse<List<WatchMovieModel?>> response = new ApiResponse<List<WatchMovieModel?>>();
                 try
                 {
                     if (!HasPermissions(loggeduser,UserModel.EUserPermissionType.Visor,thispage))
@@ -54,7 +54,7 @@ namespace ZetaDashboard.Common.ZDB.Services
                 return response;
             }
 
-            public async Task<ApiResponse<List<MovieModel>>> GetAllSeenMoviesByUserIdAsync(UserModel loggeduser)
+            public async Task<ApiResponse<List<MovieModel>>> GetAllWatchMoviesByUserIdAsync(UserModel loggeduser)
             {
                 ApiResponse<List<MovieModel?>> response = new ApiResponse<List<MovieModel?>>();
                 try
@@ -66,13 +66,13 @@ namespace ZetaDashboard.Common.ZDB.Services
                         return response;
                     }
 
-                    var filter = Builders<SeenMovieModel>.Filter.Eq(x => x.UserId, loggeduser.Id);
+                    var filter = Builders<WatchMovieModel>.Filter.Eq(x => x.UserId, loggeduser.Id);
                     var result = await FindAllAsync(filter);
                     if (result != null)
                     {
                         if (result.Count == 0)
                         {
-                            SeenMovieModel aux = new SeenMovieModel()
+                            WatchMovieModel aux = new WatchMovieModel()
                             {
                                 Movies = new List<MovieModel>(),
                                 UserId = loggeduser.Id
@@ -81,7 +81,7 @@ namespace ZetaDashboard.Common.ZDB.Services
                             result = await FindAllAsync(filter);
                         }
                         response.Result = ResponseStatus.Ok;
-                        response.Data = result[0].Movies ?? new List<MovieModel>();
+                        response.Data = result[0].Movies;
                     }
                     else
                     {
@@ -102,7 +102,7 @@ namespace ZetaDashboard.Common.ZDB.Services
 
 
             #region Post
-            public async Task<ApiResponse<bool>> InsertSeenMovieAsync(SeenMovieModel model, UserModel loggeduser)
+            public async Task<ApiResponse<bool>> InsertWatchMovieAsync(WatchMovieModel model, UserModel loggeduser)
             {
                 ApiResponse<bool> response = new ApiResponse<bool>();
                 
@@ -130,7 +130,7 @@ namespace ZetaDashboard.Common.ZDB.Services
 
             #region Update
 
-            public async Task <ApiResponse<bool>> MarkAsSeenAsync(MovieModel movie,UserModel loggeduser)
+            public async Task <ApiResponse<bool>> MarkAsWatchAsync(MovieModel movie,UserModel loggeduser)
             {
                 ApiResponse<bool> response = new ApiResponse<bool>();
                 try
@@ -142,12 +142,12 @@ namespace ZetaDashboard.Common.ZDB.Services
                         return response;
                     }
 
-                    var filter = Builders<SeenMovieModel>.Filter.Eq(x => x.UserId, loggeduser.Id);
+                    var filter = Builders<WatchMovieModel>.Filter.Eq(x => x.UserId, loggeduser.Id);
                     var result = await FindAllAsync(filter);
 
                     if(result.Count == 0)
                     {
-                        SeenMovieModel aux = new SeenMovieModel()
+                        WatchMovieModel aux = new WatchMovieModel()
                         {
                             Movies = new List<MovieModel>(),
                             UserId = loggeduser.Id
@@ -162,7 +162,7 @@ namespace ZetaDashboard.Common.ZDB.Services
 
                     
                     response.Result = ResponseStatus.Ok;
-                    response.Message = $"La pelicula se ha marcado como vista";
+                    response.Message = $"La pelicula se ha marcado ver mas tarde";
                 }
                 catch (Exception ex)
                 {
@@ -173,7 +173,7 @@ namespace ZetaDashboard.Common.ZDB.Services
                 return response;
             }
 
-            public async Task<ApiResponse<bool>> UnMarkAsSeenAsync(MovieModel movie, UserModel loggeduser)
+            public async Task<ApiResponse<bool>> UnMarkAsWatchAsync(MovieModel movie, UserModel loggeduser)
             {
                 ApiResponse<bool> response = new ApiResponse<bool>();
                 try
@@ -185,12 +185,12 @@ namespace ZetaDashboard.Common.ZDB.Services
                         return response;
                     }
 
-                    var filter = Builders<SeenMovieModel>.Filter.Eq(x => x.UserId, loggeduser.Id);
+                    var filter = Builders<WatchMovieModel>.Filter.Eq(x => x.UserId, loggeduser.Id);
                     var result = await FindAllAsync(filter);
 
                     if (result.Count == 0)
                     {
-                        SeenMovieModel aux = new SeenMovieModel()
+                        WatchMovieModel aux = new WatchMovieModel()
                         {
                             Movies = new List<MovieModel>(),
                             UserId = loggeduser.Id
@@ -205,7 +205,7 @@ namespace ZetaDashboard.Common.ZDB.Services
 
 
                     response.Result = ResponseStatus.Ok;
-                    response.Message = $"La pelicula se ha descarmacado como vista";
+                    response.Message = $"La pelicula se ha quitado de ver mas tarde";
                 }
                 catch (Exception ex)
                 {
@@ -216,7 +216,7 @@ namespace ZetaDashboard.Common.ZDB.Services
                 return response;
             }
 
-            public async Task<ApiResponse<bool>> UpdateSeenMovieAsync(SeenMovieModel model, UserModel loggeduser)
+            public async Task<ApiResponse<bool>> UpdateWatchMovieAsync(WatchMovieModel model, UserModel loggeduser)
             {
                 ApiResponse<bool> response = new ApiResponse<bool>();
 
@@ -243,7 +243,7 @@ namespace ZetaDashboard.Common.ZDB.Services
             #endregion
 
             #region Delete
-            public async Task<ApiResponse<bool>> DeleteSeenMovieAsync(SeenMovieModel model, UserModel loggeduser)
+            public async Task<ApiResponse<bool>> DeleteWatchMovieAsync(WatchMovieModel model, UserModel loggeduser)
             {
                 ApiResponse<bool> response = new ApiResponse<bool>();
 

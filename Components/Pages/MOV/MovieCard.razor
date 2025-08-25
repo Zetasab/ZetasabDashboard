@@ -17,38 +17,65 @@
         </div>
         <div class="movie-actions">
 
-            <!-- Visto -->
-            @if (SeenMovies.Any(x => x.Title == movie.Title))
+            @if (CService.CheckIfPermissions(LoggedUser, ThisPageEdit))
             {
-                <MudTooltip Text="Desmarcar como visto">
-                    <MudIconButton Icon="@Icons.Material.Filled.Visibility"
-                                   Color="Color.Success"
-                                   OnClick="@(() => UnMarkAsSeen(movie))" />
-                </MudTooltip>
+                <!-- Visto -->
+                @if (SeenMovies.Any(x => x.Title == movie.Title))
+                {
+                    <MudTooltip Text="Desmarcar como visto">
+                        <MudIconButton Icon="@Icons.Material.Filled.Visibility"
+                                       Color="Color.Success"
+                                       OnClick="@(() => UnMarkAsSeen(movie))" />
+                    </MudTooltip>
+                }
+                else
+                {
+                     <MudTooltip Text="Marcar como visto">
+                        <MudIconButton Icon="@Icons.Material.Outlined.Visibility"
+                                       Color="Color.Success"
+                                       OnClick="@(() => MarkAsSeen(movie))" />
+                    </MudTooltip>
+                }
+
+
+                <!-- Añadir a favoritos -->
+                @if (LikedMovies.Any(x => x.Title == movie.Title))
+                {
+                    <MudTooltip Text="Quitar de Favoritos">
+                        <MudIconButton Icon="@Icons.Material.Filled.Favorite"
+                                       Color="Color.Secondary"
+                                       OnClick="@(() => UnMarkAsLiked(movie))" />
+                    </MudTooltip>
+                }
+                else
+                {
+                    <MudTooltip Text="Añadir a Favoritos">
+                        <MudIconButton Icon="@Icons.Material.Outlined.FavoriteBorder"
+                                       Color="Color.Secondary"
+                                       OnClick="@(() => MarkAsLiked(movie))" />
+                    </MudTooltip>
+                }          
+
+                <!-- Watchlist -->
+                @if (WatchMovies.Any(x => x.Title == movie.Title))
+                {
+                    <MudTooltip Text="Quitar de ver mas tarde">
+                        <MudIconButton Icon="@Icons.Material.Filled.Bookmark"
+                                       Color="Color.Primary"
+                                       OnClick="@(() => UnMarkAsWatch(movie))" />
+                    </MudTooltip>
+                }
+                else
+                {
+                    <MudTooltip Text="Añadir a ver mas tarde">
+                        <MudIconButton Icon="@Icons.Material.Outlined.BookmarkBorder"
+                                       Color="Color.Primary"
+                                       OnClick="@(() => MarkAsWatch(movie))" />
+                    </MudTooltip>
+                }
             }
-            else
-            {
-                 <MudTooltip Text="Marcar como visto">
-                    <MudIconButton Icon="@Icons.Material.Outlined.Visibility"
-                                   Color="Color.Success"
-                                   OnClick="@(() => MarkAsSeen(movie))" />
-                </MudTooltip>
-            }
 
-
-            <!-- Añadir a favoritos -->
-            <MudTooltip Text="Añadir a Favoritos">
-                <MudIconButton Icon="@(true? Icons.Material.Filled.Favorite : Icons.Material.Outlined.PlaylistAdd)"
-                               Color="Color.Secondary"
-                              />
-            </MudTooltip>
-
-            <!-- Watchlist -->
-            <MudTooltip Text="Guardar en whatchlist">
-                <MudIconButton Icon="@(true? Icons.Material.Filled.Bookmark : Icons.Material.Outlined.BookmarkBorder)"
-                               Color="Color.Primary"
-                                />
-            </MudTooltip>
+            
 
         </div>
     </MudPaper>
