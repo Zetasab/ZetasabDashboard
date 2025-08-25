@@ -14,7 +14,7 @@
 @if (DataList.Count > 0)
 {
     <MudContainer MaxWidth="MaxWidth.ExtraLarge">
-        <div class="movie-grid-5" style="margin-top:15px;justify-items:center"">
+        <div class="movie-grid-5" style="margin-top:15px;justify-items:center">
             @foreach (var movie in DataList)
             {
                 <MovieCard movie="@movie"
@@ -37,7 +37,7 @@ else
 }
 
 <style>
-    <style >
+    
     .movie-grid-5 {
         grid-column: 1 / -1; /* ocupa de la primera a la última columna */
         justify-items: center; /* centra horizontalmente los items */
@@ -182,5 +182,4 @@ else
         background-color: var(--mud-palette-primary);
         opacity: 0.5;
     }
-</style>
 </style>
