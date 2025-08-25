@@ -18,15 +18,27 @@
         <div class="movie-actions">
 
             <!-- Visto -->
-            <MudTooltip Text="Marcar como visto">
-                <MudIconButton Icon="@(false? Icons.Material.Filled.Visibility : Icons.Material.Outlined.Visibility)"
-                               Color="Color.Success"
-                                />
-            </MudTooltip>
+            @if (SeenMovies.Any(x => x.Title == movie.Title))
+            {
+                <MudTooltip Text="Desmarcar como visto">
+                    <MudIconButton Icon="@Icons.Material.Filled.Visibility"
+                                   Color="Color.Success"
+                                   OnClick="@(() => UnMarkAsSeen(movie))" />
+                </MudTooltip>
+            }
+            else
+            {
+                 <MudTooltip Text="Marcar como visto">
+                    <MudIconButton Icon="@Icons.Material.Outlined.Visibility"
+                                   Color="Color.Success"
+                                   OnClick="@(() => MarkAsSeen(movie))" />
+                </MudTooltip>
+            }
 
-            <!-- Añadir a lista -->
-            <MudTooltip Text="Añadir a lista">
-                <MudIconButton Icon="@(true? Icons.Material.Filled.PlaylistAddCheck : Icons.Material.Outlined.PlaylistAdd)"
+
+            <!-- Añadir a favoritos -->
+            <MudTooltip Text="Añadir a Favoritos">
+                <MudIconButton Icon="@(true? Icons.Material.Filled.Favorite : Icons.Material.Outlined.PlaylistAdd)"
                                Color="Color.Secondary"
                               />
             </MudTooltip>

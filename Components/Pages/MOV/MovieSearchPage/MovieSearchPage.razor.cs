@@ -58,6 +58,8 @@ namespace ZetaDashboard.Components.Pages.MOV.MovieSearchPage
         private Dictionary<string, string> QueryParams = new Dictionary<string, string>();
 
         private string _searchByName;
+
+        private List<MovieModel> SeenMovieList { get; set; } = new List<MovieModel>();
         #endregion
         #region LifeCycles
         protected override async Task OnInitializedAsync()
@@ -69,7 +71,7 @@ namespace ZetaDashboard.Components.Pages.MOV.MovieSearchPage
                 LoggedUser.Name,
                 AuditWhat.See,
                 $"Entrando en SeachMovie",
-                $"Entrando en SeachMovie",
+                $"Entrando en SeachMovie; mode {mode}",
                 Common.Mongo.ResponseStatus.Ok
                 );
             await ApiService.Audits.InsertAsync(audit);
@@ -114,6 +116,8 @@ namespace ZetaDashboard.Components.Pages.MOV.MovieSearchPage
             else{
                 DataList = await DController.GetData(await HttpApiService.Movies.GetAllDiscoverMoviesAsync(_pag, LoggedUser, QueryParams));
             }
+
+            SeenMovieList = DController.GetData(await ApiService.SeenMovies.GetAllSeenMoviesByUserIdAsync(LoggedUser)).Result ?? new List<MovieModel>();
 
 
             //datagridLoading = false;

@@ -87,7 +87,9 @@
                 <div class="movie-grid-5" style="margin-top:15px;">
                     @foreach (var movie in DataList)
                     {
-                        <MovieCard movie="@movie"></MovieCard>
+                        <MovieCard movie="@movie" 
+                                ApiService="@ApiService" DController="@DController"
+                                   LoggedUser="@LoggedUser" SeenMovies="@SeenMovieList"></MovieCard>
                     }
                     <div class="movie-grid-5" style="display:flex;justify-content:center;margin-top:10px;">
 
