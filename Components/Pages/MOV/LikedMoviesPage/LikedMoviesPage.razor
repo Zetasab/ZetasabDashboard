@@ -1,0 +1,186 @@
+﻿@page "/liked-movies"
+
+<!-- #region Title -->
+<div style="display:flex;align-items:center;justify-content:space-between">
+    <div></div>
+    <div>
+        <h2>❤ Peliculas Favoritas</h2>
+    </div>
+    <div style="padding-right:30px;">
+    </div>
+</div>
+<!-- #endregion -->
+
+@if (DataList.Count > 0)
+{
+    <MudContainer MaxWidth="MaxWidth.ExtraLarge">
+        <div class="movie-grid-5" style="margin-top:15px;justify-items:center"">
+            @foreach (var movie in DataList)
+            {
+                <MovieCard movie="@movie"
+                           ApiService="@ApiService" DController="@DController"
+                           LoggedUser="@LoggedUser" SeenMovies="@SeenMovieList"
+                           LikedMovies="@LikedMovieList" WatchMovies="@WatchMovieList" 
+                           CService="@CService" Update="GetList"></MovieCard>
+            }
+            <div class="movie-grid-5" style="display:flex;justify-content:center;margin-top:10px;">
+
+                @* <MudButton Variant="Variant.Filled" OnClick="LoadMore" Color="Color.Primary" Style="padding:15px 30px">Cargar mas</MudButton> *@
+            </div>
+
+        </div>
+    </MudContainer>
+}
+else
+{
+    <MudText>No hay resultados</MudText>
+}
+
+<style>
+    <style >
+    .movie-grid-5 {
+        grid-column: 1 / -1; /* ocupa de la primera a la última columna */
+        justify-items: center; /* centra horizontalmente los items */
+    }
+    /* exactly 5 items per row on desktop */
+    .movie-grid-5 {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 16px; /* adjust spacing (gutter) */
+    }
+
+    .movie-grid-item { /* optional hook */
+        width: 250px;
+    }
+
+    /* Optional responsiveness */
+    @@media (max-width: 1200px) {
+        .movie-grid-5 {
+            grid-template-columns: repeat(4, 1fr);
+        }
+    }
+
+    @@media (max-width: 900px) {
+        .movie-grid-5 {
+            grid-template-columns: repeat(3, 1fr);
+        }
+    }
+
+    @@media (max-width: 600px) {
+        .movie-grid-5 {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @@media (max-width: 420px) {
+        .movie-grid-5 {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .movie-card {
+        position: relative;
+        border-radius: 12px;
+        overflow: hidden;
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        transition: transform 0.2s ease-in-out;
+    }
+
+        .movie-card:hover {
+            transform: scale(1.03);
+        }
+
+    .movie-backdrop {
+        flex: 1;
+        background-size: cover;
+        background-position: center;
+        position: relative;
+    }
+
+    .movie-overlay {
+        position: absolute;
+        bottom: 0px; /* dejamos hueco para botones */
+        width: 100%;
+        padding: 12px;
+        background: linear-gradient(to top, rgba(0,0,0,0.7), rgba(0,0,0,0));
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .movie-title {
+        color: white;
+        font-weight: bold;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+    }
+
+    /* barra de acciones al fondo */
+    .movie-actions {
+        display: flex;
+        justify-content: space-around;
+        background: rgba(0, 0, 0, 0.6);
+        padding: 6px;
+    }
+
+    .movie-score {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 8px;
+    }
+
+    .movie-score-text {
+        position: absolute;
+        font-size: 14px;
+        font-weight: bold;
+        color: white;
+    }
+
+    .whatprovider {
+        width: 55px;
+        height: 55px;
+        position: relative;
+        overflow: hidden;
+        border: 2px solid var(--mud-palette-primary);
+        border-radius: 8px;
+        transition: 0.3s ease-in-out;
+    }
+
+        .whatprovider:hover {
+            cursor: pointer;
+        }
+
+        .whatprovider img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: 0.3s ease-in-out;
+        }
+
+    .mud-expand-panel.mud-panel-expanded {
+        margin: 1px 0px !important;
+    }
+
+
+
+    .selectedprovider > .selectedproviderbg {
+        visibility: visible !important;
+    }
+
+    .selectedproviderbg {
+        visibility: hidden;
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: var(--mud-palette-primary);
+        opacity: 0.5;
+    }
+</style>
+</style>

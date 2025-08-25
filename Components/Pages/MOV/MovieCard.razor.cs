@@ -19,6 +19,7 @@ namespace ZetaDashboard.Components.Pages.MOV
         [Parameter] public List<MovieModel> SeenMovies { get; set; }
         [Parameter] public List<MovieModel> LikedMovies { get; set; }
         [Parameter] public List<MovieModel> WatchMovies { get; set; }
+        [Parameter] public EventCallback Update { get; set; }
 
         private UserPermissions ThisPage { get; set; } = new UserPermissions()
         {
@@ -97,16 +98,19 @@ namespace ZetaDashboard.Components.Pages.MOV
         private async Task UpdateSeenList()
         {
             SeenMovies = DController.GetData(await ApiService.SeenMovies.GetAllSeenMoviesByUserIdAsync(LoggedUser)).Result ?? new List<MovieModel>();
+            Update.InvokeAsync();
             await InvokeAsync(StateHasChanged);
         }
         private async Task UpdateLikedList()
         {
             LikedMovies = DController.GetData(await ApiService.LikedMovies.GetAllLikedMoviesByUserIdAsync(LoggedUser)).Result ?? new List<MovieModel>();
+            Update.InvokeAsync();
             await InvokeAsync(StateHasChanged);
         }
         private async Task UpdateWatchList()
         {
             WatchMovies = DController.GetData(await ApiService.WatchMovies.GetAllWatchMoviesByUserIdAsync(LoggedUser)).Result ?? new List<MovieModel>();
+            Update.InvokeAsync();
             await InvokeAsync(StateHasChanged);
         }
         
