@@ -16,10 +16,12 @@ namespace ZetaDashboard.Components.Pages.MOV
         [Parameter] public UserModel LoggedUser { get; set; }
         [Parameter] public BaseService ApiService { get; set; }
         [Parameter] public CommonServices CService { get; set; }
+        [Parameter] public NavigationManager Navigator { get; set; }
         [Parameter] public List<MovieModel> SeenMovies { get; set; }
         [Parameter] public List<MovieModel> LikedMovies { get; set; }
         [Parameter] public List<MovieModel> WatchMovies { get; set; }
         [Parameter] public EventCallback Update { get; set; }
+        [Parameter] public bool ShowButtons { get; set; } = true;
 
         private UserPermissions ThisPage { get; set; } = new UserPermissions()
         {
@@ -36,6 +38,12 @@ namespace ZetaDashboard.Components.Pages.MOV
             Code = "mov",
             UserType = EUserPermissionType.Admin
         };
+
+
+        private async Task ShowMovie(string movieId)
+        {
+            Navigator.NavigateTo($"movie/{movieId}");
+        }
 
         #region Seen
         private async Task MarkAsSeen(MovieModel movie)

@@ -53,7 +53,7 @@ namespace ZetaDashboard.Components.Pages.MOV.MovieSearchPage
         private List<MovieModel> DataList { get; set; } = new List<MovieModel>();
 
         private int _pag = 1;
-        private IReadOnlyCollection<Genre> SelectedGenres = new List<Genre>();
+        private IReadOnlyCollection<Data.MOV.Genre> SelectedGenres = new List<Data.MOV.Genre>();
         private List<Watch_provider> SelectedProviders = new List<Watch_provider>();
         private Order SelectedOrder = MovieData.SortsBy[3];
 

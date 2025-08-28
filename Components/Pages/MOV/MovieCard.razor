@@ -1,7 +1,7 @@
 ﻿<div class="movie-grid-item">
     <MudPaper Class="movie-card" Elevation="3">
         <!-- your existing card -->
-        <div class="movie-backdrop">
+        <div class="movie-backdrop" @onclick="@(() => ShowMovie(movie.Id.ToString()))">
             <img style="width:250px;height:375px;object-fit:cover;object-position:center;"
                  src="@movie.GetPosterUrl("w500")" loading="lazy" />
             <div class="movie-overlay">
@@ -16,62 +16,64 @@
             </div>
         </div>
         <div class="movie-actions">
-
-            @if (CService.CheckIfPermissions(LoggedUser, ThisPageEdit))
+            @if (ShowButtons)
             {
-                <!-- Visto -->
-                @if (SeenMovies.Any(x => x.Title == movie.Title))
+                @if (CService.CheckIfPermissions(LoggedUser, ThisPageEdit))
                 {
-                    <MudTooltip Text="Desmarcar como visto">
-                        <MudIconButton Icon="@Icons.Material.Filled.Visibility"
-                                       Color="Color.Success"
-                                       OnClick="@(() => UnMarkAsSeen(movie))" />
-                    </MudTooltip>
-                }
-                else
-                {
-                     <MudTooltip Text="Marcar como visto">
-                        <MudIconButton Icon="@Icons.Material.Outlined.Visibility"
-                                       Color="Color.Success"
-                                       OnClick="@(() => MarkAsSeen(movie))" />
-                    </MudTooltip>
-                }
+                    <!-- Visto -->
+                    @if (SeenMovies.Any(x => x.Title == movie.Title))
+                    {
+                        <MudTooltip Text="Desmarcar como visto">
+                            <MudIconButton Icon="@Icons.Material.Filled.Visibility"
+                                           Color="Color.Success"
+                                           OnClick="@(() => UnMarkAsSeen(movie))" />
+                        </MudTooltip>
+                    }
+                    else
+                    {
+                         <MudTooltip Text="Marcar como visto">
+                            <MudIconButton Icon="@Icons.Material.Outlined.Visibility"
+                                           Color="Color.Success"
+                                           OnClick="@(() => MarkAsSeen(movie))" />
+                        </MudTooltip>
+                    }
 
 
-                <!-- Añadir a favoritos -->
-                @if (LikedMovies.Any(x => x.Title == movie.Title))
-                {
-                    <MudTooltip Text="Quitar de Favoritos">
-                        <MudIconButton Icon="@Icons.Material.Filled.Favorite"
-                                       Color="Color.Secondary"
-                                       OnClick="@(() => UnMarkAsLiked(movie))" />
-                    </MudTooltip>
-                }
-                else
-                {
-                    <MudTooltip Text="Añadir a Favoritos">
-                        <MudIconButton Icon="@Icons.Material.Outlined.FavoriteBorder"
-                                       Color="Color.Secondary"
-                                       OnClick="@(() => MarkAsLiked(movie))" />
-                    </MudTooltip>
-                }          
+                    <!-- Añadir a favoritos -->
+                    @if (LikedMovies.Any(x => x.Title == movie.Title))
+                    {
+                        <MudTooltip Text="Quitar de Favoritos">
+                            <MudIconButton Icon="@Icons.Material.Filled.Favorite"
+                                           Color="Color.Secondary"
+                                           OnClick="@(() => UnMarkAsLiked(movie))" />
+                        </MudTooltip>
+                    }
+                    else
+                    {
+                        <MudTooltip Text="Añadir a Favoritos">
+                            <MudIconButton Icon="@Icons.Material.Outlined.FavoriteBorder"
+                                           Color="Color.Secondary"
+                                           OnClick="@(() => MarkAsLiked(movie))" />
+                        </MudTooltip>
+                    }          
 
-                <!-- Watchlist -->
-                @if (WatchMovies.Any(x => x.Title == movie.Title))
-                {
-                    <MudTooltip Text="Quitar de ver mas tarde">
-                        <MudIconButton Icon="@Icons.Material.Filled.Bookmark"
-                                       Color="Color.Primary"
-                                       OnClick="@(() => UnMarkAsWatch(movie))" />
-                    </MudTooltip>
-                }
-                else
-                {
-                    <MudTooltip Text="Añadir a ver mas tarde">
-                        <MudIconButton Icon="@Icons.Material.Outlined.BookmarkBorder"
-                                       Color="Color.Primary"
-                                       OnClick="@(() => MarkAsWatch(movie))" />
-                    </MudTooltip>
+                    <!-- Watchlist -->
+                    @if (WatchMovies.Any(x => x.Title == movie.Title))
+                    {
+                        <MudTooltip Text="Quitar de ver mas tarde">
+                            <MudIconButton Icon="@Icons.Material.Filled.Bookmark"
+                                           Color="Color.Primary"
+                                           OnClick="@(() => UnMarkAsWatch(movie))" />
+                        </MudTooltip>
+                    }
+                    else
+                    {
+                        <MudTooltip Text="Añadir a ver mas tarde">
+                            <MudIconButton Icon="@Icons.Material.Outlined.BookmarkBorder"
+                                           Color="Color.Primary"
+                                           OnClick="@(() => MarkAsWatch(movie))" />
+                        </MudTooltip>
+                    }
                 }
             }
 

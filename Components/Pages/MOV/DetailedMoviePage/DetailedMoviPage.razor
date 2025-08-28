@@ -1,0 +1,472 @@
+﻿@page "/movie/{movieId}"
+
+<!-- #region cabecera -->
+
+<div class="cabecera-container">
+    <img src="@MovieModel.GetBackGroungUrl()" loading="lazy" />
+</div>
+<!-- #endregion -->
+
+<MudContainer class="mudcontainer-container" MaxWidth="MaxWidth.Large">
+     <MudGrid style="align-items:center;">
+         <MudHidden Breakpoint="Breakpoint.Xs">
+            <MudItem xs="@((int)12)" md="@((int)5)" Style="display:flex;justify-content:end;">
+                <img src="@MovieModel.GetPosterUrl()" loading="lazy" style="width:370px;height:555px; border-radius:15px;" />
+            </MudItem>
+            <MudItem xs="@((int)12)" md="@((int)1)"></MudItem>
+        </MudHidden>
+        <MudItem xs="@((int)12)" md="@((int)6)">
+            <div class="info-container">
+                <MudText Typo="Typo.h4"
+                         Align="Align.Center"
+                         GutterBottom="true"
+                         Color="Color.Primary"
+                         Style="margin-top:15px;font-weight:bold;"
+                         Class="movie-title">
+                    📹 @MovieModel.Title
+                </MudText>
+                <div style="display:flex;margin:10px;">
+                    <MudIcon Icon="@Icons.Material.Filled.CalendarMonth" Color="Color.Primary"></MudIcon>
+                    <MudText>
+                        @MovieModel.ReleaseDate
+                    </MudText>
+                    <MudIcon Style="margin-left:20px;" Icon="@Icons.Material.Filled.Timer" Color="Color.Primary"></MudIcon>
+                    <MudText>
+                        @MovieModel.FormatMinutes()
+                    </MudText>
+                    
+                </div>
+                <div style="width: 100%;word-wrap: break-word;margin-top:10px;padding:0px 40px;display:flex;justify-content:center;">
+                    <MudText>
+                        @foreach (var genre in MovieModel.Genres)
+                        {
+                            <text>@genre.Name,</text>
+                        }
+                        
+                    </MudText>
+                </div>
+                <div style="margin-top:40px;display:flex;width:100%;justify-content: space-around;">
+                    <div style="position:relative;display:flex;justify-content:center;align-items:center;">
+                        <MudProgressCircular Style="width:80px;height:80px;"
+                                             Value="@(MovieModel.VoteAverage * 10)"
+                                             Color="@GetScoreColor(65)"
+                                             StrokeWidth="6" />
+                        <span style="font-size:22px;position:absolute;">@((int)(MovieModel.VoteAverage * 10))</span>
+                    </div>
+                    <div style="display:flex;align-items:end;gap:7px;">
+                        @if (CService.CheckIfPermissions(LoggedUser, ThisPageEdit))
+                        {
+                            <!-- Visto -->
+                            @if (SeenMovies.Any(x => x.Title == MovieModel.Title))
+                            {
+                                <MudTooltip Text="Desmarcar como visto">
+                                    <MudIconButton Icon="@Icons.Material.Filled.Visibility"
+                                    Size="Size.Large"          
+                                    Color="Color.Success"
+                                                   OnClick="@(() => UnMarkAsSeen(MovieModel))" />
+                                </MudTooltip>
+                            }
+                            else
+                            {
+                                <MudTooltip Text="Marcar como visto">
+                                    <MudIconButton Icon="@Icons.Material.Outlined.Visibility"
+                                    Size="Size.Large"               
+                                    Color="Color.Success"
+                                                   OnClick="@(() => MarkAsSeen(MovieModel))" />
+                                </MudTooltip>
+                            }
+
+
+                            <!-- Añadir a favoritos -->
+                            @if (LikedMovies.Any(x => x.Title == MovieModel.Title))
+                            {
+                                <MudTooltip Text="Quitar de Favoritos">
+                                    <MudIconButton Icon="@Icons.Material.Filled.Favorite"
+                                    Size="Size.Large"               
+                                    Color="Color.Secondary"
+                                                   OnClick="@(() => UnMarkAsLiked(MovieModel))" />
+                                </MudTooltip>
+                            }
+                            else
+                            {
+                                <MudTooltip Text="Añadir a Favoritos">
+                                    <MudIconButton Icon="@Icons.Material.Outlined.FavoriteBorder"
+                                    Size="Size.Large"               
+                                    Color="Color.Secondary"
+                                                   OnClick="@(() => MarkAsLiked(MovieModel))" />
+                                </MudTooltip>
+                            }
+
+                            <!-- Watchlist -->
+                            @if (WatchMovies.Any(x => x.Title == MovieModel.Title))
+                            {
+                                <MudTooltip Text="Quitar de ver mas tarde">
+                                    <MudIconButton Icon="@Icons.Material.Filled.Bookmark"
+                                    Size="Size.Large"               
+                                    Color="Color.Primary"
+                                                   OnClick="@(() => UnMarkAsWatch(MovieModel))" />
+                                </MudTooltip>
+                            }
+                            else
+                            {
+                                <MudTooltip Text="Añadir a ver mas tarde">
+                                    <MudIconButton Icon="@Icons.Material.Outlined.BookmarkBorder"
+                                    Size="Size.Large"               
+                                    Color="Color.Primary"
+                                                   OnClick="@(() => MarkAsWatch(MovieModel))" />
+                                </MudTooltip>
+                            }
+                        }
+                    </div>
+                </div>
+                <div style="width:100%;margin-top:40px;">
+                    <MudButton Href="@($"https://www.themoviedb.org/movie/{MovieModel.Id}/watch?locale=ES")" FullWidth="true" Size="Size.Large" Variant="Variant.Filled" Color="Color.Primary">
+                        <MudText Style="padding:5px;font-size:20px">
+                            🍿 ¿Donde ver?
+                        </MudText>    
+                    </MudButton>
+                </div>
+            </div>
+        </MudItem>
+     </MudGrid>
+     <MudGrid Style="margin-top:50px;">
+        <MudItem xs="@((int)12)" md="@((int)9)" Style="display:flex;justify-content:center;flex-direction:column">
+            <MudText Typo="Typo.h4">
+                Acerca de
+            </MudText>
+            <MudText Style="margin-top:20px;margin-left:15px;">
+                @MovieModel.Overview
+            </MudText>
+            <MudText Typo="Typo.h4" Style="margin-top:20px;">
+                Reparto Principal
+            </MudText>
+            <div class="card-list-scroll" style="overflow-x:auto">
+                <div class="cards-grid">
+                    @foreach (var cast in MovieCreditsModel.Cast.Take(15).ToList())
+                    {
+                        <MudPaper class="small-card">
+                            <img style="width:135px;height:175px;border-top-left-radius:15px;border-top-right-radius:15px;" src="@cast.GetImgUrl()" />
+                            <MudText Style="margin-top:5px;">@cast.Name</MudText>
+                            <MudText Style="margin-top:5px;">@cast.KnownForDepartment</MudText>
+                        </MudPaper>
+                    }
+                </div>
+            </div>
+        </MudItem>
+        <MudItem xs="@((int)12)" md="@((int)3)" Style="display:flex;justify-content:center;flex-direction:column">
+            @if (!string.IsNullOrEmpty(@MovieModel.Homepage))
+            {
+                <div>
+                    <div style="display:flex;align-items:center;">
+                        <MudIcon Icon="@Icons.Material.Filled.Public"></MudIcon>
+                        <MudText>Website</MudText>
+                    </div>
+                    <div style="overflow:hidden;margin-top:5px;">
+                        <MudLink Href="@MovieModel.Homepage" Style="margin-left:5px;">
+                            @MovieModel.Homepage
+                        </MudLink>
+                    </div>
+                </div>
+            }
+            <div style="margin-top:20px">
+                <div style="display:flex;align-items:center;">
+                    <MudIcon Icon="@Icons.Material.Filled.Info"></MudIcon>
+                    <MudText>Estado</MudText>
+                </div>
+                <div style="overflow:hidden;margin-top:5px;">
+                    <MudText>
+                        @MovieModel.Status
+                    </MudText>
+                </div>
+            </div>
+            @if (MovieModel.Budget != 0)
+            {
+                <div style="margin-top:20px">
+                    <div style="display:flex;align-items:center;">
+                        <MudIcon Icon="@Icons.Material.Filled.AttachMoney"></MudIcon>
+                        <MudText>Presupuesto</MudText>
+                    </div>
+                    <div style="overflow:hidden;margin-top:5px;">
+                        <MudText>
+                            $@MovieModel.Budget
+                        </MudText>
+                    </div>
+                </div>
+            }
+            @if (MovieModel.Revenue != 0)
+            {
+                <div style="margin-top:20px">
+                    <div style="display:flex;align-items:center;">
+                        <MudIcon Icon="@Icons.Material.Filled.MonetizationOn"></MudIcon>
+                        <MudText>Ingresos</MudText>
+                    </div>
+                    <div style="overflow:hidden;margin-top:5px;">
+                        <MudText>
+                            $@MovieModel.Revenue
+                        </MudText>
+                    </div>
+                </div>
+            }
+        </MudItem>
+        
+     </MudGrid>
+    @if (MovieVideosModel != null)
+    {
+        <MudGrid Style="margin-top:50px;">
+             <MudItem xs="@((int)12)">
+                <MudText Typo="Typo.h4">
+                    Galeria
+                </MudText>
+             </MudItem>
+             <MudItem xs="@((int)12)">
+                <div class="video-embed">
+                    @if (string.Equals(MovieVideosModel.Site, "YouTube", StringComparison.OrdinalIgnoreCase))
+                    {
+                        <iframe src="@($"https://www.youtube-nocookie.com/embed/{MovieVideosModel.Key}?autoplay=0&modestbranding=1&rel=0&cc_load_policy=0")"
+                                title="@MovieVideosModel.Name"
+                                frameborder="0"
+                                loading="lazy"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                allowfullscreen>
+                        </iframe>
+                    }
+                    else if (string.Equals(MovieVideosModel.Site, "Vimeo", StringComparison.OrdinalIgnoreCase))
+                    {
+                        <iframe src="@($"https://player.vimeo.com/video/{MovieVideosModel.Key}")"
+                                title="@MovieVideosModel.Name"
+                                frameborder="0"
+                                loading="lazy"
+                                allow="autoplay; fullscreen; picture-in-picture"
+                                allowfullscreen>
+                        </iframe>
+                    }
+                    else
+                    {
+                        <a href="@($"https://www.youtube.com/watch?v={MovieVideosModel.Key}")" target="_blank" rel="noopener">@MovieVideosModel.Name</a>
+                    }
+                </div>
+            </MudItem>
+         </MudGrid>
+    }
+</MudContainer>
+@if(MovieModel.BelongsToCollection != null)
+{
+    <div class="movie-collection" style="@($"background-image: linear-gradient(to right, rgba(3,37,65, 1) 0%, rgba(3,37,65, 0.6) 100%), url({MovieModel.GetCollectionBackGroungUrl()})");">
+        <MudText Typo="Typo.h2" Style="font-weight:bold;">
+            @MovieModel.BelongsToCollection.Name
+        </MudText>
+        <MudButton Href="@($"https://www.themoviedb.org/collection/{MovieModel.BelongsToCollection.Id}")" Variant="Variant.Filled" Color="Color.Primary" Style="margin-top:10px;padding:10px 15px;width:fit-content" FullWidth="false"> Ver colecion</MudButton>
+    </div>
+}
+<MudContainer  MaxWidth="MaxWidth.Large">
+    @if (SimilarVideosModel.Results != null)
+    {   
+        <MudGrid Style="margin-top:50px;">
+             <MudItem xs="@((int)12)">
+                <MudText Typo="Typo.h4">
+                    Peliculas Similares
+                </MudText>
+             </MudItem>
+            <MudItem xs="@((int)12)" Style="overflow-x: auto;padding-bottom: 27px;">
+                <div style="display: flex;gap: 38px;">
+                    @foreach (var movie in SimilarVideosModel.Results)
+                    {
+                        <MovieCard Navigator="@Navigator" movie="@movie" ShowButtons="false"></MovieCard>
+                    }
+                </div>
+             </MudItem>
+        </MudGrid>
+    }
+    @if (Recomendated.Results != null)
+    {
+        <MudGrid Style="margin-top:50px;">
+            <MudItem xs="@((int)12)">
+                <MudText Typo="Typo.h4">
+                    Peliculas Recomendadas
+                </MudText>
+            </MudItem>
+            <MudItem xs="@((int)12)" Style="overflow-x: auto;padding-bottom: 27px;">
+                <div style="display: flex;gap: 38px;">
+                    @foreach (var movie in Recomendated.Results)
+                    {
+                        <MovieCard Navigator="@Navigator" movie="@movie" ShowButtons="false"></MovieCard>
+                    }
+                </div>
+            </MudItem>
+        </MudGrid>
+    }
+</MudContainer>
+
+<div class="footer" style="width:100%;background-color:black;height:70px;margin-top:100px;"></div>
+
+
+<style>
+    .movie-card {
+        position: relative;
+        border-radius: 12px;
+        overflow: hidden;
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        transition: transform 0.2s ease-in-out;
+    }
+
+        .movie-card:hover {
+            transform: scale(1.03);
+        }
+
+    .movie-backdrop {
+        flex: 1;
+        background-size: cover;
+        background-position: center;
+        position: relative;
+    }
+
+    .movie-overlay {
+        position: absolute;
+        bottom: 0px; /* dejamos hueco para botones */
+        width: 100%;
+        padding: 12px;
+        background: linear-gradient(to top, rgba(0,0,0,0.7), rgba(0,0,0,0));
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .movie-title {
+        color: white;
+        font-weight: bold;
+    }
+
+    /* barra de acciones al fondo */
+    .movie-actions {
+        display: flex;
+        justify-content: space-around;
+        background: rgba(0, 0, 0, 0.6);
+        padding: 6px;
+    }
+
+    .movie-score {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 8px;
+    }
+
+    .movie-score-text {
+        position: absolute;
+        font-size: 14px;
+        font-weight: bold;
+        color: white;
+    }
+    .movie-collection{
+        padding-left:100px;
+        display:flex;
+        justify-content:center;
+       flex-direction:column;
+        width:100%;
+        position:relative;
+        height:500px;
+        margin-top:50px;
+        background-size: cover;
+        background-position: 50% 50%;
+    }
+    .video-embed {
+        position: relative;
+        width: 100%;
+        aspect-ratio: 16/9; 
+        background: #000;
+        overflow: hidden;
+        border-radius: 12px;
+    }
+
+        .video-embed > iframe {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+        }
+    .small-card{
+        width:138px;
+        padding-bottom:10px;
+        border-radius:10px;
+    }
+    .cards-grid{
+        display:flex;
+        margin-top:20px;
+        gap:15px;
+        height: fit-content;
+    }
+    .info-container{
+        width:100%;
+        min-height:387px;
+        max-height:387px;
+        background-color:transparent;
+        backdrop-filter: blur(60px) saturate(100%);
+        background-image: linear-gradient(1turn, var(--mud-palette-background) 0, rgba(39, 39, 39, 0) 70%);
+        border-radius:15px;
+        display:flex;
+        flex-direction:column;
+        align-items:center;
+       padding:15px 20px;
+    }
+    .mudcontainer-container{
+        margin-top: 250px;
+        position: relative;
+        z-index: 99;
+    }
+    .cabecera-container {
+        position: absolute;
+        width: 100%;
+        height: 500px;
+        background-color: transparent;
+       
+        overflow: hidden;
+       
+            }
+    @@media (max-width: 600px) {
+        .info-container{
+            max-height:none !important;
+        }
+        .cabecera-container
+        {
+            width: 100vw !important; 
+            height: 250px !important; 
+            margin-left: -15px !important;
+        }
+
+        .mudcontainer-container {
+            margin-top: 260px;
+        }
+
+    .cabecera-container::after {
+        height: 40px;
+    }
+
+    }
+        .cabecera-container img {
+            position: relative; 
+            z-index: 1; 
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .cabecera-container::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: -1px;
+            height: 60px;
+            width: 100%;
+            min-width: 1700px; 
+            background: var(--mud-palette-background);
+            clip-path: polygon(0 100%, 100% 100%, 0 0);
+            z-index: 2; /* encima de la imagen */
+            pointer-events: none; /* no bloquea clicks/touches */
+        }
+
+</style>

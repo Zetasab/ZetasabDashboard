@@ -80,7 +80,7 @@ namespace ZetaDashboard.Common.Services
                     }
 
                     // Opción A) Tu API devuelve ApiResponse<List<AuditModel>>
-                    var (ok, apiRes, error, raw) = await TryGetAsync<ApiResponse<List<MovieModel>>>($"search/movie?query={name}&page={page}", ct);
+                    var (ok, apiRes, error, raw) = await TryGetAsync<ApiResponse<List<MovieModel>>>($"search/movie?query={name}&page={page}&language=es-ES", ct);
 
                     if (ok && apiRes is not null)
                     {
@@ -312,6 +312,206 @@ namespace ZetaDashboard.Common.Services
                 catch (Exception ex)
                 {
                     return new ApiResponse<List<MovieModel>>
+                    {
+                        Result = ResponseStatus.InternalError,
+                        Message = $"Ha ocurrido un error al recuperar {_loslasDatos}",
+                    };
+                }
+            }
+            public async Task<ApiResponse<DetailedMovieModel>> GetMovieByIdAsync(string id, UserModel loggeduser, CancellationToken ct = default)
+            {
+                var response = new ApiResponse<DetailedMovieModel>();
+                try
+                {
+                    if (!HasPermissions(loggeduser, UserModel.EUserPermissionType.Visor, thispage))
+                    {
+                        response.Result = ResponseStatus.Unauthorized;
+                        response.Message = "No tienes permisos";
+                        return response!;
+                    }
+
+                    // Opción A) Tu API devuelve ApiResponse<List<AuditModel>>
+                    var (ok, apiRes, error, raw) = await TryGetAsync<ApiResponse<DetailedMovieModel>>($"movie/{id}?language=es-ES", ct);
+
+                    if (ok && apiRes is not null)
+                    {
+                        response.Result = ResponseStatus.Ok;
+                        response.Data = JsonSerializer.Deserialize<DetailedMovieModel>(raw, _json);
+                        return response;
+                    }
+                    else
+                    {
+                        response.Result = ResponseStatus.NotFound;
+                        response.Message = $"Error obteniendo {_loslasDatos}";
+                        return response!;
+                    }
+
+                    return response;
+
+                }
+                catch (Exception ex)
+                {
+                    return new ApiResponse<DetailedMovieModel>
+                    {
+                        Result = ResponseStatus.InternalError,
+                        Message = $"Ha ocurrido un error al recuperar {_loslasDatos}",
+                    };
+                }
+            }
+            public async Task<ApiResponse<MovieCreditsModel>> GetCastMovieByIdAsync(string id, UserModel loggeduser, CancellationToken ct = default)
+            {
+                var response = new ApiResponse<MovieCreditsModel>();
+                try
+                {
+                    if (!HasPermissions(loggeduser, UserModel.EUserPermissionType.Visor, thispage))
+                    {
+                        response.Result = ResponseStatus.Unauthorized;
+                        response.Message = "No tienes permisos";
+                        return response!;
+                    }
+
+                    // Opción A) Tu API devuelve ApiResponse<List<AuditModel>>
+                    var (ok, apiRes, error, raw) = await TryGetAsync<ApiResponse<MovieCreditsModel>>($"movie/{id}/credits?language=es-ES", ct);
+
+                    if (ok && apiRes is not null)
+                    {
+                        response.Result = ResponseStatus.Ok;
+                        response.Data = JsonSerializer.Deserialize<MovieCreditsModel>(raw, _json);
+                        return response;
+                    }
+                    else
+                    {
+                        response.Result = ResponseStatus.NotFound;
+                        response.Message = $"Error obteniendo {_loslasDatos}";
+                        return response!;
+                    }
+
+                    return response;
+
+                }
+                catch (Exception ex)
+                {
+                    return new ApiResponse<MovieCreditsModel>
+                    {
+                        Result = ResponseStatus.InternalError,
+                        Message = $"Ha ocurrido un error al recuperar {_loslasDatos}",
+                    };
+                }
+            }
+            public async Task<ApiResponse<MovieVideosModel>> GetVideoMovieByIdAsync(string id, UserModel loggeduser, CancellationToken ct = default)
+            {
+                var response = new ApiResponse<MovieVideosModel>();
+                try
+                {
+                    if (!HasPermissions(loggeduser, UserModel.EUserPermissionType.Visor, thispage))
+                    {
+                        response.Result = ResponseStatus.Unauthorized;
+                        response.Message = "No tienes permisos";
+                        return response!;
+                    }
+
+                    // Opción A) Tu API devuelve ApiResponse<List<AuditModel>>
+                    var (ok, apiRes, error, raw) = await TryGetAsync<ApiResponse<MovieVideosModel>>($"movie/{id}/videos?language=es-ES", ct);
+
+                    if (ok && apiRes is not null)
+                    {
+                        response.Result = ResponseStatus.Ok;
+                        response.Data = JsonSerializer.Deserialize<MovieVideosModel>(raw, _json);
+                        return response;
+                    }
+                    else
+                    {
+                        response.Result = ResponseStatus.NotFound;
+                        response.Message = $"Error obteniendo {_loslasDatos}";
+                        return response!;
+                    }
+
+                    return response;
+
+                }
+                catch (Exception ex)
+                {
+                    return new ApiResponse<MovieVideosModel>
+                    {
+                        Result = ResponseStatus.InternalError,
+                        Message = $"Ha ocurrido un error al recuperar {_loslasDatos}",
+                    };
+                }
+            }
+            public async Task<ApiResponse<MovieListModel>> GetSimilarMovieByIdAsync(string id, UserModel loggeduser, CancellationToken ct = default)
+            {
+                var response = new ApiResponse<MovieListModel>();
+                try
+                {
+                    if (!HasPermissions(loggeduser, UserModel.EUserPermissionType.Visor, thispage))
+                    {
+                        response.Result = ResponseStatus.Unauthorized;
+                        response.Message = "No tienes permisos";
+                        return response!;
+                    }
+
+                    // Opción A) Tu API devuelve ApiResponse<List<AuditModel>>
+                    var (ok, apiRes, error, raw) = await TryGetAsync<ApiResponse<MovieListModel>>($"movie/{id}/similar?language=es-ES", ct);
+
+                    if (ok && apiRes is not null)
+                    {
+                        response.Result = ResponseStatus.Ok;
+                        response.Data = JsonSerializer.Deserialize<MovieListModel>(raw, _json);
+                        return response;
+                    }
+                    else
+                    {
+                        response.Result = ResponseStatus.NotFound;
+                        response.Message = $"Error obteniendo {_loslasDatos}";
+                        return response!;
+                    }
+
+                    return response;
+
+                }
+                catch (Exception ex)
+                {
+                    return new ApiResponse<MovieListModel>
+                    {
+                        Result = ResponseStatus.InternalError,
+                        Message = $"Ha ocurrido un error al recuperar {_loslasDatos}",
+                    };
+                }
+            }
+            public async Task<ApiResponse<MovieListModel>> GetRecomendatedMovieByIdAsync(string id, UserModel loggeduser, CancellationToken ct = default)
+            {
+                var response = new ApiResponse<MovieListModel>();
+                try
+                {
+                    if (!HasPermissions(loggeduser, UserModel.EUserPermissionType.Visor, thispage))
+                    {
+                        response.Result = ResponseStatus.Unauthorized;
+                        response.Message = "No tienes permisos";
+                        return response!;
+                    }
+
+                    // Opción A) Tu API devuelve ApiResponse<List<AuditModel>>
+                    var (ok, apiRes, error, raw) = await TryGetAsync<ApiResponse<MovieListModel>>($"movie/{id}/recommendations?language=es-ES", ct);
+
+                    if (ok && apiRes is not null)
+                    {
+                        response.Result = ResponseStatus.Ok;
+                        response.Data = JsonSerializer.Deserialize<MovieListModel>(raw, _json);
+                        return response;
+                    }
+                    else
+                    {
+                        response.Result = ResponseStatus.NotFound;
+                        response.Message = $"Error obteniendo {_loslasDatos}";
+                        return response!;
+                    }
+
+                    return response;
+
+                }
+                catch (Exception ex)
+                {
+                    return new ApiResponse<MovieListModel>
                     {
                         Result = ResponseStatus.InternalError,
                         Message = $"Ha ocurrido un error al recuperar {_loslasDatos}",
