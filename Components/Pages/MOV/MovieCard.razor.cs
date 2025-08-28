@@ -42,7 +42,7 @@ namespace ZetaDashboard.Components.Pages.MOV
 
         private async Task ShowMovie(string movieId)
         {
-            Navigator.NavigateTo($"movie/{movieId}");
+            Navigator.NavigateTo($"movie/{movieId}",false);
         }
 
         #region Seen

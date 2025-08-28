@@ -1,7 +1,10 @@
 ﻿@page "/movie/{movieId}"
 
-<!-- #region cabecera -->
+<MudPaper Class="@((IsLoading) ? "" : "d-none")" Style="width:100%;height:100%;position:fixed;display:flex;justify-content:center;align-items:center;z-index:300;">
+    <MudProgressCircular Style="width:200px;height:200px" Color="Color.Primary" Indeterminate="true" />
+</MudPaper>
 
+<!-- #region cabecera -->
 <div class="cabecera-container">
     <img src="@MovieModel.GetBackGroungUrl()" loading="lazy" />
 </div>

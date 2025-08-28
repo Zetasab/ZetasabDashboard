@@ -54,7 +54,9 @@ namespace ZetaDashboard.Components.Pages.MOV.DetailedMoviePage
         private List<MovieModel> SeenMovies { get; set; } = new List<MovieModel>();
         private List<MovieModel> LikedMovies { get; set; } = new List<MovieModel>();
         private List<MovieModel> WatchMovies { get; set; } = new List<MovieModel>();
-        
+
+        private bool IsLoading = true;
+
         #endregion
 
         #region LifeCycles
@@ -75,6 +77,8 @@ namespace ZetaDashboard.Components.Pages.MOV.DetailedMoviePage
         }
         protected override async Task OnParametersSetAsync()
         {
+            IsLoading = true;
+            InvokeAsync(StateHasChanged);
             GetMovie();
         }
 
@@ -103,6 +107,8 @@ namespace ZetaDashboard.Components.Pages.MOV.DetailedMoviePage
             SeenMovies = DController.GetData(await ApiService.SeenMovies.GetAllSeenMoviesByUserIdAsync(LoggedUser)).Result ?? new List<MovieModel>();
             LikedMovies = DController.GetData(await ApiService.LikedMovies.GetAllLikedMoviesByUserIdAsync(LoggedUser)).Result ?? new List<MovieModel>();
             WatchMovies = DController.GetData(await ApiService.WatchMovies.GetAllWatchMoviesByUserIdAsync(LoggedUser)).Result ?? new List<MovieModel>();
+
+            IsLoading = false;
             await InvokeAsync(StateHasChanged);
         }
 

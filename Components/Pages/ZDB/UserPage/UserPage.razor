@@ -6,271 +6,273 @@
 
 <PageTitle>Usuarios - ZetaDashboard</PageTitle>
 
-<!-- #region Title -->
-<div style="display:flex;align-items:center;justify-content:space-between">
-    <div></div>
-    <div>
-        <h2>👨‍👩‍👦‍👦 Usuarios</h2>
-    </div>
-    <div style="padding-right:30px;">
-        @if (CService.CheckIfPermissions(LoggedUser, ThisPageEdit))
-        {
-            <MudTooltip Text="Insertar usuario">
-                <MudIconButton Variant="Variant.Filled"
-                               Icon="@Icons.Material.Filled.Add"
-                               Size="Size.Large"
-                               Color="Color.Primary"
-                               OnClick="@OnOpenInsertModal"></MudIconButton>
-            </MudTooltip>
-        }
-    </div>
-</div>
-<!-- #endregion -->
-<!-- #region Insert Modal -->
-<MudDialog @bind-Visible="InsertModal" Class="dialog-modal-custom">
-    <TitleContent>
-        <div style="display:flex;align-items:center;justify-content:space-between;">
-            <div></div>
-            <div style="display:flex;align-items:center;">
-                <MudIcon Icon="@Icons.Material.Filled.AddCircle">
-                </MudIcon>
-                <h3 style="margin-left:10px">Insertar Usuario</h3>
-            </div>
-            <div>
-                <MudIconButton Icon="@Icons.Material.Filled.Close"
-                               Variant="Variant.Filled"
-                               Color="Color.Error"
-                               OnClick="@(() => InsertModal = false)">
-                </MudIconButton>
-            </div>
+<MudContainer MaxWidth="MaxWidth.ExtraLarge" Style="margin-top:30px;">
+    <!-- #region Title -->
+    <div style="display:flex;align-items:center;justify-content:space-between">
+        <div></div>
+        <div>
+            <h2>👨‍👩‍👦‍👦 Usuarios</h2>
         </div>
-    </TitleContent>
-    <DialogContent>
-        <EditForm Model="InsertModel" OnValidSubmit="OnInsertData">
-            <div style="margin-top:25px;">
-                <MudTextField @bind-Value="InsertModel.Name"
-                              Immediate="true"
-                              Label="Nombre"
-                              Required="true"
-                              >
-                </MudTextField>
-            </div>
-            <div style="margin-top:15px;">
-            <MudTextField @bind-Value="InsertModel.PasswordHash"
-                          Immediate="true"
-                          InputType="@_inputType"
-                          Label="Password"
-                          Adornment="Adornment.End"
-                          AdornmentIcon="@_icon"
-                          OnAdornmentClick="_changeVisibility"
-                          Required="true"
-                              AdornmentAriaLabel="Show Password"
-                              
-                          Style="margin-top:25px;">
-            </MudTextField>
-            </div>
-            <div style="margin-top:25px;">
-                <MudSelect T="EUserType"
-                           @bind-Value="InsertModel.UserType"
-                            Label="Tipo de usuario" Required="true">
-                            @foreach (var value in Enum.GetValues(typeof(EUserType)).Cast<EUserType>())
-                            {
-                                <MudSelectItem Value="@value">
-                                    <MudIcon Icon="@CService.EUserTypeIcon(value)" />
-                                    @value.ToString()
-                        </MudSelectItem>
-                            }
-                </MudSelect>
-            </div>
-            <div style="margin-top:25px;">
-                <MudText>Permisos:</MudText>
-                <div style="padding-left:25px;margin-top:10px;">
-                    @foreach (var item in DataProyectList)
-                    {
-                        <MudText>
-                            @item.FullName
-                        </MudText>
-                        <MudSelect T="EUserPermissionType"
-                                   Required="true"
-                                   ValueChanged="@((EUserPermissionType val) => PermissionsValueChanged(item.Code, val))">
-                            @foreach (var value in Enum.GetValues(typeof(EUserPermissionType)).Cast<EUserPermissionType>())
-                            {
-                                <MudSelectItem Value="@value">
-                                    <MudIcon Icon="@CService.EUserPermissionTypeIcon(value)" />
-                                    @value.ToString()
-                                </MudSelectItem>
-                            }
-                        </MudSelect>
-                    }
+        <div style="padding-right:30px;">
+            @if (CService.CheckIfPermissions(LoggedUser, ThisPageEdit))
+            {
+                <MudTooltip Text="Insertar usuario">
+                    <MudIconButton Variant="Variant.Filled"
+                                   Icon="@Icons.Material.Filled.Add"
+                                   Size="Size.Large"
+                                   Color="Color.Primary"
+                                   OnClick="@OnOpenInsertModal"></MudIconButton>
+                </MudTooltip>
+            }
+        </div>
+    </div>
+    <!-- #endregion -->
+    <!-- #region Insert Modal -->
+    <MudDialog @bind-Visible="InsertModal" Class="dialog-modal-custom">
+        <TitleContent>
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+                <div></div>
+                <div style="display:flex;align-items:center;">
+                    <MudIcon Icon="@Icons.Material.Filled.AddCircle">
+                    </MudIcon>
+                    <h3 style="margin-left:10px">Insertar Usuario</h3>
+                </div>
+                <div>
+                    <MudIconButton Icon="@Icons.Material.Filled.Close"
+                                   Variant="Variant.Filled"
+                                   Color="Color.Error"
+                                   OnClick="@(() => InsertModal = false)">
+                    </MudIconButton>
                 </div>
             </div>
-
-            <div style="display:flex;justify-content:center;">
-                <div style="display:flex;justify-content:space-around;width:70%">
-                    <MudButton ButtonType="ButtonType.Submit" Color="Color.Primary" Style="margin-top:25px;" Variant="Variant.Filled">Aceptar</MudButton>
-                    <MudButton Color="Color.Error" Style="margin-top:25px;" Variant="Variant.Filled" OnClick="@(() => InsertModal = false)">Cerrar</MudButton>
+        </TitleContent>
+        <DialogContent>
+            <EditForm Model="InsertModel" OnValidSubmit="OnInsertData">
+                <div style="margin-top:25px;">
+                    <MudTextField @bind-Value="InsertModel.Name"
+                                  Immediate="true"
+                                  Label="Nombre"
+                                  Required="true"
+                                  >
+                    </MudTextField>
                 </div>
-            </div>
-        </EditForm>
-    </DialogContent>
-</MudDialog>
-<!-- #endregion -->
-<!-- #region Update Modal -->
-<MudDialog @bind-Visible="UpdateModal" Class="dialog-modal-custom">
-    <TitleContent>
-        <div style="display:flex;align-items:center;justify-content:space-between;">
-            <div></div>
-            <div style="display:flex;align-items:center;">
-                <MudIcon Icon="@Icons.Material.Filled.Edit">
-                </MudIcon>
-                <h3 style="margin-left:10px">Editar @UpdateModel.Name Usuario</h3>
-            </div>
-            <div>
-                <MudIconButton Icon="@Icons.Material.Filled.Close"
-                               Variant="Variant.Filled"
-                               Color="Color.Error"
-                               OnClick="@(() => UpdateModal = false)">
-                </MudIconButton>
-            </div>
-        </div>
-    </TitleContent>
-    <DialogContent>
-        <EditForm Model="UpdateModel" OnValidSubmit="OnUpdateData">
-            <div style="margin-top:25px;">
-                <MudText>@UpdateModel.Name</MudText>
-            </div>
-            <div style="margin-top:15px;">
-                <MudTextField @bind-Value="updatePassword"
+                <div style="margin-top:15px;">
+                <MudTextField @bind-Value="InsertModel.PasswordHash"
                               Immediate="true"
                               InputType="@_inputType"
                               Label="Password"
                               Adornment="Adornment.End"
                               AdornmentIcon="@_icon"
                               OnAdornmentClick="_changeVisibility"
-                              AdornmentAriaLabel="Show Password"
+                              Required="true"
+                                  AdornmentAriaLabel="Show Password"
+                              
                               Style="margin-top:25px;">
                 </MudTextField>
-            </div>
-            <div style="margin-top:25px;">
-                <MudSelect T="EUserType"
-                           @bind-Value="UpdateModel.UserType"
-                           Label="Tipo de usuario" Required="true">
-                    @foreach (var value in Enum.GetValues(typeof(EUserType)).Cast<EUserType>())
-                    {
-                        <MudSelectItem Value="@value">
-                            <MudIcon Icon="@CService.EUserTypeIcon(value)" />
-                            @value.ToString()
-                        </MudSelectItem>
-                    }
-                </MudSelect>
-            </div>
-            <div style="margin-top:25px;">
-                <MudText>Permisos:</MudText>
-                <div style="padding-left:25px;margin-top:10px;">
-                    @foreach (var item in UpdateModel.Permissions)
-                    {
-                        <MudText>
-                            @item.Code
-                        </MudText>
-                        <MudSelect T="EUserPermissionType"
-                                   Required="true"
-                                   Value="item.UserType"
-                                   ValueChanged="@((EUserPermissionType val) => PermissionsUpdateValueChanged(item.Code, val))">
-                            @foreach (var value in Enum.GetValues(typeof(EUserPermissionType)).Cast<EUserPermissionType>())
-                            {
-                                <MudSelectItem Value="@value">
-                                    <MudIcon Icon="@CService.EUserPermissionTypeIcon(value)" />
-                                    @value.ToString()
-                                </MudSelectItem>
-                            }
-                        </MudSelect>
-                    }
                 </div>
-            </div>
-            <div style="display:flex;justify-content:center;">
-                <div style="display:flex;justify-content:space-around;width:70%">
-                    <MudButton ButtonType="ButtonType.Submit" Color="Color.Primary" Style="margin-top:25px;" Variant="Variant.Filled">Aceptar</MudButton>
-                    <MudButton Color="Color.Error" Style="margin-top:25px;" Variant="Variant.Filled" OnClick="@(() => UpdateModal = false)">Cerrar</MudButton>
-                </div>
-            </div>
-        </EditForm>
-    </DialogContent>
-</MudDialog>
-<!-- #endregion -->
-<!-- #region DataGrid -->
-<MudPaper Style="margin-top:20px;" Elevation="0">
-    <MudDataGrid Items="@DataList" T="UserModel" Filterable="true" QuickFilter="_quickFilter" Hideable="true">
-        <ToolBarContent>
-            <MudText Typo="Typo.h6"></MudText>
-            <MudSpacer />
-            <MudTextField @bind-Value="_searchString" Placeholder="Search" Adornment="Adornment.Start" Immediate="true"
-                          AdornmentIcon="@Icons.Material.Filled.Search" Clearable="true" IconSize="Size.Medium" Class="mt-0"></MudTextField>
-        </ToolBarContent>
-        <Columns>
-            <TemplateColumn>
-                <CellTemplate>
-                    <MudTooltip Text="@(context.Item.Id)">
-                        <MudIcon Icon="@Icons.Material.Filled.Info">
-                        </MudIcon>
-                    </MudTooltip>
-                </CellTemplate>
-            </TemplateColumn>
-
-            <TemplateColumn Title="Tipo">
-                <CellTemplate >
-                    <div>
-                            <MudIcon Icon="@CService.EUserTypeIcon(context.Item.UserType)">
-                            </MudIcon>
-                            @context.Item.UserType.ToString()
-                    </div>
-                </CellTemplate>
-            </TemplateColumn>
-            <PropertyColumn Property="x => x.Name" Title="Nombre" />
-            <TemplateColumn Title="Permisos">
-                <CellTemplate>
-                    @foreach (var perm in context.Item.Permissions)
-                    { 
-                        <MudText Style="margin-top:4px;">
-                            @perm.Code: 
-                            <MudIcon  Style="margin-left:5px;" Icon="@CService.EUserPermissionTypeIcon(perm.UserType)">
-                            </MudIcon>
-                            @perm.UserType.ToString()
-                        </MudText>
-                    }
-                </CellTemplate>
-            </TemplateColumn>
-            @if (CService.CheckIfPermissions(LoggedUser,ThisPageEdit))
-            {
-                <TemplateColumn Title="Acciones">
-                    <CellTemplate>
-                        <MudStack Row style="width:100%">
-                            <div class="modal-buttons-actions">
-                                <MudTooltip Text="@($"Editar usuario {context.Item.Name}")">
-                                    <MudIconButton Variant="@Variant.Filled"
-                                                   Color="@Color.Primary"
-                                                   OnClick="@(() => OnOpenUpdateModal(context.Item))"
-                                                   Icon="@Icons.Material.Filled.Edit"></MudIconButton>
-                                </MudTooltip>
-                                @if (CService.CheckIfPermissions(LoggedUser, ThisPageAdmin))
+                <div style="margin-top:25px;">
+                    <MudSelect T="EUserType"
+                               @bind-Value="InsertModel.UserType"
+                                Label="Tipo de usuario" Required="true">
+                                @foreach (var value in Enum.GetValues(typeof(EUserType)).Cast<EUserType>())
                                 {
-                                    <MudTooltip Text="@($"Borrar usuario {context.Item.Name}")">
-                                        <MudIconButton Variant="@Variant.Filled"
-                                                       Style="margin-left:7px;"
-                                                       OnClick="@(() => OnOpenDeleteModal(context.Item))"
-                                                       Color="@Color.Error"
-                                                       Icon="@Icons.Material.Filled.Delete">
-                                        </MudIconButton>
-                                    </MudTooltip>
+                                    <MudSelectItem Value="@value">
+                                        <MudIcon Icon="@CService.EUserTypeIcon(value)" />
+                                        @value.ToString()
+                            </MudSelectItem>
                                 }
-                            </div>
-                        </MudStack>
+                    </MudSelect>
+                </div>
+                <div style="margin-top:25px;">
+                    <MudText>Permisos:</MudText>
+                    <div style="padding-left:25px;margin-top:10px;">
+                        @foreach (var item in DataProyectList)
+                        {
+                            <MudText>
+                                @item.FullName
+                            </MudText>
+                            <MudSelect T="EUserPermissionType"
+                                       Required="true"
+                                       ValueChanged="@((EUserPermissionType val) => PermissionsValueChanged(item.Code, val))">
+                                @foreach (var value in Enum.GetValues(typeof(EUserPermissionType)).Cast<EUserPermissionType>())
+                                {
+                                    <MudSelectItem Value="@value">
+                                        <MudIcon Icon="@CService.EUserPermissionTypeIcon(value)" />
+                                        @value.ToString()
+                                    </MudSelectItem>
+                                }
+                            </MudSelect>
+                        }
+                    </div>
+                </div>
+
+                <div style="display:flex;justify-content:center;">
+                    <div style="display:flex;justify-content:space-around;width:70%">
+                        <MudButton ButtonType="ButtonType.Submit" Color="Color.Primary" Style="margin-top:25px;" Variant="Variant.Filled">Aceptar</MudButton>
+                        <MudButton Color="Color.Error" Style="margin-top:25px;" Variant="Variant.Filled" OnClick="@(() => InsertModal = false)">Cerrar</MudButton>
+                    </div>
+                </div>
+            </EditForm>
+        </DialogContent>
+    </MudDialog>
+    <!-- #endregion -->
+    <!-- #region Update Modal -->
+    <MudDialog @bind-Visible="UpdateModal" Class="dialog-modal-custom">
+        <TitleContent>
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+                <div></div>
+                <div style="display:flex;align-items:center;">
+                    <MudIcon Icon="@Icons.Material.Filled.Edit">
+                    </MudIcon>
+                    <h3 style="margin-left:10px">Editar @UpdateModel.Name Usuario</h3>
+                </div>
+                <div>
+                    <MudIconButton Icon="@Icons.Material.Filled.Close"
+                                   Variant="Variant.Filled"
+                                   Color="Color.Error"
+                                   OnClick="@(() => UpdateModal = false)">
+                    </MudIconButton>
+                </div>
+            </div>
+        </TitleContent>
+        <DialogContent>
+            <EditForm Model="UpdateModel" OnValidSubmit="OnUpdateData">
+                <div style="margin-top:25px;">
+                    <MudText>@UpdateModel.Name</MudText>
+                </div>
+                <div style="margin-top:15px;">
+                    <MudTextField @bind-Value="updatePassword"
+                                  Immediate="true"
+                                  InputType="@_inputType"
+                                  Label="Password"
+                                  Adornment="Adornment.End"
+                                  AdornmentIcon="@_icon"
+                                  OnAdornmentClick="_changeVisibility"
+                                  AdornmentAriaLabel="Show Password"
+                                  Style="margin-top:25px;">
+                    </MudTextField>
+                </div>
+                <div style="margin-top:25px;">
+                    <MudSelect T="EUserType"
+                               @bind-Value="UpdateModel.UserType"
+                               Label="Tipo de usuario" Required="true">
+                        @foreach (var value in Enum.GetValues(typeof(EUserType)).Cast<EUserType>())
+                        {
+                            <MudSelectItem Value="@value">
+                                <MudIcon Icon="@CService.EUserTypeIcon(value)" />
+                                @value.ToString()
+                            </MudSelectItem>
+                        }
+                    </MudSelect>
+                </div>
+                <div style="margin-top:25px;">
+                    <MudText>Permisos:</MudText>
+                    <div style="padding-left:25px;margin-top:10px;">
+                        @foreach (var item in UpdateModel.Permissions)
+                        {
+                            <MudText>
+                                @item.Code
+                            </MudText>
+                            <MudSelect T="EUserPermissionType"
+                                       Required="true"
+                                       Value="item.UserType"
+                                       ValueChanged="@((EUserPermissionType val) => PermissionsUpdateValueChanged(item.Code, val))">
+                                @foreach (var value in Enum.GetValues(typeof(EUserPermissionType)).Cast<EUserPermissionType>())
+                                {
+                                    <MudSelectItem Value="@value">
+                                        <MudIcon Icon="@CService.EUserPermissionTypeIcon(value)" />
+                                        @value.ToString()
+                                    </MudSelectItem>
+                                }
+                            </MudSelect>
+                        }
+                    </div>
+                </div>
+                <div style="display:flex;justify-content:center;">
+                    <div style="display:flex;justify-content:space-around;width:70%">
+                        <MudButton ButtonType="ButtonType.Submit" Color="Color.Primary" Style="margin-top:25px;" Variant="Variant.Filled">Aceptar</MudButton>
+                        <MudButton Color="Color.Error" Style="margin-top:25px;" Variant="Variant.Filled" OnClick="@(() => UpdateModal = false)">Cerrar</MudButton>
+                    </div>
+                </div>
+            </EditForm>
+        </DialogContent>
+    </MudDialog>
+    <!-- #endregion -->
+    <!-- #region DataGrid -->
+    <MudPaper Style="margin-top:20px;" Elevation="0">
+        <MudDataGrid Items="@DataList" T="UserModel" Filterable="true" QuickFilter="_quickFilter" Hideable="true">
+            <ToolBarContent>
+                <MudText Typo="Typo.h6"></MudText>
+                <MudSpacer />
+                <MudTextField @bind-Value="_searchString" Placeholder="Search" Adornment="Adornment.Start" Immediate="true"
+                              AdornmentIcon="@Icons.Material.Filled.Search" Clearable="true" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+            </ToolBarContent>
+            <Columns>
+                <TemplateColumn>
+                    <CellTemplate>
+                        <MudTooltip Text="@(context.Item.Id)">
+                            <MudIcon Icon="@Icons.Material.Filled.Info">
+                            </MudIcon>
+                        </MudTooltip>
                     </CellTemplate>
                 </TemplateColumn>
-            }
-        </Columns>
-        <PagerContent>
-            <MudDataGridPager T="UserModel" />
-        </PagerContent>
-    </MudDataGrid>
-</MudPaper>
-<!-- #endregion -->
+
+                <TemplateColumn Title="Tipo">
+                    <CellTemplate >
+                        <div>
+                                <MudIcon Icon="@CService.EUserTypeIcon(context.Item.UserType)">
+                                </MudIcon>
+                                @context.Item.UserType.ToString()
+                        </div>
+                    </CellTemplate>
+                </TemplateColumn>
+                <PropertyColumn Property="x => x.Name" Title="Nombre" />
+                <TemplateColumn Title="Permisos">
+                    <CellTemplate>
+                        @foreach (var perm in context.Item.Permissions)
+                        { 
+                            <MudText Style="margin-top:4px;">
+                                @perm.Code: 
+                                <MudIcon  Style="margin-left:5px;" Icon="@CService.EUserPermissionTypeIcon(perm.UserType)">
+                                </MudIcon>
+                                @perm.UserType.ToString()
+                            </MudText>
+                        }
+                    </CellTemplate>
+                </TemplateColumn>
+                @if (CService.CheckIfPermissions(LoggedUser,ThisPageEdit))
+                {
+                    <TemplateColumn Title="Acciones">
+                        <CellTemplate>
+                            <MudStack Row style="width:100%">
+                                <div class="modal-buttons-actions">
+                                    <MudTooltip Text="@($"Editar usuario {context.Item.Name}")">
+                                        <MudIconButton Variant="@Variant.Filled"
+                                                       Color="@Color.Primary"
+                                                       OnClick="@(() => OnOpenUpdateModal(context.Item))"
+                                                       Icon="@Icons.Material.Filled.Edit"></MudIconButton>
+                                    </MudTooltip>
+                                    @if (CService.CheckIfPermissions(LoggedUser, ThisPageAdmin))
+                                    {
+                                        <MudTooltip Text="@($"Borrar usuario {context.Item.Name}")">
+                                            <MudIconButton Variant="@Variant.Filled"
+                                                           Style="margin-left:7px;"
+                                                           OnClick="@(() => OnOpenDeleteModal(context.Item))"
+                                                           Color="@Color.Error"
+                                                           Icon="@Icons.Material.Filled.Delete">
+                                            </MudIconButton>
+                                        </MudTooltip>
+                                    }
+                                </div>
+                            </MudStack>
+                        </CellTemplate>
+                    </TemplateColumn>
+                }
+            </Columns>
+            <PagerContent>
+                <MudDataGridPager T="UserModel" />
+            </PagerContent>
+        </MudDataGrid>
+    </MudPaper>
+    <!-- #endregion -->
+</MudContainer>
