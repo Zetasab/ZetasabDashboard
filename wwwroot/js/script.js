@@ -42,3 +42,8 @@ window.clientErrorTap = {
         });
     }
 };
+
+function scrollToTop() {
+    var x = document.getElementById("main-ariticle");
+    x.scrollTo({ top: 0, behavior: 'smooth' });
+}

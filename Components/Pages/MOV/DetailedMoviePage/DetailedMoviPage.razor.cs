@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.JSInterop;
 using MudBlazor;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -25,6 +26,7 @@ namespace ZetaDashboard.Components.Pages.MOV.DetailedMoviePage
         [Inject] private CommonServices CService { get; set; } = default!;
         [Inject] private AuthenticationStateProvider Auth { get; set; } = default!;
         [Inject] private NavigationManager Navigator { get; set; } = default!;
+        [Inject] private IJSRuntime JS { get; set; } = default!;
         #endregion
         #region Vars
         #region Global
@@ -77,9 +79,18 @@ namespace ZetaDashboard.Components.Pages.MOV.DetailedMoviePage
         }
         protected override async Task OnParametersSetAsync()
         {
-            IsLoading = true;
-            InvokeAsync(StateHasChanged);
-            GetMovie();
+            try
+            {
+                IsLoading = true;
+                InvokeAsync(StateHasChanged);
+                GetMovie();
+                
+                await JS.InvokeVoidAsync("scrollToTop");
+            }
+            catch (Exception ex)
+            {
+
+            }
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
