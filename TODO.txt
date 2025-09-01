@@ -1,10 +1,8 @@
 Todo: ->
 
-poner lista de planes y notas por colores
-
 haacer que usuarios estan conectados
 
-cambiar paadding por container
+poner guardar usuario con storage
 
 Mejoras->
 

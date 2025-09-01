@@ -110,66 +110,37 @@
                         <MudText Style="margin-left:5px;font-size:18px">Inicio</MudText>
                     </div>
                 </MudNavLink>
-                <MudNavGroup Title="Buscar" Class="mb-2 mud-nav-link-groupNoBefore" Expanded="true">
-                    <MudNavLink Href="/search-movie" Match="NavLinkMatch.All" Style="margin-top:5px;" Class="mud-nav-link-c2">
-                        <div style="display:flex;align-items:center;" onclick="changetoggler()">
-                            <text style="font-size:24px">📍</text>
-                            <MudText Style="margin-left:5px;font-size:18px">Descubre Peliculas</MudText>
-                        </div>
-                    </MudNavLink>
-                    <MudNavLink Href="/search-movie/nowplaying"  Match="NavLinkMatch.All" Style="margin-top:5px;" Class="mud-nav-link-c2">
-                        <div style="display:flex;align-items:center;" onclick="changetoggler()">
-                            <text style="font-size:24px">⌛</text>
-                            <MudText Style="margin-left:5px;font-size:18px">Ahora mismo</MudText>
-                        </div>
-                    </MudNavLink>
-                    <MudNavLink Href="/search-movie/popular" Match="NavLinkMatch.All" Style="margin-top:5px;" Class="mud-nav-link-c2">
-                        <div style="display:flex;align-items:center;" onclick="changetoggler()">
-                            <text style="font-size:24px">🔥</text>
-                            <MudText Style="margin-left:5px;font-size:18px">Popular</MudText>
-                        </div>
-                    </MudNavLink>
-                    <MudNavLink Href="/search-movie/toprated" Match="NavLinkMatch.All" Style="margin-top:5px;" Class="mud-nav-link-c2">
-                        <div style="display:flex;align-items:center;" onclick="changetoggler()">
-                            <text style="font-size:24px">📈</text>
-                            <MudText Style="margin-left:5px;font-size:18px">Mas valoradas</MudText>
-                        </div>
-                    </MudNavLink>
-                    <MudNavLink Href="/search-movie/upcoming" Match="NavLinkMatch.All" Style="margin-top:5px;" Class="mud-nav-link-c2">
-                        <div style="display:flex;align-items:center;" onclick="changetoggler()">
-                            <text style="font-size:24px">🆕</text>
-                            <MudText Style="margin-left:5px;font-size:18px">Nuevas</MudText>
-                        </div>
-                    </MudNavLink>
-                    <MudNavLink Href="/search-movie/search" Match="NavLinkMatch.All" Style="margin-top:5px;" Class="mud-nav-link-c2">
-                        <div style="display:flex;align-items:center;" onclick="changetoggler()">
-                            <text style="font-size:24px">🔎</text>
-                            <MudText Style="margin-left:5px;font-size:18px">Buscar</MudText>
-                        </div>
-                    </MudNavLink>
-                </MudNavGroup>
+                
+                <MudNavLink Href="/search-movie" Match="NavLinkMatch.All" Style="margin-top:5px;" Class="mud-nav-link-c2">
+                    <div style="display:flex;align-items:center;" onclick="changetoggler()">
+                        <text style="font-size:24px">📍</text>
+                        <MudText Style="margin-left:5px;font-size:18px">Descubre Peliculas</MudText>
+                    </div>
+                </MudNavLink>
+                    
+                
                 @if (CService.CheckIfPermissions(LoggedUser, ThisMoviePageEditor))
                 {
-                    <MudNavGroup Title="Listas" Class="mb-2 mud-nav-link-groupNoBefore" Expanded="true">
-                        <MudNavLink Href="/seen-movies" Match="NavLinkMatch.All" Style="margin-top:5px;" Class="mud-nav-link-c2">
-                            <div style="display:flex;align-items:center;" onclick="changetoggler()">
-                                <text style="font-size:24px">👁</text>
-                                <MudText Style="margin-left:5px;font-size:18px"> Vistas</MudText>
-                            </div>
-                        </MudNavLink>
-                        <MudNavLink Href="/liked-movies" Match="NavLinkMatch.All" Style="margin-top:5px;" Class="mud-nav-link-c2">
-                            <div style="display:flex;align-items:center;" onclick="changetoggler()">
-                                <text style="font-size:24px">❤</text>
-                                <MudText Style="margin-left:5px;font-size:18px">Favoritas</MudText>
-                            </div>
-                        </MudNavLink>
-                        <MudNavLink Href="/watch-movies" Match="NavLinkMatch.All" Style="margin-top:5px;" Class="mud-nav-link-c2">
-                            <div style="display:flex;align-items:center;" onclick="changetoggler()">
-                                <text style="font-size:24px">🕝</text>
-                                <MudText Style="margin-left:5px;font-size:18px">Previstas</MudText>
-                            </div>
-                        </MudNavLink>
-                    </MudNavGroup>
+                    
+                    <MudNavLink Href="/seen-movies" Match="NavLinkMatch.All" Style="margin-top:5px;" Class="mud-nav-link-c2">
+                        <div style="display:flex;align-items:center;" onclick="changetoggler()">
+                            <text style="font-size:24px">👁</text>
+                            <MudText Style="margin-left:5px;font-size:18px"> Vistas</MudText>
+                        </div>
+                    </MudNavLink>
+                    <MudNavLink Href="/liked-movies" Match="NavLinkMatch.All" Style="margin-top:5px;" Class="mud-nav-link-c2">
+                        <div style="display:flex;align-items:center;" onclick="changetoggler()">
+                            <text style="font-size:24px">❤</text>
+                            <MudText Style="margin-left:5px;font-size:18px">Favoritas</MudText>
+                        </div>
+                    </MudNavLink>
+                    <MudNavLink Href="/watch-movies" Match="NavLinkMatch.All" Style="margin-top:5px;" Class="mud-nav-link-c2">
+                        <div style="display:flex;align-items:center;" onclick="changetoggler()">
+                            <text style="font-size:24px">🕝</text>
+                            <MudText Style="margin-left:5px;font-size:18px">Previstas</MudText>
+                        </div>
+                    </MudNavLink>
+                    
                 }
                 
             </MudNavGroup>

@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.WebUtilities;
 using MudBlazor;
+using System.Globalization;
 using System.Text.RegularExpressions;
 using ZetaCommon.Auth;
 using ZetaDashboard.Common.MOV;
@@ -15,10 +17,10 @@ namespace ZetaDashboard.Components.Pages.MOV.MovieSearchPage
 {
     public partial class MovieSearchPage
     {
-        [Parameter]
+        
         public string mode { get; set; }
         [Parameter]
-        public string name { get; set; }
+        public string urlparams { get; set; }
         
 
         #region Injects
@@ -29,6 +31,7 @@ namespace ZetaDashboard.Components.Pages.MOV.MovieSearchPage
         [Inject] private CommonServices CService { get; set; } = default!;
         [Inject] private AuthenticationStateProvider Auth { get; set; } = default!;
         [Inject] private NavigationManager Navigator { get; set; } = default!;
+        [Inject] private IBrowserViewportService BrowserViewportService { get; set; }
         #endregion
         #region Vars
         #region Global
@@ -65,6 +68,7 @@ namespace ZetaDashboard.Components.Pages.MOV.MovieSearchPage
         private List<MovieModel> LikedMovieList { get; set; } = new List<MovieModel>();
         private List<MovieModel> WatchMovieList { get; set; } = new List<MovieModel>();
         private int Maxpages = 0;
+        private bool IsPc = true;
         #endregion
         #region LifeCycles
         protected override async Task OnInitializedAsync()
@@ -80,21 +84,120 @@ namespace ZetaDashboard.Components.Pages.MOV.MovieSearchPage
                 Common.Mongo.ResponseStatus.Ok
                 );
             await ApiService.Audits.InsertAsync(audit);
-            
+
+            var x = await BrowserViewportService.GetCurrentBreakpointAsync();
+            IsPc = (x >= Breakpoint.Md);
         }
         protected override async Task OnParametersSetAsync()
         {
-            GetList();
+            GetParamsQueryAndList();
+            //GetList();
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             if (firstRender)
             {
+                GetList();
                 StateHasChanged();
             }
         }
         #endregion
+        private async Task GetParamsQueryAndList()
+        {
+            var uri = Navigator.ToAbsoluteUri(Navigator.Uri);
+            var query = QueryHelpers.ParseQuery(uri.Query);
+
+            if (query.TryGetValue("mode", out var modevalue))
+                SelectedCategory = modevalue;
+
+            if (query.TryGetValue("search", out var searchValue))
+                _searchByName = searchValue;
+
+            if (query.TryGetValue("selectedorder", out var selectedorderValue))
+                SelectedOrder = MovieData.SortsBy.FirstOrDefault(x => x.eng_order == selectedorderValue);
+
+            if (query.TryGetValue("watch_providers", out var watch_providersValue))
+            {
+                var x = watch_providersValue.ToString().Split(",");
+                foreach(var y in x)
+                {
+                    SelectedProviders.Add(MovieData.WhatProviders.FirstOrDefault(z => z.provider_id.ToString() == y));
+                }
+            }
+            
+            if (query.TryGetValue("genres", out var genresValue))
+            {
+                var x = genresValue.ToString().Split(",");
+                var list = new List<Data.MOV.Genre>();
+                foreach (var y in x)
+                {
+                    list.Add(MovieData.Genres.FirstOrDefault(z => z.Id.ToString() == y));
+                }
+                SelectedGenres = list;
+            }
+
+
+
+            //if (query.TryGetValue("selectedorder", out var selectedorderValue))
+            //    SelectedOrder = MovieData.SortsBy.FirstOrDefault(x => x.eng_order == selectedorderValue);
+
+            FilterBy();
+        }
+        private async Task FilterBy()
+        {
+            if (!string.IsNullOrEmpty(SelectedCategory))
+            {
+                if (SelectedCategory == "nowplaying")
+                {
+                    mode = "nowplaying";
+                }
+                else if (SelectedCategory == "popular")
+                {
+                    mode = "popular";
+                }
+                else if (SelectedCategory == "toprated")
+                {
+                    mode = "toprated";
+                }
+                else if (SelectedCategory == "upcoming")
+                {
+                    mode = "upcoming";
+                }
+                GetList();
+                return;
+            }
+
+
+            QueryParams.Clear();
+
+            QueryParams.Add("sort_by", SelectedOrder.eng_order);
+
+            if (SelectedProviders.Count > 0)
+            {
+                var watch_providers = "";
+                foreach(var watch in SelectedProviders)
+                {
+                    watch_providers += watch.provider_id + ",";
+                }
+                QueryParams.Add("with_watch_providers", watch_providers.Substring(0, watch_providers.Length - 1));
+                QueryParams.Add("watch_region", "ES");
+            }
+
+            if (SelectedGenres.Count > 0)
+            {
+                var genres = "";
+                foreach (var genre in SelectedGenres)
+                {
+                    genres += genre.Id + ",";
+                }
+
+                QueryParams.Add("with_genres", genres.Substring(0, genres.Length - 1));
+            }
+
+
+            GetList();
+        }
         #region CRUD
         #region GET
         private async Task GetList()
@@ -102,29 +205,38 @@ namespace ZetaDashboard.Components.Pages.MOV.MovieSearchPage
             //datagridLoading = true;
             //await InvokeAsync(StateHasChanged);
             _pag = 1;
+            DataList.Clear();
 
-            if (mode == "nowplaying")
+            //var url = "search-movie/?";
+            //foreach (var inn in QueryParams)
+            //{
+            //    url += $"&{inn.Key}={inn.Value}";
+            //}
+            //Navigator.NavigateTo(url, false, false);
+
+            if (string.IsNullOrEmpty(SelectedCategory))
             {
-                DataList = await DController.GetData(await HttpApiService.Movies.GetAllMoviesByNowPlayingAsync(_pag, LoggedUser));
+                DataList = await DController.GetData(await HttpApiService.Movies.GetAllDiscoverMoviesAsync(_pag, LoggedUser,QueryParams));
             }
-            else if (mode == "popular")
+            else if (SelectedCategory == "nowplaying")
             {
-                DataList = await DController.GetData(await HttpApiService.Movies.GetAllMoviesByPopularAsync(_pag, LoggedUser));
+                DataList.AddRange(await DController.GetData(await HttpApiService.Movies.GetAllMoviesByNowPlayingAsync(_pag, LoggedUser)));
             }
-            else if (mode == "toprated")
+            else if (SelectedCategory == "popular")
             {
-                DataList = await DController.GetData(await HttpApiService.Movies.GetAllMoviesByTopRatedAsync(_pag, LoggedUser));
+                DataList.AddRange(await DController.GetData(await HttpApiService.Movies.GetAllMoviesByPopularAsync(_pag, LoggedUser)));
             }
-            else if (mode == "upcoming")
+            else if (SelectedCategory == "toprated")
             {
-                DataList = await DController.GetData(await HttpApiService.Movies.GetAllMoviesByUpcomingAsync(_pag, LoggedUser));
+                DataList.AddRange(await DController.GetData(await HttpApiService.Movies.GetAllMoviesByTopRatedAsync(_pag, LoggedUser)));
             }
-            else if (mode == "search")
+            else if (SelectedCategory == "upcoming")
             {
-                DataList = await DController.GetData(await HttpApiService.Movies.GetAllMoviesByNameAsync(_searchByName,_pag, LoggedUser));
+                DataList.AddRange(await DController.GetData(await HttpApiService.Movies.GetAllMoviesByUpcomingAsync(_pag, LoggedUser)));
             }
-            else{
-                DataList = await DController.GetData(await HttpApiService.Movies.GetAllDiscoverMoviesAsync(_pag, LoggedUser, QueryParams));
+            else if (SelectedCategory == "search")
+            {
+                DataList = await DController.GetData(await HttpApiService.Movies.GetAllMoviesByNameAsync(_searchByName, _pag, LoggedUser));
             }
 
             SeenMovieList = DController.GetData(await ApiService.SeenMovies.GetAllSeenMoviesByUserIdAsync(LoggedUser)).Result ?? new List<MovieModel>();
@@ -142,78 +254,36 @@ namespace ZetaDashboard.Components.Pages.MOV.MovieSearchPage
         private async Task LoadMore()
         {
             _pag++;
-            
-            if (mode == "nowplaying")
-            {
-                DataList.AddRange(await DController.GetData(await HttpApiService.Movies.GetAllMoviesByNowPlayingAsync(_pag, LoggedUser)));
-            }
-            else if (mode == "popular")
-            {
-                DataList.AddRange(await DController.GetData(await HttpApiService.Movies.GetAllMoviesByPopularAsync(_pag, LoggedUser)));
-            }
-            else if (mode == "toprated")
-            {
-                DataList.AddRange(await DController.GetData(await HttpApiService.Movies.GetAllMoviesByTopRatedAsync(_pag, LoggedUser)));
-            }
-            else if (mode == "upcoming")
-            {
-                DataList.AddRange(await DController.GetData(await HttpApiService.Movies.GetAllMoviesByUpcomingAsync(_pag, LoggedUser)));
-            }
-            else if (mode == "search")
-            {
-                DataList.AddRange(await DController.GetData(await HttpApiService.Movies.GetAllMoviesByNameAsync(_searchByName,_pag, LoggedUser)));
-            }
-            else
+
+            if (string.IsNullOrEmpty(SelectedCategory))
             {
                 DataList.AddRange(await DController.GetData(await HttpApiService.Movies.GetAllDiscoverMoviesAsync(_pag, LoggedUser, QueryParams)));
             }
+            else if (SelectedCategory == "nowplaying")
+            {
+                DataList.AddRange(await DController.GetData(await HttpApiService.Movies.GetAllMoviesByNowPlayingAsync(_pag, LoggedUser)));
+            }
+            else if (SelectedCategory == "popular")
+            {
+                DataList.AddRange(await DController.GetData(await HttpApiService.Movies.GetAllMoviesByPopularAsync(_pag, LoggedUser)));
+            }
+            else if (SelectedCategory == "toprated")
+            {
+                DataList.AddRange(await DController.GetData(await HttpApiService.Movies.GetAllMoviesByTopRatedAsync(_pag, LoggedUser)));
+            }
+            else if (SelectedCategory == "upcoming")
+            {
+                DataList.AddRange(await DController.GetData(await HttpApiService.Movies.GetAllMoviesByUpcomingAsync(_pag, LoggedUser)));
+            }
+            else if (SelectedCategory == "search")
+            {
+                DataList.AddRange(await DController.GetData(await HttpApiService.Movies.GetAllMoviesByNameAsync(_searchByName, _pag, LoggedUser)));
+            }
+
         }
 
-        private void SelectProviders(Watch_provider provider)
-        {
-            if (SelectedProviders.Contains(provider))
-            {
-                SelectedProviders.Remove(provider);
-            }
-            else
-            {
-                SelectedProviders.Add(provider);
-            }
-            StateHasChanged();
-        }
-        private async Task SearchMovies()
-        {
-            QueryParams = new Dictionary<string, string>();
-            var querygenres = "";
-            if(SelectedGenres != null && SelectedGenres.Count > 0)
-            {
-                foreach (var i in SelectedGenres)
-                {
-                    querygenres += i.Id + ",";
-                }
-                querygenres = querygenres.Substring(0, querygenres.Length - 1);
-                QueryParams.Add("with_genres", querygenres);
-            }
-
-            var queryproviders = "";
-            if (SelectedProviders != null && SelectedProviders.Count > 0)
-            {
-                foreach (var i in SelectedProviders)
-                {
-                    queryproviders += i.provider_id + ",";
-                }
-                queryproviders = queryproviders.Substring(0, queryproviders.Length - 1);
-                QueryParams.Add("with_watch_providers", queryproviders);
-                QueryParams.Add("watch_region", "ES");
-            }
-
-            if(SelectedOrder != null)
-            {
-                QueryParams.Add("sort_by", SelectedOrder.eng_order);
-            }
-
-            GetList();
-        }
+        
+        
 
         private CancellationTokenSource? _cts;
         private async Task OnQueryChanged(string text)
@@ -238,6 +308,7 @@ namespace ZetaDashboard.Components.Pages.MOV.MovieSearchPage
             }
             
         }
+        
 
         public string GetTitle(string mode) => mode switch
         {
@@ -250,5 +321,100 @@ namespace ZetaDashboard.Components.Pages.MOV.MovieSearchPage
             "upcoming" => "🆕  Nuevas",
             "search" => "🔎 Buscar"
         };
+
+        private string SelectedCategory;
+
+        private async Task SelectedCategoryChanged(string cat)
+        {
+            SelectedCategory = cat;
+            _cts?.Cancel();
+            _cts = new CancellationTokenSource();
+            try
+            {
+                await Task.Delay(1000, _cts.Token);
+
+                
+                await FilterBy();
+            }
+            catch (TaskCanceledException)
+            {
+            }
+            
+        }
+        private async Task SelectedOrderChanged(Order order)
+        {
+            SelectedOrder = order;
+            _cts?.Cancel();
+            _cts = new CancellationTokenSource();
+            try
+            {
+                await Task.Delay(1000, _cts.Token);
+
+                
+                await FilterBy();
+            }
+            catch (TaskCanceledException)
+            {
+            }
+
+        }
+        private async Task SelectProviders(Watch_provider provider)
+        {
+            if (SelectedProviders.Contains(provider))
+            {
+                SelectedProviders.Remove(provider);
+            }
+            else
+            {
+                SelectedProviders.Add(provider);
+            }
+            StateHasChanged();
+
+
+            _cts?.Cancel();
+            _cts = new CancellationTokenSource();
+            var token = _cts.Token;
+
+            try
+            {
+                await Task.Delay(1000, _cts.Token);
+                await FilterBy();
+            }
+            catch (TaskCanceledException)
+            {
+            }
+        }
+
+        private async Task SelectGenresChanged(IReadOnlyCollection<Data.MOV.Genre> genres)
+        {
+            SelectedGenres = genres.ToList();
+            StateHasChanged();
+
+
+            _cts?.Cancel();
+            _cts = new CancellationTokenSource();
+            var token = _cts.Token;
+
+            try
+            {
+                await Task.Delay(1000, _cts.Token);
+                await FilterBy();
+            }
+            catch (TaskCanceledException)
+            {
+            }
+        }
+
+        private async Task SearchByTitleMovies()
+        {
+            SelectedCategory = "search";
+            _searchByName = "";
+        }
+        private async Task CancelSearchByTitleMovies()
+        {
+            SelectedCategory = null;
+            _searchByName = "";
+            GetList();
+        }
     }
 }

@@ -1,6 +1,5 @@
 ﻿@page "/search-movie"
-@page "/search-movie/{mode}"
-@page "/search-movie/{mode}/{name}"
+@page "/search-movie/{urlparams}"
 
 @using ZetaDashboard.Data.MOV
 
@@ -8,7 +7,7 @@
 <!-- #region Title -->
 <div style="display:flex;align-items:center;justify-content:space-between">
     <div></div>
-    <div>
+    <div style="margin-top:40px;">
         <h2>@GetTitle(mode)</h2>
     </div>
     <div style="padding-right:30px;">
@@ -18,28 +17,52 @@
 <MudContainer MaxWidth="MaxWidth.ExtraLarge">
     <MudGrid>
         <MudItem xs="@((int)12)" md="@((int)2)">
-            @if (string.IsNullOrEmpty(mode) || mode == "discover")
+
+            @if (SelectedCategory == "search")
+            {
+                <MudButton EndIcon="@Icons.Material.Filled.Cancel"
+                           Variant="Variant.Filled" FullWidth="true"
+                           Color="Color.Error" Style="margin-bottom:15px;margin-top:5px;"
+                           OnClick="CancelSearchByTitleMovies">Cancelar</MudButton>
+            }
+            else
             {
                 <MudButton EndIcon="@Icons.Material.Filled.Search"
-                    Variant="Variant.Filled" FullWidth="true" 
-                    Color="Color.Primary" Style="margin-bottom:15px;margin-top:5px;"
-                    OnClick="SearchMovies">Buscar</MudButton>
-                <MudExpansionPanels MultiExpansion="true" >
-                    <MudExpansionPanel Text="Ordenar">
-                        <MudSelect @bind-Value="SelectedOrder" Clearable="true" T="Order">
+                            Variant="Variant.Filled" FullWidth="true"
+                            Color="Color.Primary" Style="margin-bottom:15px;margin-top:5px;"
+                            OnClick="SearchByTitleMovies">Buscar por titulo</MudButton>
+            }
+
+            
+            <MudExpansionPanels MultiExpansion="true" >
+                @if (SelectedCategory != "search")
+                {
+                    <MudExpansionPanel Text="Categorias" Expanded="@IsPc">
+                        <MudChipSet T="string" SelectedValueChanged="SelectedCategoryChanged" SelectedValue="@SelectedCategory" CheckMark SelectionMode="SelectionMode.ToggleSelection">
+                            <MudChip Color="Color.Primary" Value="@("nowplaying")">⌛ Ahora mismo</MudChip>
+                            <MudChip Color="Color.Primary" Value="@("popular")">🔥 Popular</MudChip>
+                            <MudChip Color="Color.Primary" Value="@("toprated")">📈 Mas valoradas</MudChip>
+                            <MudChip Color="Color.Primary" Value="@("upcoming")">🆕 Nuevas</MudChip>
+                        </MudChipSet>
+                    </MudExpansionPanel>
+                }
+                @if (string.IsNullOrEmpty(SelectedCategory))
+                {
+                    <MudExpansionPanel Text="Ordenar" Expanded="@IsPc">
+                        <MudSelect ValueChanged="SelectedOrderChanged" Value="SelectedOrder" Clearable="false" T="Order">
                             @foreach (var item in MovieData.SortsBy)
                             {
                                 <MudSelectItem Value="@item">@item.esp_order</MudSelectItem>
                             }
                         </MudSelect>
                     </MudExpansionPanel>
-                    <MudExpansionPanel Text="Donde ver">
+                    <MudExpansionPanel Text="Donde ver" Expanded="@IsPc">
                         <MudGrid Style="padding:4px;">
                             @foreach (var item in MovieData.WhatProviders)
                             {
-                                <MudItem >
+                                <MudItem>
                                     <div @onclick="@(() => SelectProviders(item))"
-                                         class="@(SelectedProviders.Contains(item) ? "whatprovider selectedprovider" : "whatprovider")">
+                                            class="@(SelectedProviders.Contains(item) ? "whatprovider selectedprovider" : "whatprovider")">
                                         <div class="selectedproviderbg">
                                             <MudIcon Icon="@Icons.Material.Filled.Check"></MudIcon>
                                         </div>
@@ -49,9 +72,9 @@
                             }
                         </MudGrid>
                     </MudExpansionPanel>
-                    <MudExpansionPanel Text="Filtros" >
+                    <MudExpansionPanel Text="Filtros" Expanded="@IsPc">
                         Generos:
-                        <MudChipSet @bind-SelectedValues="SelectedGenres" SelectionMode="SelectionMode.MultiSelection"
+                        <MudChipSet T="Data.MOV.Genre" SelectedValuesChanged="SelectGenresChanged" SelectedValues="@SelectedGenres" SelectionMode="SelectionMode.MultiSelection"
                                     CheckMark="true" Variant="Variant.Text" Color="Color.Primary">
                             @foreach(var genre in MovieData.Genres)
                             {
@@ -59,29 +82,29 @@
                             }
                         </MudChipSet>
                     </MudExpansionPanel>
+                }
             
-                </MudExpansionPanels>
-            }
-            else if(mode == "search")
-            {
-                <MudExpansionPanels MultiExpansion="true" >
-                    <MudExpansionPanel Text="Buscar por nombre" Expanded="true">
-                        <MudTextField T="string"
-                                      ValueChanged="OnQueryChanged"
-                                      Variant="Variant.Filled"
-                                      Adornment="Adornment.Start"
-                                      AdornmentIcon="@Icons.Material.Outlined.Search"
-                                      AdornmentColor="Color.Primary"
-                                      Clearable="true"
-                                      Immediate="true"
-                                      DebounceInterval="450"
-                                      Margin="Margin.Dense"
-                                      FullWidth="true" />
-                    </MudExpansionPanel>
-                </MudExpansionPanels>
-            }
+            </MudExpansionPanels>
+            
         </MudItem>
         <MudItem xs="@((int)12)" md="@((int)10)">
+            
+            @if (SelectedCategory == "search")
+            {
+                <MudTextField T="string"
+                              ValueChanged="OnQueryChanged"
+                              Variant="Variant.Filled"
+                              Adornment="Adornment.Start"
+                              AdornmentIcon="@Icons.Material.Outlined.Search"
+                              AdornmentColor="Color.Primary"
+                              Clearable="true"
+                              Value="_searchByName"
+                              Immediate="true"
+                              DebounceInterval="450"
+                              Margin="Margin.Dense"
+                              FullWidth="true" />
+
+            }
             @if (DataList.Count > 0) 
             {
                 <div class="movie-grid-5" style="margin-top:15px;">
