@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.JSInterop;
 using MudBlazor;
 using System.Globalization;
 using System.Text.RegularExpressions;
@@ -32,6 +33,7 @@ namespace ZetaDashboard.Components.Pages.MOV.MovieSearchPage
         [Inject] private AuthenticationStateProvider Auth { get; set; } = default!;
         [Inject] private NavigationManager Navigator { get; set; } = default!;
         [Inject] private IBrowserViewportService BrowserViewportService { get; set; }
+        [Inject] private IJSRuntime JS { get; set; } = default!;
         #endregion
         #region Vars
         #region Global
@@ -87,10 +89,10 @@ namespace ZetaDashboard.Components.Pages.MOV.MovieSearchPage
 
             var x = await BrowserViewportService.GetCurrentBreakpointAsync();
             IsPc = (x >= Breakpoint.Md);
+            GetParamsQueryAndList();
         }
         protected override async Task OnParametersSetAsync()
         {
-            GetParamsQueryAndList();
             //GetList();
         }
 
@@ -207,12 +209,6 @@ namespace ZetaDashboard.Components.Pages.MOV.MovieSearchPage
             _pag = 1;
             DataList.Clear();
 
-            //var url = "search-movie/?";
-            //foreach (var inn in QueryParams)
-            //{
-            //    url += $"&{inn.Key}={inn.Value}";
-            //}
-            //Navigator.NavigateTo(url, false, false);
 
             if (string.IsNullOrEmpty(SelectedCategory))
             {

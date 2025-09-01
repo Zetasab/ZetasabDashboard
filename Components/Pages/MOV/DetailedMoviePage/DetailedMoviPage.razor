@@ -4,6 +4,16 @@
     <MudProgressCircular Style="width:200px;height:200px" Color="Color.Primary" Indeterminate="true" />
 </MudPaper>
 
+<div style="position:absolute;top:0;right:0;z-index:99;margin-top: 40px;margin-right: 40px;">
+    <MudIconButton Variant="Variant.Filled"
+    Color="Color.Error"
+    Icon="@Icons.Material.Filled.Close"
+    Size="Size.Large"
+                   OnClick="GoBack">
+        
+    </MudIconButton>
+</div>
+
 <!-- #region cabecera -->
 <div class="cabecera-container">
     <img src="@MovieModel.GetBackGroungUrl()" loading="lazy" />

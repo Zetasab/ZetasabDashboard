@@ -47,3 +47,10 @@ function scrollToTop() {
     var x = document.getElementById("main-ariticle");
     x.scrollTo({ top: 0, behavior: 'smooth' });
 }
+
+function goBack() {
+    window.history.back();
+}
+function replaceUrl(url) {
+    window.history.replaceState({}, "", url);
+}

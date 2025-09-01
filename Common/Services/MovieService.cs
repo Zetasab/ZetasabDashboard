@@ -269,6 +269,46 @@ namespace ZetaDashboard.Common.Services
                     };
                 }
             }
+            public async Task<ApiResponse<List<MovieModel>>> GetAllMoviesByTrendingAsync(string time, UserModel loggeduser, CancellationToken ct = default)
+            {
+                var response = new ApiResponse<List<MovieModel?>>();
+                try
+                {
+                    if (!HasPermissions(loggeduser, UserModel.EUserPermissionType.Visor, thispage))
+                    {
+                        response.Result = ResponseStatus.Unauthorized;
+                        response.Message = "No tienes permisos";
+                        return response!;
+                    }
+
+                    // Opción A) Tu API devuelve ApiResponse<List<AuditModel>>
+                    var (ok, apiRes, error, raw) = await TryGetAsync<ApiResponse<List<MovieModel>>>($"trending/movie/{time}?language=es-ES", ct);
+
+                    if (ok && apiRes is not null)
+                    {
+                        response.Result = ResponseStatus.Ok;
+                        response.Data = JsonSerializer.Deserialize<MovieListModel>(raw, _json).Results;
+                        return response;
+                    }
+                    else
+                    {
+                        response.Result = ResponseStatus.NotFound;
+                        response.Message = $"Error obteniendo {_loslasDatos}";
+                        return response!;
+                    }
+
+                    return response;
+
+                }
+                catch (Exception ex)
+                {
+                    return new ApiResponse<List<MovieModel>>
+                    {
+                        Result = ResponseStatus.InternalError,
+                        Message = $"Ha ocurrido un error al recuperar {_loslasDatos}",
+                    };
+                }
+            }
 
             public async Task<ApiResponse<List<MovieModel>>> GetAllDiscoverMoviesAsync(int page, UserModel loggeduser, Dictionary<string, string> queryparams = null, CancellationToken ct = default)
             {

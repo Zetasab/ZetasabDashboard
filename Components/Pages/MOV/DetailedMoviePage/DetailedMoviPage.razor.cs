@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.JSInterop;
 using MudBlazor;
+using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using ZetaCommon.Auth;
@@ -10,6 +11,7 @@ using ZetaDashboard.Common.Services;
 using ZetaDashboard.Common.ZDB.Models;
 using ZetaDashboard.Common.ZDB.Services;
 using ZetaDashboard.Services;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 using static ZetaDashboard.Common.ZDB.Models.UserModel;
 
 namespace ZetaDashboard.Components.Pages.MOV.DetailedMoviePage
@@ -235,6 +237,10 @@ namespace ZetaDashboard.Components.Pages.MOV.DetailedMoviePage
             return Color.Error;                        // rojo
         }
 
+        private async Task GoBack()
+        {
+            await JS.InvokeVoidAsync("goBack");
+        }
         
     }
 }

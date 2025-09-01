@@ -1,0 +1,195 @@
+﻿@page "/movie-home"
+
+<!-- #region cabecera -->
+<div class="cabecera-container ">
+    <div class="cabecera-fade"></div>
+    <img src="@($"https://image.tmdb.org/t/p/w1920_and_h800_multi_faces/{_bg}.jpg")" loading="lazy" />
+</div>
+<!-- #endregion -->
+
+<MudPaper Class="search-bar" Elevation="0">
+    <div class="search-bar-container">
+
+        <MudTextField T="string" Style="
+    background-color: white;"
+                    @bind-Value="_searchMovie"
+                      Placeholder="Buscar una titulo de película..."
+                      Variant="Variant.Outlined"
+                      Class="search-input"
+                      FullWidth="true" />
+        <MudButton Class="search-button" Color="Color.Primary" Variant="Variant.Filled" OnClick="NavigateToSearchMovie">
+            Buscar
+        </MudButton>
+    </div>
+</MudPaper>
+
+
+<MudContainer MaxWidth="MaxWidth.Large">
+    @if (TrendingMovies != null)
+    {
+       
+        <MudGrid Style="margin-top:50px;">
+            <MudItem xs="@((int)12)" Style="display:flex;gap:20px;align-items:center;">
+                <MudText Typo="Typo.h4">
+                    Tendencias
+                </MudText>
+                <MudToggleGroup Style="width:300px;" T="string" SelectedClass="custom-gradient" Value="_trendingMovie" ValueChanged="ChangeTrendingMovies">
+                    <MudToggleItem Value="@("Hoy")" />
+                    <MudToggleItem Value="@("Esta semana")" />
+                </MudToggleGroup>
+            </MudItem>
+            <MudItem xs="@((int)12)" Style="overflow-x: auto;padding-bottom: 27px;">
+                <div style="display: flex;gap: 38px;">
+                    @foreach (var movie in TrendingMovies)
+                    {
+                        <MovieCard Navigator="@Navigator" movie="@movie" ShowButtons="false"></MovieCard>
+                    }
+                </div>
+            </MudItem>
+        </MudGrid>
+    }
+    
+</MudContainer>
+
+<style>
+    /* barra de acciones al fondo */
+    .movie-actions {
+        display: flex;
+        justify-content: space-around;
+        background: rgba(0, 0, 0, 0.6);
+        padding: 6px;
+    }
+
+    .movie-score {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 8px;
+    }
+
+    .movie-score-text {
+        position: absolute;
+        font-size: 14px;
+        font-weight: bold;
+        color: white;
+    }
+    .custom-gradient {
+        background-image: linear-gradient(to right top, #051937, #004d7a, #008793, #00bf72, #a8eb12);
+        color: white !important;
+    }
+    .movie-card {
+        position: relative;
+        border-radius: 12px;
+        overflow: hidden;
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        transition: transform 0.2s ease-in-out;
+    }
+
+        .movie-card:hover {
+            transform: scale(1.03);
+        }
+
+    .movie-backdrop {
+        flex: 1;
+        background-size: cover;
+        background-position: center;
+        position: relative;
+    }
+
+    .movie-overlay {
+        position: absolute;
+        bottom: 0px; /* dejamos hueco para botones */
+        width: 100%;
+        padding: 12px;
+        background: linear-gradient(to top, rgba(0,0,0,0.7), rgba(0,0,0,0));
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .movie-title {
+        color: white;
+        font-weight: bold;
+    }
+    .movie-card {
+        position: relative;
+        border-radius: 12px;
+        overflow: hidden;
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        transition: transform 0.2s ease-in-out;
+    }
+
+        .movie-card:hover {
+            transform: scale(1.03);
+        }
+
+    .movie-backdrop {
+        flex: 1;
+        background-size: cover;
+        background-position: center;
+        position: relative;
+    }
+    .cabecera-fade{
+        width:100%;
+        height:100%;
+        position:absolute;
+        z-index:20;
+        background: radial-gradient(circle,rgba(0, 0, 0, 0) 88%, rgba(39,39,47,0.9) 95%);
+    }
+    .search-bar-container{
+        width: 70%;
+        display: flex;
+        border-radius: 19px;
+        overflow: hidden;
+        position: relative;
+        z-index: 30;
+        border: 2px solid var(--mud-palette-primary);
+        box-sizing:border-box;
+    }
+    .cabecera-container img {
+        position: relative;
+        z-index: 1;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    .search-bar {
+        display: flex;
+        align-items: center;
+        
+        height:500px;
+        width:100%;
+        justify-content:center;
+    }
+
+    .search-input .mud-input-root {
+        border: none !important;
+        box-shadow: none !important;
+        color:black !important;
+    }
+
+    .search-button {
+        border-radius: 0px !important;
+        
+        color: black !important;
+        min-width: 100px;
+        position:absolute;
+        right: 0px;
+        height: 56px;
+    }
+    .cabecera-container {
+        position: absolute;
+        width: 100%;
+        height: 500px;
+        overflow: hidden;
+        display:flex;justify-content:center;
+        
+    }
+</style>
