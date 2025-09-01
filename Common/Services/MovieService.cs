@@ -478,6 +478,46 @@ namespace ZetaDashboard.Common.Services
                     };
                 }
             }
+            public async Task<ApiResponse<MovieBackdropModel>> GetBackdropMovieByIdAsync(string id, UserModel loggeduser, CancellationToken ct = default)
+            {
+                var response = new ApiResponse<MovieBackdropModel>();
+                try
+                {
+                    if (!HasPermissions(loggeduser, UserModel.EUserPermissionType.Visor, thispage))
+                    {
+                        response.Result = ResponseStatus.Unauthorized;
+                        response.Message = "No tienes permisos";
+                        return response!;
+                    }
+
+                    // Opción A) Tu API devuelve ApiResponse<List<AuditModel>>
+                    var (ok, apiRes, error, raw) = await TryGetAsync<ApiResponse<MovieBackdropModel>>($"movie/{id}/images", ct);
+
+                    if (ok && apiRes is not null)
+                    {
+                        response.Result = ResponseStatus.Ok;
+                        response.Data = JsonSerializer.Deserialize<MovieBackdropModel>(raw, _json);
+                        return response;
+                    }
+                    else
+                    {
+                        response.Result = ResponseStatus.NotFound;
+                        response.Message = $"Error obteniendo {_loslasDatos}";
+                        return response!;
+                    }
+
+                    return response;
+
+                }
+                catch (Exception ex)
+                {
+                    return new ApiResponse<MovieBackdropModel>
+                    {
+                        Result = ResponseStatus.InternalError,
+                        Message = $"Ha ocurrido un error al recuperar {_loslasDatos}",
+                    };
+                }
+            }
             public async Task<ApiResponse<MovieListModel>> GetRecomendatedMovieByIdAsync(string id, UserModel loggeduser, CancellationToken ct = default)
             {
                 var response = new ApiResponse<MovieListModel>();

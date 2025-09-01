@@ -140,7 +140,7 @@
             <MudText Style="margin-top:20px;margin-left:15px;">
                 @MovieModel.Overview
             </MudText>
-            <MudText Typo="Typo.h4" Style="margin-top:20px;">
+            <MudText Typo="Typo.h4" Style="margin-top:40px;">
                 Reparto Principal
             </MudText>
             <div class="card-list-scroll" style="overflow-x:auto">
@@ -251,7 +251,35 @@
             </MudItem>
          </MudGrid>
     }
+
+    <div id="galeria" class="pswp-gallery" style="margin-top:40px;">
+    @if (BackdropsModel != null)
+    {
+        @if (BackdropsModel.Backdrops.Count > 0)
+        {
+            <MudText Typo="Typo.h4" Style="margin-top:40px;">
+                Imagenes
+            </MudText>
+                <div style="overflow-x:auto;width:100%;padding-bottom:30px">
+                    <div style="display:flex;justify-content:center;margin-top:20px;width:fit-content;">
+                        @foreach (var img in BackdropsModel.Backdrops.Take(5))
+                        {
+                            <a href="@img.GetPosterUrl("original")"
+                               data-pswp-width="@img.Width"
+                               data-pswp-height="@img.Height">
+                                <img src="@img.GetPosterUrl()" width="200" loading="lazy" class="m-2 rounded shadow" />
+                            </a>
+                        }
+                    </div>
+            </div>
+            
+        }
+    }
+    </div>
 </MudContainer>
+
+
+
 @if(MovieModel.BelongsToCollection != null)
 {
     <div class="movie-collection" style="@($"background-image: linear-gradient(to right, rgba(3,37,65, 1) 0%, rgba(3,37,65, 0.6) 100%), url({MovieModel.GetCollectionBackGroungUrl()})");">

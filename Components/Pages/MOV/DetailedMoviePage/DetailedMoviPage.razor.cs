@@ -52,6 +52,7 @@ namespace ZetaDashboard.Components.Pages.MOV.DetailedMoviePage
         private MovieCreditsModel MovieCreditsModel { get; set; } = new MovieCreditsModel();
         private VideoResult MovieVideosModel { get; set; } = new VideoResult();
         private MovieListModel SimilarVideosModel { get; set; } = new MovieListModel();
+        private MovieBackdropModel BackdropsModel { get; set; } = new MovieBackdropModel();
         private MovieListModel Recomendated { get; set; } = new MovieListModel();
         private List<MovieModel> SeenMovies { get; set; } = new List<MovieModel>();
         private List<MovieModel> LikedMovies { get; set; } = new List<MovieModel>();
@@ -86,6 +87,7 @@ namespace ZetaDashboard.Components.Pages.MOV.DetailedMoviePage
                 GetMovie();
                 
                 await JS.InvokeVoidAsync("scrollToTop");
+                await JS.InvokeVoidAsync("initGallery");
             }
             catch (Exception ex)
             {
@@ -112,6 +114,7 @@ namespace ZetaDashboard.Components.Pages.MOV.DetailedMoviePage
             video = await DController.GetData(await HttpApiService.Movies.GetVideoMovieByIdAsync(movieId, LoggedUser));
             MovieVideosModel = video.Results.FirstOrDefault(x => x.Type == "Teaser");
             SimilarVideosModel = await DController.GetData(await HttpApiService.Movies.GetSimilarMovieByIdAsync(movieId, LoggedUser));
+            BackdropsModel = await DController.GetData(await HttpApiService.Movies.GetBackdropMovieByIdAsync(movieId, LoggedUser));
             Recomendated = await DController.GetData(await HttpApiService.Movies.GetRecomendatedMovieByIdAsync(movieId, LoggedUser));
 
 
