@@ -37,23 +37,7 @@ namespace ZetaDashboard.Components.Pages.ZDB.Login
 
         protected override async Task OnInitializedAsync()
         {
-            try
-            {
-                var config = Config.GetSection("Mongo").Get<MongoConfig>();
-
-                var client = new MongoClient(config.ConnectionString);
-                var database = client.GetDatabase(config.DatabaseName);
-
-                // Comando simple para verificar conexión
-                var result = await database.RunCommandAsync((Command<BsonDocument>)"{ ping: 1 }");
-
-                Console.WriteLine("? Conexión a MongoDB exitosa.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("? Error conectando a MongoDB:");
-                Console.WriteLine(ex.Message);
-            }
+            
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -73,6 +57,24 @@ namespace ZetaDashboard.Components.Pages.ZDB.Login
 
         private async Task OnLogin()
         {
+            try
+            {
+                var config = Config.GetSection("Mongo").Get<MongoConfig>();
+
+                var client = new MongoClient(config.ConnectionString);
+                var database = client.GetDatabase(config.DatabaseName);
+
+                // Comando simple para verificar conexión
+                var result = await database.RunCommandAsync((Command<BsonDocument>)"{ ping: 1 }");
+
+                Console.WriteLine("? Conexión a MongoDB exitosa.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("? Error conectando a MongoDB:");
+                Console.WriteLine(ex.Message);
+            }
+
             var adminpassw = UserAccountModel.PasswordHash;
             var usermodel = new UserModel();
             usermodel.Name = UserAccountModel.Name;
