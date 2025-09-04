@@ -1,4 +1,5 @@
 ﻿@page "/movie-home"
+@using ZetaDashboard.Data.MOV
 
 <!-- #region cabecera -->
 <div class="cabecera-container ">
@@ -31,7 +32,7 @@
         <MudGrid Style="margin-top:50px;">
             <MudItem xs="@((int)12)" Style="display:flex;gap:20px;align-items:center;">
                 <MudText Typo="Typo.h4">
-                    Tendencias
+                    🥤 Tendencias
                 </MudText>
                 <MudToggleGroup Style="width:300px;" T="string" SelectedClass="custom-gradient" Value="_trendingMovie" ValueChanged="ChangeTrendingMovies">
                     <MudToggleItem Value="@("Hoy")" />
@@ -51,7 +52,427 @@
     
 </MudContainer>
 
+<MudPaper Elevation="0" Class="personal-movies-container">
+    <div>
+        <MudText Typo="Typo.h2" Style="color:white;font-weight:bold;">
+            ¿No ves lo que buscas?
+        </MudText>
+    </div>
+    <div>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="/search-movie" Style="padding: 14px 30px;font-size: 19px;margin:25px;">
+            📍 Descubre peluculas
+        </MudButton>
+    </div>
+</MudPaper>
+
+<MudContainer MaxWidth="MaxWidth.Large">
+    @if (CarteleraMovies != null)
+    {
+
+        <MudGrid Style="margin-top:50px;">
+            <MudItem xs="@((int)12)" Style="display:flex;gap:20px;align-items:center;">
+                <MudText Typo="Typo.h4">
+                    🎬 En cartelera
+                </MudText>
+            </MudItem>
+            <MudItem xs="@((int)12)" Style="overflow-x: auto;padding-bottom: 27px;">
+                <div style="display: flex;gap: 38px;">
+                    @foreach (var movie in CarteleraMovies)
+                    {
+                        <MovieCard Navigator="@Navigator" movie="@movie" ShowButtons="false"></MovieCard>
+                    }
+                </div>
+            </MudItem>
+        </MudGrid>
+    }
+
+    @if (PopularMovies != null)
+    {
+        <MudGrid Style="margin-top:50px;">
+            <MudItem xs="@((int)12)" Style="display:flex;gap:20px;align-items:center;">
+                <MudText Typo="Typo.h4">
+                    🔥 Popular
+                </MudText>
+            </MudItem>
+            <MudItem xs="@((int)12)" Style="overflow-x: auto;padding-bottom: 27px;">
+                <div style="display: flex;gap: 38px;">
+                    @foreach (var movie in PopularMovies)
+                    {
+                        <MovieCard Navigator="@Navigator" movie="@movie" ShowButtons="false"></MovieCard>
+                    }
+                </div>
+            </MudItem>
+        </MudGrid>
+    }
+
+</MudContainer>
+
+
+<div class="three-panels">
+    <a href="/seen-movies" class="panel panel--watched" tabindex="0">
+        <div class="movie-link">
+            <MudText Typo="Typo.h5">👀 Pelicuas vistas</MudText>
+        </div>
+    </a>
+    
+    <a href="/liked-movies" class="panel panel--favorites" tabindex="0">
+        <div class="movie-link">
+            <MudText Typo="Typo.h5">💞 Pelicuas favoritas</MudText>
+        </div>
+    </a>
+    <a href="/watch-movies" class="panel panel--saved" tabindex="0">
+        <div class="movie-link">
+            <MudText Typo="Typo.h5">🕝 Pelicuas previstas</MudText>
+        </div>
+    </a>
+</div>
+
+<MudContainer MaxWidth="MaxWidth.Large">
+        <MudGrid Style="margin-top:50px;">
+            <MudItem xs="@((int)12)" Style="display:flex;gap:20px;align-items:center;">
+                <MudText Typo="Typo.h4">
+                🔎 Buscar peliculas por
+                </MudText>
+            </MudItem>
+            <MudItem xs="@((int)12)">
+                <div class="stream-buttons">
+                    @foreach (var item in MovieData.WhatProviders)
+                    {
+                        <a href="@($"/search-movie?watch_providers={item.provider_id}")" class="@($"card bg_{item.provider_id}")">
+
+                        </a>
+                    }
+                </div>
+
+            </MudItem>
+            <MudItem xs="@((int)12)">
+                <MudDivider Light="true" ></MudDivider>
+            </MudItem>
+
+            <MudItem xs="@((int)12)">
+                <div class="stream-buttons">
+                    @foreach (var item in MovieData.Genres)
+                    {
+                    <a href="@($"/search-movie?genres={item.Id}")" class="@($"card bg_{item.Name.ToString().Replace(" ", "")}")">
+                            <MudText Style="font-size:29px;">@item.Esp_Name</MudText>
+                    </a>
+                    }
+                </div>
+
+            </MudItem>
+        </MudGrid>
+
+</MudContainer>
+
+<div class="footer" style="width:100%;height:80px;background-color:black;margin-top:100px"></div>
 <style>
+    .stream-buttons {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 1.5rem;
+        margin: 2rem 0;
+    }
+
+    .card {
+        position: relative;
+        width: 280px;
+        height: 190px;
+        border-radius: 1rem;
+        overflow: hidden;
+        text-decoration: none;
+        color: white;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: .5rem;
+        font-size: 1.2rem;
+        font-weight: 600;
+        box-shadow: 0 6px 20px rgba(0,0,0,.4);
+        transition: transform .3s ease, box-shadow .3s ease;
+    }
+
+        .card::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.45); /* oscurece el fondo */
+            z-index: 0;
+            transition:0.3s;
+        }
+
+        .card:hover::after {
+            background: rgba(0,0,0,0); /* transparente */
+        }
+
+        .card MudText,
+        .card span,
+        .card p {
+            position: relative;
+            z-index: 1; /* asegura que el texto esté encima del overlay */
+        }
+
+        .card img {
+            max-width: 120px;
+            max-height: 60px;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,.5));
+        }
+
+        .card span {
+            z-index: 2;
+            text-shadow: 0 2px 6px rgba(0,0,0,.6);
+        }
+
+        /* Efecto hover */
+        .card:hover {
+            transform: scale(1.08);
+            box-shadow: 0 10px 30px rgba(0,0,0,.6);
+        }
+
+        /* Fondo de cada plataforma */
+        .card.bg_9 {
+            background: url("https://m.media-amazon.com/images/G/01/primevideo/seo/primevideo-seo-logo.png") center/cover no-repeat;
+        }
+
+        .card.bg_8 {
+            background: url("https://www.giztele.com/wp-content/uploads/2022/07/Netflix.jpg") center/cover no-repeat;
+        }
+
+        .card.bg_337 {
+            background: url("https://phonegest.com/wp-content/uploads/2023/11/4298a29d-820f-48bc-b353-c754809e24ec_16-9-discover-aspect-ratio_default_0.jpg") center/cover no-repeat;
+        }
+
+        .card.bg_1899 {
+            background: url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTEg4j1IoSCrJziu0MbUQlcX7Fdq9iYsc40sw&s") center/cover no-repeat;
+        }
+
+
+        .card.bg_Action
+        {
+            background: url("https://media.timeout.com/images/106157687/750/562/image.jpg") center/cover no-repeat;
+        }
+
+        .card.bg_Adventure {
+            background: url("https://nextbestpicture-com.b-cdn.net/wp-content/uploads/2022/08/screen-shot-2017-05-25-at-1-25-16-pm_orig-3.jpg") center/cover no-repeat;
+        }
+
+        .card.bg_Animation {
+            background: url("https://imgmediagumlet.lbb.in/media/2023/12/658574651519821d48d11132_1703244901555.jpg") center/cover no-repeat;
+        }
+
+        .card.bg_Comedy {
+            background: url("https://media.timeout.com/images/106155250/750/562/image.jpg") center/cover no-repeat;
+        }
+
+        .card.bg_Crime {
+            background: url("https://thescriptlab.com/wp-content/uploads/2022/06/Crime-Pays-The-Original-Gangsters_TSL.jpg") center/cover no-repeat;
+        }
+
+        .card.bg_Documentary {
+            background: url("https://cdnblog.picsart.com/2022/01/cover-1.jpg?to=max&r=700&type=webp") center/cover no-repeat;
+        }
+
+        .card.bg_Drama {
+            background: url("https://hips.hearstapps.com/hmg-prod/images/before-sunrise-everett-1651175088.jpg?crop=1xw:1xh;center,top&resize=980:*") center/cover no-repeat;
+        }
+
+        .card.bg_Family {
+            background: url("https://images.mummypages.ie/uploads/images/dir7045/dir352/dir17/19_1.php") center/cover no-repeat;
+        }
+
+        .card.bg_Fantasy {
+            background: url("https://i.insider.com/5eb1c74ee3c3fb191941a158?width=700") center/cover no-repeat;
+        }
+
+        .card.bg_History {
+            background: url("https://www.historyhit.com/app/uploads/2022/11/Gladiator-Scene.jpg?x96477") center/cover no-repeat;
+        }
+
+        .card.bg_Horror {
+            background: url("https://assets3.thrillist.com/v1/image/2722110/792x446/scale;webp=auto;jpeg_quality=60;progressive.jpg") center/cover no-repeat;
+        }
+
+        .card.bg_Music {
+            background: url("https://publish.purewow.net/wp-content/uploads/sites/2/2020/11/best-musical-movies-fb.jpg") center/cover no-repeat;
+        }
+
+        .card.bg_Mystery {
+            background: url("https://d26oc3sg82pgk3.cloudfront.net/files/media/edit/image/47036/article_full%401x.jpg") center/cover no-repeat;
+        }
+
+        .card.bg_Romance {
+            background: url("https://www.fluentu.com/blog/wp-content/uploads/site//2/through-my-window-netflix-poster-1-1-1024x647.jpeg") center/cover no-repeat;
+        }
+
+        .card.bg_ScienceFiction {
+            background: url("https://media.timeout.com/images/106154645/750/562/image.jpg") center/cover no-repeat;
+        }
+
+        .card.bg_TVMovie {
+            background: url("https://ca-times.brightspotcdn.com/dims4/default/21bd722/2147483647/strip/true/crop/2500x3000+250+0/resize/375x450!/quality/75/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2Fad%2F87%2F1f47900e4dc190daeb168643a45f%2Findustry-economy-mental-health-2.jpg") center/cover no-repeat;
+        }
+
+        .card.bg_Thriller {
+            background: url("https://hips.hearstapps.com/hmg-prod/images/best-psychological-thriller-movies-1596656403.jpg?crop=0.503xw:1.00xh;0.0881xw,0&resize=640:*") center/cover no-repeat;
+        }
+
+        .card.bg_War {
+            background: url("https://thegirlwhoworefreedom.com/wp-content/uploads/2019/01/fury-movie-poster-prints.jpg") center/cover no-repeat;
+        }
+
+        .card.bg_Western {
+            background: url("https://imageio.forbes.com/specials-images/imageserve/67ae6809ddcd93c767973f49/On-the-set-of-The-Good--The-Bad-and-The-Ugly/0x0.jpg?format=jpg&crop=1916,1077,x0,y0,safe&width=960") center/cover no-repeat;
+        }
+
+        
+
+        /* Capa de oscurecimiento para legibilidad */
+       
+
+        .card img, .card span {
+            position: relative;
+            z-index: 2;
+        }
+
+    /* CSS */
+    .three-panels {
+        display: flex;
+        width: 100%;
+        height: 700px;
+        overflow: hidden;
+        margin-top:90px;
+    }
+
+    .panel {
+        flex: 1 1 0%;
+        display: grid;
+        place-items: center;
+        text-decoration: none;
+        color: #fff;
+        font-weight: 600;
+        font-size: 1.25rem;
+        transition: flex-grow .45s ease, flex-basis .45s ease, filter .3s ease, transform .3s ease;
+        will-change: flex-basis, flex-grow;
+        position: relative;
+    }
+
+        .panel::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.45); /* oscurece el fondo */
+        z-index: 0;
+            transition: 0.3s
+    }
+
+    /* Fondos de ejemplo */
+    .panel--watched {
+        background: url("https://theprofilehhs.com/wp-content/uploads/2022/09/istockphoto-1191001701-612x612-1.jpg") center/cover no-repeat;
+    }
+
+    .panel--favorites {
+        background: url("https://opportunitydesk.org/wp-content/uploads/2025/02/Photos-for-OD-article-Watching-movies.jpg") center/cover no-repeat;
+    }
+
+    .panel--saved {
+        background: url("https://www.quiltingdaily.com/wp-content/uploads/2022/12/moviestowatchwhilequilting2-1024x538.png") center/cover no-repeat;
+    }
+
+    /* Oscurecer un poco por defecto para legibilidad */
+    
+
+    .panel > span {
+        position: relative;
+        z-index: 1;
+    }
+
+    /* Al entrar en el contenedor, todas se contraen un poco */
+    .three-panels:hover .panel,
+    .three-panels:focus-within .panel {
+        flex-basis: 10%;
+        filter: brightness(.7);
+    }
+
+    /* La panel activa (hover o foco) se expande y gana brillo */
+    /* IMPORTANTE: esta regla va DESPUÉS para que gane a la anterior (igual especificidad) */
+    .three-panels .panel:hover,
+    .three-panels .panel:focus {
+        flex-grow: 6;
+        flex-basis: 80%;
+        filter: brightness(1);
+        transform: translateZ(0);
+    }
+
+        .three-panels .panel:hover::after,
+        .three-panels .panel:focus::after {
+            opacity: .05;
+        }
+
+    /* Opcional: indicación de foco accesible */
+    .panel:focus-visible {
+        outline: 2px solid rgba(255,255,255,.8);
+        outline-offset: -2px;
+    }
+
+    /* Responsivo: en pantallas estrechas, apilar y usar foco/click */
+    @@media (max-width: 700px) {
+        .three-panels
+
+    {
+        flex-direction: column;
+        height: 60vh;
+    }
+
+    .three-panels:hover .panel {
+        flex-basis: auto;
+    }
+
+    .three-panels .panel {
+        min-height: 30%;
+    }
+
+    }
+    
+
+    .movie-link {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-decoration: none;
+        color: black;
+        font-weight: 500;
+        font-size: 1.1rem;
+        padding: 1rem;
+        border-radius: 1rem;
+        background: rgba(255,255,255,0.6); 
+        backdrop-filter: blur(6px); 
+        box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        transition: all 0.3s ease;
+        min-width: 100px;
+        z-index:4;
+    }
+
+       
+
+    .personal-movies-container{
+        width: 100%;
+        height: 400px; 
+        background-image: linear-gradient(rgba(0,0,0,2.35), rgba(0,0,0,0.35)),
+        url("https://wallpapers.com/images/hd/collage-of-movie-posters-g2fdqahxlakaa7yq.jpg");
+        background-size: cover; 
+        background-position: center;
+        background-repeat: no-repeat;
+        background-attachment: fixed; 
+        position: relative;
+        overflow: hidden;
+        margin-top:150px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+    
     /* barra de acciones al fondo */
     .movie-actions {
         display: flex;
@@ -192,4 +613,19 @@
         display:flex;justify-content:center;
         
     }
+
+        .cabecera-container::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: -1px;
+            height: 60px;
+            width: 100%;
+            min-width: 1700px;
+            background: var(--mud-palette-background);
+            clip-path: polygon(0 100%, 100% 100%, 0 0);
+            z-index: 50; /* encima de la imagen */
+            pointer-events: none; /* no bloquea clicks/touches */
+        }
 </style>

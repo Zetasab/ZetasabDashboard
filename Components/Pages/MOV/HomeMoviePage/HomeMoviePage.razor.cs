@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using MudBlazor;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using ZetaCommon.Auth;
 using ZetaDashboard.Common.MOV;
 using ZetaDashboard.Common.Services;
@@ -50,6 +52,8 @@ namespace ZetaDashboard.Components.Pages.MOV.HomeMoviePage
 
         private string _bg = "";
         public List<MovieModel> TrendingMovies { get; set; } = new List<MovieModel>();
+        public List<MovieModel> CarteleraMovies { get; set; } = new List<MovieModel>();
+        public List<MovieModel> PopularMovies { get; set; } = new List<MovieModel>();
         #endregion
 
         #region LifeCycles
@@ -73,6 +77,9 @@ namespace ZetaDashboard.Components.Pages.MOV.HomeMoviePage
         private async Task GetLists()
         {
             TrendingMovies = await DController.GetData(await HttpApiService.Movies.GetAllMoviesByTrendingAsync("day",LoggedUser));
+            CarteleraMovies = await DController.GetData(await HttpApiService.Movies.GetAllMoviesByNowPlayingAsync(1,LoggedUser));
+            PopularMovies = await DController.GetData(await HttpApiService.Movies.GetAllMoviesByPopularAsync(1,LoggedUser));
+
 
             var rand = new Random();
 
