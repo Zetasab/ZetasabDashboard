@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Server.Circuits;
 using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using MongoDB.Bson;
@@ -12,7 +11,6 @@ using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats.Jpeg;
 using SixLabors.ImageSharp.Formats.Webp;
 using SixLabors.ImageSharp.Processing;
-using System.Net;
 using System.Net.Http.Headers;
 using ZetaCommon.Auth;
 using ZetaDashboard.Common.Http.Config;
@@ -21,6 +19,7 @@ using ZetaDashboard.Common.Mongo.DataModels;
 using ZetaDashboard.Common.Services;
 using ZetaDashboard.Common.ZDB.Services;
 using ZetaDashboard.Components;
+using ZetaDashboard.Handlers;
 using ZetaDashboard.Services;
 
 
@@ -62,14 +61,28 @@ builder.Services.AddSingleton(sp =>
 
 builder.Services.AddScoped<BaseService>();
 
-
 var configMDB = builder.Configuration.GetSection("MovieDataBaseConfig").Get<MovieDataBaseConfig>();
-builder.Services.AddHttpClient<HttpService>(client =>
+var configRAW = builder.Configuration.GetSection("GameDataBaseConfig").Get<GameDataBaseConfig>();
+
+// TMDb
+builder.Services.AddHttpClient("tmdb", client =>
 {
     client.BaseAddress = new Uri("https://api.themoviedb.org/3/");
-    client.DefaultRequestHeaders.Authorization =
-        new AuthenticationHeaderValue("Bearer", configMDB.Mdb_token); // muévelo a appsettings/secret
+    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", configMDB.Mdb_token);
 });
+
+
+builder.Services.AddTransient<RawgApiKeyHandler>(_ => new RawgApiKeyHandler(configRAW.Raw_token));
+
+
+builder.Services.AddHttpClient("rawg", client =>
+{
+    client.BaseAddress = new Uri("https://api.rawg.io/api/");
+    // aquí añadirías el ?key= en un handler, o como header si fuera el caso
+})
+    .AddHttpMessageHandler<RawgApiKeyHandler>(); 
+
+builder.Services.AddScoped<HttpService>();
 
 var config = builder.Configuration.GetSection("Mongo").Get<MongoConfig>();
 

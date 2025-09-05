@@ -4,11 +4,15 @@ namespace ZetaDashboard.Common.Services
     public partial class HttpService
     {
         public MovieService Movies { get; }
+        public GameService Games { get; }
 
-        public HttpService(HttpClient http)
+        public HttpService(IHttpClientFactory factory)
         {
-            // All HTTP-based services share the same configured HttpClient
-            Movies = new MovieService(http);
+            var tmdbClient = factory.CreateClient("tmdb");
+            var rawgClient = factory.CreateClient("rawg");
+
+            Movies = new MovieService(tmdbClient);
+            Games = new GameService(rawgClient);
         }
     }
 }

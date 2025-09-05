@@ -29,7 +29,7 @@
         </MudNavLink>
         @if (CService.CheckIfPermissions(LoggedUser,ThisPageAdmin))
         {
-            <MudNavGroup Title="💻 ZDB" Class="mb-2 mud-nav-link-groupNoBefore" Expanded="true">
+            <MudNavGroup Title="💻 ZDB" Class="mb-2 mud-nav-link-groupNoBefore" Expanded="false">
                 <MudNavLink Href="/user" Match="NavLinkMatch.All" Style="margin-top:5px;" Class="mud-nav-link-c2">
                     <div style="display:flex;align-items:center;" onclick="changetoggler()">
                         <text style="font-size:24px">👨‍👩‍👦‍👦</text>
@@ -61,7 +61,7 @@
         }
         @if (CService.CheckIfPermissions(LoggedUser, ThisNotesPage))
         {
-            <MudNavGroup Title="📝 ZNT" Class="mb-2 mud-nav-link-groupNoBefore" Expanded="true">
+            <MudNavGroup Title="📝 ZNT" Class="mb-2 mud-nav-link-groupNoBefore" Expanded="false">
                 <MudNavLink Href="/notes" Match="NavLinkMatch.All" Style="margin-top:5px;" Class="mud-nav-link-c2">
                     <div style="display:flex;align-items:center;" onclick="changetoggler()">
                         <text style="font-size:24px">📒</text>
@@ -82,7 +82,7 @@
 
         @if (CService.CheckIfPermissions(LoggedUser, ThisPlansPage))
         {
-            <MudNavGroup Title="🍻 PLN" Class="mb-2 mud-nav-link-groupNoBefore" Expanded="true">
+            <MudNavGroup Title="🍻 PLN" Class="mb-2 mud-nav-link-groupNoBefore" Expanded="false">
                 <MudNavLink Href="/plans" Match="NavLinkMatch.All" Style="margin-top:5px;" Class="mud-nav-link-c2">
                     <div style="display:flex;align-items:center;" onclick="changetoggler()">
                         <text style="font-size:24px">🧗🏻‍</text>
@@ -143,6 +143,50 @@
                     
                 }
                 
+            </MudNavGroup>
+        }
+        @if (CService.CheckIfPermissions(LoggedUser, ThisGamePage))
+        {
+            <MudNavGroup Title="👾 GMS" Class="mb-2 mud-nav-link-groupNoBefore" Expanded="true">
+                <MudNavLink Href="/games-home" Match="NavLinkMatch.All" Style="margin-top:5px;" Class="mud-nav-link-c2">
+                    <div style="display:flex;align-items:center;" onclick="changetoggler()">
+                        <text style="font-size:24px">🎮</text>
+                        <MudText Style="margin-left:5px;font-size:18px">Inicio</MudText>
+                    </div>
+                </MudNavLink>
+
+                <MudNavLink Href="/search-games" Match="NavLinkMatch.All" Style="margin-top:5px;" Class="mud-nav-link-c2">
+                    <div style="display:flex;align-items:center;" onclick="changetoggler()">
+                        <text style="font-size:24px">🕹</text>
+                        <MudText Style="margin-left:5px;font-size:18px">Descubre Juegos</MudText>
+                    </div>
+                </MudNavLink>
+
+
+                @if (CService.CheckIfPermissions(LoggedUser, ThisMoviePageEditor))
+                {
+
+                    <MudNavLink Href="/seen-games" Match="NavLinkMatch.All" Style="margin-top:5px;" Class="mud-nav-link-c2">
+                        <div style="display:flex;align-items:center;" onclick="changetoggler()">
+                            <text style="font-size:24px">✅</text>
+                            <MudText Style="margin-left:5px;font-size:18px"> Jugados</MudText>
+                        </div>
+                    </MudNavLink>
+                    <MudNavLink Href="/liked-games" Match="NavLinkMatch.All" Style="margin-top:5px;" Class="mud-nav-link-c2">
+                        <div style="display:flex;align-items:center;" onclick="changetoggler()">
+                            <text style="font-size:24px">🖤</text>
+                            <MudText Style="margin-left:5px;font-size:18px">Favoritos</MudText>
+                        </div>
+                    </MudNavLink>
+                    <MudNavLink Href="/watch-games" Match="NavLinkMatch.All" Style="margin-top:5px;" Class="mud-nav-link-c2">
+                        <div style="display:flex;align-items:center;" onclick="changetoggler()">
+                            <text style="font-size:24px">🕝</text>
+                            <MudText Style="margin-left:5px;font-size:18px">Previstos</MudText>
+                        </div>
+                    </MudNavLink>
+
+                }
+
             </MudNavGroup>
         }
 

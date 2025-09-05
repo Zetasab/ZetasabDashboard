@@ -71,6 +71,21 @@ namespace ZetaDashboard.Components.Layout
             Code = "mov",
             UserType = EUserPermissionType.Admin
         };
+        private UserPermissions ThisGamePage { get; set; } = new UserPermissions()
+        {
+            Code = "gms",
+            UserType = EUserPermissionType.Visor
+        };
+        private UserPermissions ThisGamePageEditor { get; set; } = new UserPermissions()
+        {
+            Code = "gms",
+            UserType = EUserPermissionType.Editor
+        };
+        private UserPermissions ThisGamePageAdmin { get; set; } = new UserPermissions()
+        {
+            Code = "gms",
+            UserType = EUserPermissionType.Admin
+        };
         #endregion
 
         #region LifeCycles

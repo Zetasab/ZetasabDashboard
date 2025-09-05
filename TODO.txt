@@ -1,10 +1,10 @@
 Todo: ->
 
-hacer audits de busquedas de pelis y aaañadir 
-
 haacer que usuarios estan conectados
 
 poner guardar usuario con storage
+
+mejorar los backups
 
 Mejoras->
 

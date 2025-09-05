@@ -57,7 +57,7 @@
                 </div>
             </div>
         </MudHidden>
-            @if (Navigator.Uri.Contains("movie"))
+            @if (Navigator.Uri.Contains("movie") || Navigator.Uri.Contains("game"))
             {
                 <article id="main-ariticle" class="content px-4" style="overflow-y:auto;height: calc(100vh - 56px);position:relative;padding:0px 0px 100px 0px !important;">
                     @Body

@@ -20,10 +20,10 @@ namespace ZetaDashboard.Common.Services
 
             private const string AuditsRoute = "/audits";
 
-            public string _dato = "auditoria";
-            public string _datos = "auditorias";
-            public string _ellaDato = "la auditoria";
-            public string _loslasDatos = "las auditorias";
+            public string _dato = "peli";
+            public string _datos = "pelis";
+            public string _ellaDato = "la peli";
+            public string _loslasDatos = "las pelis";
 
             public MovieService(HttpClient http) : base(http) { }
             #region Get
