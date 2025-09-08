@@ -96,3 +96,123 @@ h1:focus {
         justify-content: end !important;
     }
 }
+
+
+.game-container-actions-div {
+    flex: 1 1 0;
+    min-width: 0;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.game-container-actions {
+    display: flex;
+    background: linear-gradient(0deg,rgba(39,39,39,1) 75%, rgba(0,0,0,0.1) 99%);
+    height: 50px;
+    position: relative;
+    margin-top: -10px;
+    z-index: 200;
+}
+
+.game-container-img-container {
+    width: 100%;
+    height: 300px;
+    border-radius: 10px;
+    overflow: hidden;
+    position: relative;
+}
+
+.game-container-added {
+    position: absolute;
+    z-index: 60;
+    background-color: var(--mud-palette-primary);
+    right: 0;
+    top: 0;
+    padding: 4px 10px;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+    transition: 0.3s;
+    margin-right: -142px;
+}
+
+.game-container-title {
+    height: 60px;
+    width: 100%;
+    font-size: 21px;
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    color: #c9c9c9;
+    font-family: system-ui;
+    margin-left: 19px;
+    overflow: hidden;
+    position: relative;
+    padding-right: 102px;
+    white-space: nowrap;
+    margin-top: -22px;
+}
+
+    .game-container-title::after {
+        content: "";
+        width: 70px;
+        position: absolute;
+        inset: 0;
+        z-index: 1; /* overlay above background, below content */
+        pointer-events: none;
+        margin-left: 213px;
+        opacity: var(--opacity);
+        background: linear-gradient(90deg,rgba(0,0,0,0) 40%, #272727 97%);
+    }
+
+.game-container {
+    background-color: transparent;
+    width: 100%;
+    height: 350px;
+    border-radius: 10px;
+    transition: 0.3s;
+    position: relative;
+    overflow: hidden;
+}
+
+.game-container-img {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    border-radius: 10px;
+    transition: 0.3s;
+    box-sizing: border-box;
+    border: 0px solid var(--mud-palette-primary);
+    filter: brightness(0.75);
+    z-index: 3;
+    position: relative;
+}
+
+.game-container:hover {
+    cursor: pointer;
+}
+
+    .game-container:hover > .game-container-img-container > .game-container-img {
+        transform: scale(1.04);
+        filter: brightness(1);
+    }
+
+    .game-container:hover > .game-container-img-container > .game-container-added {
+        margin-right: 0px;
+    }
+
+.movie-score {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 8px;
+}
+
+.movie-score-text {
+    position: absolute;
+    font-size: 14px;
+    font-weight: bold;
+    color: white;
+}

@@ -87,6 +87,18 @@ namespace ZetaDashboard.Common.GMS
 
         [JsonPropertyName("esrb_rating")] public EsrbRating? EsrbRating { get; set; }
         [JsonPropertyName("short_screenshots")] public List<ShortScreenshot> ShortScreenshots { get; set; } = new();
+    
+        public void Format()
+        {
+            Ratings.Clear();
+            Platforms.Clear();
+            ParentPlatforms.Clear();
+            AddedByStatus = new AddedByStatus();
+            Genres.Clear();
+            Stores.Clear();
+            Tags.Clear();
+            EsrbRating = new EsrbRating();
+        }
     }
 
     public sealed class RawgRating

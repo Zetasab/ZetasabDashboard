@@ -4,6 +4,10 @@ haacer que usuarios estan conectados
 
 poner guardar usuario con storage
 
+poner filters by name en movies liked wathced
+
+cuidado el scroll en paginas en movil
+
 mejorar los backups
 
 Mejoras->

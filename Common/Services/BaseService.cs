@@ -16,8 +16,11 @@ namespace ZetaDashboard.Common.ZDB.Services
             Notes = new NoteService(context);
             Plans = new PlanListService(context);
             LikedMovies = new LikedMovieService(context);
+            LikedGames = new LikedGameService(context);
             SeenMovies = new SeenMovieService(context);
+            PlayedGames = new PlayedGameService(context);
             WatchMovies = new WatchMovieService(context);
+            WatchGames = new WatchGameService(context);
         }
 
         private readonly MongoContext _context;
@@ -29,8 +32,10 @@ namespace ZetaDashboard.Common.ZDB.Services
         public NoteService Notes { get; }
         public PlanListService Plans { get; }
         public SeenMovieService SeenMovies { get; }
+        public PlayedGameService PlayedGames { get; }
         public LikedMovieService LikedMovies { get; }
+        public LikedGameService LikedGames { get; }
         public WatchMovieService WatchMovies { get; }
-        //public MovieService Movies { get; }
+        public WatchGameService WatchGames { get; }
     }
 }

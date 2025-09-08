@@ -139,14 +139,6 @@ namespace ZetaDashboard.Components.Layout
 
             return theme;
         }
-        //public MudTheme MyTheme = new MudTheme()
-        //{
-        //    PaletteDark = new PaletteDark()
-        //    {
-        //        PrimaryDarken = "463e8b"
-        //        //PrimaryDarken = "ffffff"
-        //    }
-        //};
 
         public MudTheme MyTheme = new MudTheme()
         {

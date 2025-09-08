@@ -1,0 +1,29 @@
+﻿@page "/search-games"
+@using ZetaDashboard.Data.GMS
+
+<!-- #region Title -->
+<div style="display:flex;align-items:center;justify-content:space-between">
+    <div></div>
+    <div style="margin-top:40px;">
+        <h2>🕹 Descubre Juegos</h2>
+    </div>
+    <div style="padding-right:30px;">
+    </div>
+</div>
+<!-- #endregion -->
+
+<MudContainer MaxWidth="MaxWidth.Large">
+
+    <MudGrid Justify="Justify.Center" Style="margin-top:30px;">
+        @foreach (var item in GameList)
+        {
+            <MudItem xs="@((int)12)" md="@((int)4)" Style="display:flex;justify-content:center;padding:20px">
+                <GameCard item="@item" LikedGames="@LikedGameList" ApiService="@ApiService"
+                          DController="@DController" LoggedUser="@LoggedUser" Update="GetListActions"
+                 CService="@CService" PlayedGames="@PlayedGameList" WatchedGames="@WatchedGameList"></GameCard>
+            </MudItem>
+        }
+    </MudGrid>
+
+</MudContainer>
+

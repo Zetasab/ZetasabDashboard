@@ -54,3 +54,37 @@ function goBack() {
 function replaceUrl(url) {
     window.history.replaceState({}, "", url);
 }
+
+// one timer per image id
+const timers = new Map();
+
+/**
+ * Start rotating `photos` (array of strings) every 2s on the <img id="{id}">
+ */
+function startTimer(id, photos) {
+    const el = document.getElementById(id);
+    if (!el || !Array.isArray(photos) || photos.length < 2) return;
+    if (timers.has(id)) return; // already running
+
+    let index = 1; // start from second photo (first is already shown)
+    const handle = setInterval(() => {
+        console.log("timer " + index)
+        el.src = photos[index];
+        index = (index + 1) % photos.length; // wrap
+    }, 850);
+
+    timers.set(id, handle);
+}
+
+/**
+ * Stop the timer for this image and reset to the given `photo` (usually photos[0])
+ */
+function stopTimer(id, photo) {
+    const handle = timers.get(id);
+    if (handle) {
+        clearInterval(handle);
+        timers.delete(id);
+    }
+    const el = document.getElementById(id);
+    if (el && photo) el.src = photo; // reset
+}

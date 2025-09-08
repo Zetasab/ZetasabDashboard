@@ -57,15 +57,21 @@
                 </div>
             </div>
         </MudHidden>
-            @if (Navigator.Uri.Contains("movie") || Navigator.Uri.Contains("game"))
+            @if (Navigator.Uri.Contains("movie"))
             {
                 <article id="main-ariticle" class="content px-4" style="overflow-y:auto;height: calc(100vh - 56px);position:relative;padding:0px 0px 100px 0px !important;">
                     @Body
                 </article>
             }
+            else if (Navigator.Uri.Contains("game"))
+            {
+                <article id="main-ariticle" class="content px-4 moreblack" style="overflow-x:hidden;overflow-y:auto;height: calc(100vh - 56px);position:relative;padding:0px 0px 100px 0px !important;">
+                    @Body
+                </article>
+            }
             else
             {
-                 <article id="main-ariticle" class="content px-4" style="overflow-y:auto;height: calc(100vh - 56px);padding-bottom:100px;position:relative;">
+                 <article id="main-ariticle" class="content px-4" style="overflow-x:hidden;overflow-y:auto;height: calc(100vh - 56px);padding-bottom:100px;position:relative;">
                     @Body
                 </article>
             }
@@ -78,4 +84,8 @@
     <a class="dismiss">🗙</a>
 </div>
 }
-
+<style>
+    .moreblack{
+        background-color: #272727 !important;
+    }
+</style>
