@@ -1,21 +1,19 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using MudBlazor;
-using System.Globalization;
 using System.Text;
 using ZetaCommon.Auth;
+using ZetaDashboard.Common.GMS;
 using ZetaDashboard.Common.MOV;
 using ZetaDashboard.Common.Services;
 using ZetaDashboard.Common.ZDB.Models;
 using ZetaDashboard.Common.ZDB.Services;
 using ZetaDashboard.Services;
-using static MongoDB.Driver.WriteConcern;
-using static MudBlazor.CategoryTypes;
 using static ZetaDashboard.Common.ZDB.Models.UserModel;
 
-namespace ZetaDashboard.Components.Pages.MOV.WatchMoviesPage
+namespace ZetaDashboard.Components.Pages.GMS.LikedGamesPage
 {
-    public partial class WatchMoviesPage
+    public partial class LikedGamesPage
     {
         #region Injects
         [Inject] BaseService ApiService { get; set; }
@@ -31,28 +29,27 @@ namespace ZetaDashboard.Components.Pages.MOV.WatchMoviesPage
         private UserModel LoggedUser { get; set; }
         private UserPermissions ThisPage { get; set; } = new UserPermissions()
         {
-            Code = "mov",
+            Code = "gms",
             UserType = EUserPermissionType.Visor
         };
         private UserPermissions ThisPageEdit { get; set; } = new UserPermissions()
         {
-            Code = "mov",
+            Code = "gms",
             UserType = EUserPermissionType.Editor
         };
         private UserPermissions ThisPageAdmin { get; set; } = new UserPermissions()
         {
-            Code = "mov",
+            Code = "gms",
             UserType = EUserPermissionType.Admin
         };
 
 
         #endregion
-        private List<MovieModel> DataList { get; set; } = new List<MovieModel>();
-        private List<MovieModel> DataBup { get; set; } = new List<MovieModel>();
-        private List<MovieModel> SeenMovieList { get; set; } = new List<MovieModel>();
-        private List<MovieModel> LikedMovieList { get; set; } = new List<MovieModel>();
-        private List<MovieModel> WatchMovieList { get; set; } = new List<MovieModel>();
-
+        private List<RawgGame> DataList { get; set; } = new List<RawgGame>();
+        private List<RawgGame> DataBup { get; set; } = new List<RawgGame>();
+        private List<RawgGame> PlayedGamesList { get; set; } = new List<RawgGame>();
+        private List<RawgGame> LikedGamesList { get; set; } = new List<RawgGame>();
+        private List<RawgGame> WatchGamesList { get; set; } = new List<RawgGame>();
 
         protected override async Task OnInitializedAsync()
         {
@@ -62,27 +59,28 @@ namespace ZetaDashboard.Components.Pages.MOV.WatchMoviesPage
                 LoggedUser.Id,
                 LoggedUser.Name,
                 AuditWhat.See,
-                $"Entrando en WatchMovies",
-                $"Entrando en WatchMovies",
+                $"Entrando en LikedGames",
+                $"Entrando en LikedGames",
                 Common.Mongo.ResponseStatus.Ok
                 );
             await ApiService.Audits.InsertAsync(audit);
             GetList();
-        }   
+        }
 
         private async Task GetList()
         {
-            DataBup = await DController.GetData(await ApiService.WatchMovies.GetAllWatchMoviesByUserIdAsync(LoggedUser));
-
+            DataBup = await DController.GetData(await ApiService.LikedGames.GetAllLikedGamesByUserIdAsync(LoggedUser));
             DataList = DataBup.ToList();
 
-            WatchMovieList = DController.GetData(await ApiService.WatchMovies.GetAllWatchMoviesByUserIdAsync(LoggedUser)).Result ?? new List<MovieModel>();
-            LikedMovieList = DController.GetData(await ApiService.LikedMovies.GetAllLikedMoviesByUserIdAsync(LoggedUser)).Result ?? new List<MovieModel>();
-            SeenMovieList = DController.GetData(await ApiService.SeenMovies.GetAllSeenMoviesByUserIdAsync(LoggedUser)).Result ?? new List<MovieModel>();
+            PlayedGamesList = await DController.GetData(await ApiService.PlayedGames.GetAllPlayedGamesByUserIdAsync(LoggedUser)) ?? new List<RawgGame>();
+            LikedGamesList = await DController.GetData(await ApiService.LikedGames.GetAllLikedGamesByUserIdAsync(LoggedUser)) ?? new List<RawgGame>();
+            WatchGamesList = await DController.GetData(await ApiService.WatchGames.GetAllWatchGamesByUserIdAsync(LoggedUser)) ?? new List<RawgGame>();
 
-           await InvokeAsync(StateHasChanged);
-            
+            await InvokeAsync(StateHasChanged);
+
         }
+
+        
 
         private string _search = "";
 
@@ -107,7 +105,7 @@ namespace ZetaDashboard.Components.Pages.MOV.WatchMoviesPage
 
             var q = Normalize(text);
 
-            IEnumerable<MovieModel> result =
+            IEnumerable<RawgGame> result =
                 string.IsNullOrEmpty(q)
                 ? DataBup
                 : DataBup.Where(item => Matches(item, q));
@@ -119,11 +117,10 @@ namespace ZetaDashboard.Components.Pages.MOV.WatchMoviesPage
 
             StateHasChanged();
         }
-        private static bool Matches(MovieModel item, string q)
+        private static bool Matches(RawgGame item, string q)
         {
             if (item is null) return false;
-            return Normalize(item.Title).Contains(q, StringComparison.Ordinal)
-                || Normalize(item.OriginalTitle).Contains(q, StringComparison.Ordinal);
+            return Normalize(item.Name).Contains(q, StringComparison.Ordinal);
         }
 
         // Normaliza: trim, lower-invariant, quita acentos

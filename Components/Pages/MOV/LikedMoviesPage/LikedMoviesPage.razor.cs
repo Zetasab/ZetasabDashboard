@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using MudBlazor;
+using System.Text;
 using ZetaCommon.Auth;
 using ZetaDashboard.Common.MOV;
 using ZetaDashboard.Common.Services;
@@ -45,6 +46,7 @@ namespace ZetaDashboard.Components.Pages.MOV.LikedMoviesPage
 
         #endregion
         private List<MovieModel> DataList { get; set; } = new List<MovieModel>();
+        private List<MovieModel> DataBup { get; set; } = new List<MovieModel>();
         private List<MovieModel> SeenMovieList { get; set; } = new List<MovieModel>();
         private List<MovieModel> LikedMovieList { get; set; } = new List<MovieModel>();
         private List<MovieModel> WatchMovieList { get; set; } = new List<MovieModel>();
@@ -67,7 +69,8 @@ namespace ZetaDashboard.Components.Pages.MOV.LikedMoviesPage
 
         private async Task GetList()
         {
-            DataList = await DController.GetData(await ApiService.LikedMovies.GetAllLikedMoviesByUserIdAsync(LoggedUser));
+            DataBup = await DController.GetData(await ApiService.LikedMovies.GetAllLikedMoviesByUserIdAsync(LoggedUser));
+            DataList = DataBup.ToList();
 
             SeenMovieList = DController.GetData(await ApiService.SeenMovies.GetAllSeenMoviesByUserIdAsync(LoggedUser)).Result ?? new List<MovieModel>();
             LikedMovieList = DController.GetData(await ApiService.LikedMovies.GetAllLikedMoviesByUserIdAsync(LoggedUser)).Result ?? new List<MovieModel>();
@@ -75,6 +78,66 @@ namespace ZetaDashboard.Components.Pages.MOV.LikedMoviesPage
 
            await InvokeAsync(StateHasChanged);
             
+        }
+
+        private string _search = "";
+
+        private CancellationTokenSource? _queryCts;
+        private async void OnQueryChanged(string text)
+        {
+            _search = text;
+            // cancela búsquedas anteriores (si el usuario sigue escribiendo)
+            _queryCts?.Cancel();
+            _queryCts = new CancellationTokenSource();
+            var token = _queryCts.Token;
+
+            // debounce suave
+            try { await Task.Delay(100, token); } catch (TaskCanceledException) { return; }
+
+            if (string.IsNullOrEmpty(text))
+            {
+                DataList = DataBup.ToList();
+                StateHasChanged();
+                return;
+            }
+
+            var q = Normalize(text);
+
+            IEnumerable<MovieModel> result =
+                string.IsNullOrEmpty(q)
+                ? DataBup
+                : DataBup.Where(item => Matches(item, q));
+
+            // Refresca la lista mostrada
+            DataList.Clear();
+            foreach (var it in result)
+                DataList.Add(it);
+
+            StateHasChanged();
+        }
+        private static bool Matches(MovieModel item, string q)
+        {
+            if (item is null) return false;
+            return Normalize(item.Title).Contains(q, StringComparison.Ordinal)
+                || Normalize(item.OriginalTitle).Contains(q, StringComparison.Ordinal);
+        }
+
+        // Normaliza: trim, lower-invariant, quita acentos
+        private static string Normalize(string? s)
+        {
+            if (string.IsNullOrWhiteSpace(s)) return string.Empty;
+
+            var formD = s.Trim().ToLowerInvariant().Normalize(NormalizationForm.FormD);
+            var sb = new System.Text.StringBuilder(formD.Length);
+
+            foreach (var c in formD)
+            {
+                var cat = System.Globalization.CharUnicodeInfo.GetUnicodeCategory(c);
+                if (cat != System.Globalization.UnicodeCategory.NonSpacingMark)
+                    sb.Append(c);
+            }
+
+            return sb.ToString().Normalize(NormalizationForm.FormC);
         }
     }
 }

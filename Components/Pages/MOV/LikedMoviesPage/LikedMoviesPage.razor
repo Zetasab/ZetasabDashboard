@@ -11,10 +11,26 @@
 </div>
 <!-- #endregion -->
 
+<MudContainer MaxWidth="MaxWidth.ExtraLarge">
+    <MudTextField T="string"
+                  ValueChanged="OnQueryChanged"
+                  Variant="Variant.Filled"
+                  Adornment="Adornment.Start"
+                  AdornmentIcon="@Icons.Material.Outlined.Search"
+                  AdornmentColor="Color.Primary"
+                  Clearable="true"
+                  Value="_search"
+                  Label="Buscar por título"
+                  Immediate="true"
+                  DebounceInterval="450"
+                  Margin="Margin.Dense"
+                  FullWidth="true" />
+</MudContainer>
+
 @if (DataList.Count > 0)
 {
     <MudContainer MaxWidth="MaxWidth.ExtraLarge">
-        <div class="movie-grid-5" style="margin-top:15px;justify-items:center">
+        <div class="movie-grid-5" style="margin-top:25px;justify-items:center">
             @foreach (var movie in DataList)
             {
                 <MovieCard movie="@movie"

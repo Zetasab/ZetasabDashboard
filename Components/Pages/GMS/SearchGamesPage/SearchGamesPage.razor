@@ -12,12 +12,12 @@
 </div>
 <!-- #endregion -->
 
-<MudContainer MaxWidth="MaxWidth.Large">
+<MudContainer MaxWidth="MaxWidth.ExtraLarge" Style="position:relative;">
 
-    <MudGrid Justify="Justify.Center" Style="margin-top:30px;">
+    <MudGrid Justify="Justify.Center" Style="margin-top:30px;width: 100% !important;position: relative;margin-left: 0px;">
         @foreach (var item in GameList)
         {
-            <MudItem xs="@((int)12)" md="@((int)4)" Style="display:flex;justify-content:center;padding:20px">
+            <MudItem xs="@((int)12)" md="@((int)3)" Style="display:flex;justify-content:center;padding:20px">
                 <GameCard item="@item" LikedGames="@LikedGameList" ApiService="@ApiService"
                           DController="@DController" LoggedUser="@LoggedUser" Update="GetListActions"
                  CService="@CService" PlayedGames="@PlayedGameList" WatchedGames="@WatchedGameList"></GameCard>

@@ -169,7 +169,7 @@ h1:focus {
 .game-container {
     background-color: transparent;
     width: 100%;
-    height: 350px;
+    height: 332px;
     border-radius: 10px;
     transition: 0.3s;
     position: relative;

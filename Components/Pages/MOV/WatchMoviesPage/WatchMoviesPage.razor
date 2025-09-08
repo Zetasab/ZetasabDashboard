@@ -1,7 +1,7 @@
 ﻿@page "/watch-movies"
 
 <!-- #region Title -->
-<div style="display:flex;align-items:center;justify-content:space-between">
+<div style="display:flex;align-items:center;justify-content:space-between;margin-top:20px;">
     <div></div>
     <div>
         <h2>🕝 Peliculas previstas para ver</h2>
@@ -10,11 +10,27 @@
     </div>
 </div>
 <!-- #endregion -->
-
+<MudContainer MaxWidth="MaxWidth.ExtraLarge">
+<MudTextField T="string"
+              ValueChanged="OnQueryChanged"
+              Variant="Variant.Filled"
+              Adornment="Adornment.Start"
+              AdornmentIcon="@Icons.Material.Outlined.Search"
+              AdornmentColor="Color.Primary"
+              Clearable="true"
+              Value="_search"
+              Label="Buscar por título"
+              Immediate="true"
+              DebounceInterval="450"
+              Margin="Margin.Dense"
+              FullWidth="true" />
+              </MudContainer>
 @if (DataList.Count > 0)
 {
     <MudContainer MaxWidth="MaxWidth.ExtraLarge">
-        <div class="movie-grid-5" style="margin-top:15px;justify-items:center">
+        
+
+        <div class="movie-grid-5" style="margin-top:25px;justify-items:center">
             @foreach (var movie in DataList)
             {
                 <MovieCard movie="@movie"

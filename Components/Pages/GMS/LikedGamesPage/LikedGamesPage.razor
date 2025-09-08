@@ -1,0 +1,49 @@
+﻿@page "/liked-games"
+
+<!-- #region Title -->
+<div style="display:flex;align-items:center;justify-content:space-between">
+    <div></div>
+    <div>
+        <h2>🖤 Juegos favoritos</h2>
+    </div>
+    <div style="padding-right:30px;">
+    </div>
+</div>
+<!-- #endregion -->
+
+<MudContainer MaxWidth="MaxWidth.ExtraLarge">
+    <MudTextField T="string"
+                  ValueChanged="OnQueryChanged"
+                  Variant="Variant.Filled"
+                  Adornment="Adornment.Start"
+                  AdornmentIcon="@Icons.Material.Outlined.Search"
+                  AdornmentColor="Color.Primary"
+                  Clearable="true"
+                  Value="_search"
+                  Label="Buscar por título"
+                  Immediate="true"
+                  DebounceInterval="450"
+                  Margin="Margin.Dense"
+                  FullWidth="true" />
+</MudContainer>
+
+@if (DataList.Count > 0)
+{
+    <MudContainer MaxWidth="MaxWidth.ExtraLarge">
+        <MudGrid Justify="Justify.Center" Style="margin-top:30px;width: 100% !important;position: relative;margin-left: 0px;">
+            @foreach (var item in DataList)
+            {
+                <MudItem xs="@((int)12)" md="@((int)3)" Style="display:flex;justify-content:center;padding:20px">
+                    <GameCard item="@item"  ApiService="@ApiService"
+                              DController="@DController" LoggedUser="@LoggedUser" 
+                              CService="@CService" LikedGames="@LikedGamesList" 
+                              PlayedGames="@PlayedGamesList" Update="GetList" WatchedGames="@WatchGamesList"></GameCard>
+                </MudItem>
+            }
+        </MudGrid>
+    </MudContainer>
+}
+else
+{
+    <MudText>No hay resultados</MudText>
+}
