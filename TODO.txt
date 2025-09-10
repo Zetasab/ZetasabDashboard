@@ -1,5 +1,7 @@
 Todo: ->
 
+paginacion en peliculas y juegos vistos gusto etc
+
 haacer que usuarios estan conectados
 
 poner guardar usuario con storage

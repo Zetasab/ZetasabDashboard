@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.JSInterop;
 using MudBlazor;
 using System.Globalization;
+using System.Runtime.Intrinsics.X86;
 using System.Text.RegularExpressions;
 using ZetaCommon.Auth;
 using ZetaDashboard.Common.MOV;
@@ -12,6 +13,7 @@ using ZetaDashboard.Common.ZDB.Models;
 using ZetaDashboard.Common.ZDB.Services;
 using ZetaDashboard.Data.MOV;
 using ZetaDashboard.Services;
+using static MongoDB.Driver.WriteConcern;
 using static ZetaDashboard.Common.ZDB.Models.UserModel;
 
 namespace ZetaDashboard.Components.Pages.MOV.MovieSearchPage
@@ -58,6 +60,7 @@ namespace ZetaDashboard.Components.Pages.MOV.MovieSearchPage
         private List<MovieModel> DataList { get; set; } = new List<MovieModel>();
 
         private int _pag = 1;
+        private int _maxpag = 1;
         private IReadOnlyCollection<Data.MOV.Genre> SelectedGenres = new List<Data.MOV.Genre>();
         private List<Watch_provider> SelectedProviders = new List<Watch_provider>();
         private Order SelectedOrder = MovieData.SortsBy[3];
@@ -69,6 +72,9 @@ namespace ZetaDashboard.Components.Pages.MOV.MovieSearchPage
         private List<MovieModel> SeenMovieList { get; set; } = new List<MovieModel>();
         private List<MovieModel> LikedMovieList { get; set; } = new List<MovieModel>();
         private List<MovieModel> WatchMovieList { get; set; } = new List<MovieModel>();
+
+        Dictionary<string, string> Paramss = new Dictionary<string, string>();
+
         private int Maxpages = 0;
         private bool IsPc = true;
         #endregion
@@ -100,7 +106,7 @@ namespace ZetaDashboard.Components.Pages.MOV.MovieSearchPage
         {
             if (firstRender)
             {
-                GetList();
+                //GetList();
                 StateHasChanged();
             }
         }
@@ -112,6 +118,9 @@ namespace ZetaDashboard.Components.Pages.MOV.MovieSearchPage
 
             if (query.TryGetValue("mode", out var modevalue))
                 SelectedCategory = modevalue;
+            
+            if (query.TryGetValue("page", out var page))
+                _pag = Int32.Parse(page);
 
             if (query.TryGetValue("search", out var searchValue))
                 _searchByName = searchValue;
@@ -204,35 +213,41 @@ namespace ZetaDashboard.Components.Pages.MOV.MovieSearchPage
         #region GET
         private async Task GetList()
         {
-            //datagridLoading = true;
-            //await InvokeAsync(StateHasChanged);
-            _pag = 1;
-            DataList.Clear();
-
-
             if (string.IsNullOrEmpty(SelectedCategory))
             {
-                DataList = await DController.GetData(await HttpApiService.Movies.GetAllDiscoverMoviesAsync(_pag, LoggedUser,QueryParams));
+                var x = await DController.GetData(await HttpApiService.Movies.GetAllDiscoverMovieModelAsync(_pag, LoggedUser, QueryParams)); ;
+                DataList = x.Results;
+                _maxpag = x.TotalPages;
             }
             else if (SelectedCategory == "nowplaying")
             {
-                DataList.AddRange(await DController.GetData(await HttpApiService.Movies.GetAllMoviesByNowPlayingAsync(_pag, LoggedUser)));
+                    var x = (await DController.GetData(await HttpApiService.Movies.GetAllMoviesByNowPlayingMovieAsync(_pag, LoggedUser)));
+                DataList = x.Results;
+                _maxpag = x.TotalPages;
             }
             else if (SelectedCategory == "popular")
             {
-                DataList.AddRange(await DController.GetData(await HttpApiService.Movies.GetAllMoviesByPopularAsync(_pag, LoggedUser)));
+                   var x = (await DController.GetData(await HttpApiService.Movies.GetAllMoviesByPopularMovieAsync(_pag, LoggedUser)));
+                DataList = x.Results;
+                _maxpag = x.TotalPages;
             }
             else if (SelectedCategory == "toprated")
             {
-                DataList.AddRange(await DController.GetData(await HttpApiService.Movies.GetAllMoviesByTopRatedAsync(_pag, LoggedUser)));
+                   var x = (await DController.GetData(await HttpApiService.Movies.GetAllMoviesByTopRatedMovieAsync(_pag, LoggedUser)));
+                DataList = x.Results;
+                _maxpag = x.TotalPages;
             }
             else if (SelectedCategory == "upcoming")
             {
-                DataList.AddRange(await DController.GetData(await HttpApiService.Movies.GetAllMoviesByUpcomingAsync(_pag, LoggedUser)));
+                   var x = (await DController.GetData(await HttpApiService.Movies.GetAllMoviesByUpcomingMovieAsync(_pag, LoggedUser)));
+                DataList = x.Results;
+                _maxpag = x.TotalPages;
             }
             else if (SelectedCategory == "search")
             {
-                DataList = await DController.GetData(await HttpApiService.Movies.GetAllMoviesByNameAsync(_searchByName, _pag, LoggedUser));
+                var x =  await DController.GetData(await HttpApiService.Movies.GetAllMoviesByNameMovieAsync(_searchByName, _pag, LoggedUser));
+                DataList = x.Results;
+                _maxpag = x.TotalPages;
             }
 
             SeenMovieList = DController.GetData(await ApiService.SeenMovies.GetAllSeenMoviesByUserIdAsync(LoggedUser)).Result ?? new List<MovieModel>();
@@ -247,39 +262,6 @@ namespace ZetaDashboard.Components.Pages.MOV.MovieSearchPage
         #endregion
 
       
-        private async Task LoadMore()
-        {
-            _pag++;
-
-            if (string.IsNullOrEmpty(SelectedCategory))
-            {
-                DataList.AddRange(await DController.GetData(await HttpApiService.Movies.GetAllDiscoverMoviesAsync(_pag, LoggedUser, QueryParams)));
-            }
-            else if (SelectedCategory == "nowplaying")
-            {
-                DataList.AddRange(await DController.GetData(await HttpApiService.Movies.GetAllMoviesByNowPlayingAsync(_pag, LoggedUser)));
-            }
-            else if (SelectedCategory == "popular")
-            {
-                DataList.AddRange(await DController.GetData(await HttpApiService.Movies.GetAllMoviesByPopularAsync(_pag, LoggedUser)));
-            }
-            else if (SelectedCategory == "toprated")
-            {
-                DataList.AddRange(await DController.GetData(await HttpApiService.Movies.GetAllMoviesByTopRatedAsync(_pag, LoggedUser)));
-            }
-            else if (SelectedCategory == "upcoming")
-            {
-                DataList.AddRange(await DController.GetData(await HttpApiService.Movies.GetAllMoviesByUpcomingAsync(_pag, LoggedUser)));
-            }
-            else if (SelectedCategory == "search")
-            {
-                DataList.AddRange(await DController.GetData(await HttpApiService.Movies.GetAllMoviesByNameAsync(_searchByName, _pag, LoggedUser)));
-            }
-
-        }
-
-        
-        
 
         private CancellationTokenSource? _cts;
         private async Task OnQueryChanged(string text)
@@ -291,6 +273,7 @@ namespace ZetaDashboard.Components.Pages.MOV.MovieSearchPage
             try
             {
                 _searchByName = text;
+                await SetUrl();
                 GetList();
             }
             catch (OperationCanceledException)
@@ -304,7 +287,40 @@ namespace ZetaDashboard.Components.Pages.MOV.MovieSearchPage
             }
             
         }
-        
+
+        private async Task SetUrl(bool paage = true)
+        {
+            Paramss.Clear();
+            if(paage)
+                _pag = 1;
+
+            Paramss.Add(key: "page", value: _pag.ToString());
+            if (!string.IsNullOrEmpty(_searchByName))
+            {
+                Paramss.Add(key: "search", value:_searchByName);
+            }
+            if (!string.IsNullOrEmpty(SelectedCategory))
+            {
+                Paramss.Add(key: "mode", value: SelectedCategory);
+            }
+            if (!string.IsNullOrEmpty(SelectedOrder.eng_order))
+            {
+                Paramss.Add(key: "selectedorder", value: SelectedOrder.eng_order);
+            }
+            if (SelectedProviders.Count > 0)
+            {
+                var aux = string.Join(",", SelectedProviders.Select(x => x.provider_id));
+
+                Paramss.Add(key: "watch_providers", value: aux);
+            }
+            if (SelectedGenres.Count > 0)
+            {
+                var aux = string.Join(",", SelectedGenres.Select(x => x.Id));
+                Paramss.Add(key: "genres", value: aux);
+            }
+            await JS.InvokeVoidAsync("replaceQuery", Paramss);
+
+        }
 
         public string GetTitle(string mode) => mode switch
         {
@@ -329,7 +345,7 @@ namespace ZetaDashboard.Components.Pages.MOV.MovieSearchPage
             {
                 await Task.Delay(1000, _cts.Token);
 
-                
+                await SetUrl();
                 await FilterBy();
             }
             catch (TaskCanceledException)
@@ -346,7 +362,7 @@ namespace ZetaDashboard.Components.Pages.MOV.MovieSearchPage
             {
                 await Task.Delay(1000, _cts.Token);
 
-                
+                await SetUrl();
                 await FilterBy();
             }
             catch (TaskCanceledException)
@@ -374,6 +390,7 @@ namespace ZetaDashboard.Components.Pages.MOV.MovieSearchPage
             try
             {
                 await Task.Delay(1000, _cts.Token);
+                await SetUrl();
                 await FilterBy();
             }
             catch (TaskCanceledException)
@@ -394,6 +411,7 @@ namespace ZetaDashboard.Components.Pages.MOV.MovieSearchPage
             try
             {
                 await Task.Delay(1000, _cts.Token);
+                await SetUrl();
                 await FilterBy();
             }
             catch (TaskCanceledException)
@@ -410,7 +428,16 @@ namespace ZetaDashboard.Components.Pages.MOV.MovieSearchPage
         {
             SelectedCategory = null;
             _searchByName = "";
+            await SetUrl();
             GetList();
+        }
+
+        private async Task PagChanged(int pag)
+        {
+            _pag = pag;
+            await SetUrl(false);
+            await GetList();
+            await JS.InvokeVoidAsync("scrollToTop");
         }
     }
 }

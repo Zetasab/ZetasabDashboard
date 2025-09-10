@@ -118,7 +118,7 @@
                     }
                     <div class="movie-grid-5" style="display:flex;justify-content:center;margin-top:10px;">
 
-                        <MudButton Variant="Variant.Filled" OnClick="LoadMore" Color="Color.Primary" Style="padding:15px 30px">Cargar mas</MudButton>
+                        <MudPagination BoundaryCount="1" MiddleCount="3" SelectedChanged="PagChanged" Selected="@_pag" Count="@_maxpag" Class="mt-4" />
                     </div>
         
                 </div>

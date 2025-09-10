@@ -5,12 +5,37 @@
 <div style="display:flex;align-items:center;justify-content:space-between">
     <div></div>
     <div style="margin-top:40px;">
-        <h2>🕹 Descubre Juegos</h2>
+        <h2>📟 Descubre Juegos</h2>
     </div>
     <div style="padding-right:30px;">
     </div>
 </div>
 <!-- #endregion -->
+
+<MudContainer MaxWidth="MaxWidth.ExtraLarge">
+    
+    <MudTextField T="string"
+                  ValueChanged="OnQueryChanged"
+                  Variant="Variant.Filled"
+                  Adornment="Adornment.Start"
+                  AdornmentIcon="@Icons.Material.Outlined.Search"
+                  AdornmentColor="Color.Primary"
+                  Clearable="true"
+                  Value="_search"
+                  Immediate="true"
+                  DebounceInterval="450"
+                  Margin="Margin.Dense"
+                  FullWidth="false" />
+
+    <MudGrid Justify="Justify.Center" Style="gap:15px;">
+        <MudItem xs="@((int)12)" md="@((int)3)">
+            <div>
+                
+            </div>
+        </MudItem>
+    </MudGrid>
+</MudContainer>
+
 
 <MudContainer MaxWidth="MaxWidth.ExtraLarge" Style="position:relative;">
 

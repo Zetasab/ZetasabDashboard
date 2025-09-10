@@ -67,9 +67,9 @@ namespace ZetaDashboard.Common.Services
                     };
                 }
             }
-            public async Task<ApiResponse<List<MovieModel>>> GetAllMoviesByNameAsync(string name,int page,UserModel loggeduser, CancellationToken ct = default)
+            public async Task<ApiResponse<MovieListModel>> GetAllMoviesByNameMovieAsync(string name,int page,UserModel loggeduser, CancellationToken ct = default)
             {
-                var response = new ApiResponse<List<MovieModel?>>();
+                var response = new ApiResponse<MovieListModel>();
                 try
                 {
                     if (!HasPermissions(loggeduser, UserModel.EUserPermissionType.Visor, thispage))
@@ -80,12 +80,12 @@ namespace ZetaDashboard.Common.Services
                     }
 
                     // Opción A) Tu API devuelve ApiResponse<List<AuditModel>>
-                    var (ok, apiRes, error, raw) = await TryGetAsync<ApiResponse<List<MovieModel>>>($"search/movie?query={name}&page={page}&language=es-ES", ct);
+                    var (ok, apiRes, error, raw) = await TryGetAsync<ApiResponse<MovieListModel>>($"search/movie?query={name}&page={page}&language=es-ES", ct);
 
                     if (ok && apiRes is not null)
                     {
                         response.Result = ResponseStatus.Ok;
-                        response.Data = JsonSerializer.Deserialize<MovieListModel>(raw, _json).Results;
+                        response.Data = JsonSerializer.Deserialize<MovieListModel>(raw, _json);
                         return response;
                     }
                     else
@@ -100,7 +100,7 @@ namespace ZetaDashboard.Common.Services
                 }
                 catch (Exception ex)
                 {
-                    return new ApiResponse<List<MovieModel>>
+                    return new ApiResponse<MovieListModel>
                     {
                         Result = ResponseStatus.InternalError,
                         Message = $"Ha ocurrido un error al recuperar {_loslasDatos}",
@@ -141,6 +141,46 @@ namespace ZetaDashboard.Common.Services
                 catch (Exception ex)
                 {
                     return new ApiResponse<List<MovieModel>>
+                    {
+                        Result = ResponseStatus.InternalError,
+                        Message = $"Ha ocurrido un error al recuperar {_loslasDatos}",
+                    };
+                }
+            }
+            public async Task<ApiResponse<MovieListModel>> GetAllMoviesByNowPlayingMovieAsync(int page, UserModel loggeduser, CancellationToken ct = default)
+            {
+                var response = new ApiResponse<MovieListModel>();
+                try
+                {
+                    if (!HasPermissions(loggeduser, UserModel.EUserPermissionType.Visor, thispage))
+                    {
+                        response.Result = ResponseStatus.Unauthorized;
+                        response.Message = "No tienes permisos";
+                        return response!;
+                    }
+
+                    // Opción A) Tu API devuelve ApiResponse<List<AuditModel>>
+                    var (ok, apiRes, error, raw) = await TryGetAsync<ApiResponse<MovieListModel>>($"movie/now_playing?language=es-ES&page={page}", ct);
+
+                    if (ok && apiRes is not null)
+                    {
+                        response.Result = ResponseStatus.Ok;
+                        response.Data = JsonSerializer.Deserialize<MovieListModel>(raw, _json);
+                        return response;
+                    }
+                    else
+                    {
+                        response.Result = ResponseStatus.NotFound;
+                        response.Message = $"Error obteniendo {_loslasDatos}";
+                        return response!;
+                    }
+
+                    return response;
+
+                }
+                catch (Exception ex)
+                {
+                    return new ApiResponse<MovieListModel>
                     {
                         Result = ResponseStatus.InternalError,
                         Message = $"Ha ocurrido un error al recuperar {_loslasDatos}",
@@ -188,6 +228,46 @@ namespace ZetaDashboard.Common.Services
                     };
                 }
             }
+            public async Task<ApiResponse<MovieListModel>> GetAllMoviesByPopularMovieAsync(int page, UserModel loggeduser, CancellationToken ct = default)
+            {
+                var response = new ApiResponse<MovieListModel>();
+                try
+                {
+                    if (!HasPermissions(loggeduser, UserModel.EUserPermissionType.Visor, thispage))
+                    {
+                        response.Result = ResponseStatus.Unauthorized;
+                        response.Message = "No tienes permisos";
+                        return response!;
+                    }
+
+                    // Opción A) Tu API devuelve ApiResponse<List<AuditModel>>
+                    var (ok, apiRes, error, raw) = await TryGetAsync<ApiResponse<MovieListModel>>($"movie/popular?language=es-ES&page={page}", ct);
+
+                    if (ok && apiRes is not null)
+                    {
+                        response.Result = ResponseStatus.Ok;
+                        response.Data = JsonSerializer.Deserialize<MovieListModel>(raw, _json);
+                        return response;
+                    }
+                    else
+                    {
+                        response.Result = ResponseStatus.NotFound;
+                        response.Message = $"Error obteniendo {_loslasDatos}";
+                        return response!;
+                    }
+
+                    return response;
+
+                }
+                catch (Exception ex)
+                {
+                    return new ApiResponse<MovieListModel>
+                    {
+                        Result = ResponseStatus.InternalError,
+                        Message = $"Ha ocurrido un error al recuperar {_loslasDatos}",
+                    };
+                }
+            }
 
             public async Task<ApiResponse<List<MovieModel>>> GetAllMoviesByTopRatedAsync(int page, UserModel loggeduser, CancellationToken ct = default)
             {
@@ -229,6 +309,46 @@ namespace ZetaDashboard.Common.Services
                     };
                 }
             }
+            public async Task<ApiResponse<MovieListModel>> GetAllMoviesByTopRatedMovieAsync(int page, UserModel loggeduser, CancellationToken ct = default)
+            {
+                var response = new ApiResponse<MovieListModel>();
+                try
+                {
+                    if (!HasPermissions(loggeduser, UserModel.EUserPermissionType.Visor, thispage))
+                    {
+                        response.Result = ResponseStatus.Unauthorized;
+                        response.Message = "No tienes permisos";
+                        return response!;
+                    }
+
+                    // Opción A) Tu API devuelve ApiResponse<List<AuditModel>>
+                    var (ok, apiRes, error, raw) = await TryGetAsync<ApiResponse<MovieListModel>>($"movie/top_rated?language=es-ES&page={page}", ct);
+
+                    if (ok && apiRes is not null)
+                    {
+                        response.Result = ResponseStatus.Ok;
+                        response.Data = JsonSerializer.Deserialize<MovieListModel>(raw, _json);
+                        return response;
+                    }
+                    else
+                    {
+                        response.Result = ResponseStatus.NotFound;
+                        response.Message = $"Error obteniendo {_loslasDatos}";
+                        return response!;
+                    }
+
+                    return response;
+
+                }
+                catch (Exception ex)
+                {
+                    return new ApiResponse<MovieListModel>
+                    {
+                        Result = ResponseStatus.InternalError,
+                        Message = $"Ha ocurrido un error al recuperar {_loslasDatos}",
+                    };
+                }
+            }
             public async Task<ApiResponse<List<MovieModel>>> GetAllMoviesByUpcomingAsync(int page, UserModel loggeduser, CancellationToken ct = default)
             {
                 var response = new ApiResponse<List<MovieModel?>>();
@@ -263,6 +383,46 @@ namespace ZetaDashboard.Common.Services
                 catch (Exception ex)
                 {
                     return new ApiResponse<List<MovieModel>>
+                    {
+                        Result = ResponseStatus.InternalError,
+                        Message = $"Ha ocurrido un error al recuperar {_loslasDatos}",
+                    };
+                }
+            }
+            public async Task<ApiResponse<MovieListModel>> GetAllMoviesByUpcomingMovieAsync(int page, UserModel loggeduser, CancellationToken ct = default)
+            {
+                var response = new ApiResponse<MovieListModel>();
+                try
+                {
+                    if (!HasPermissions(loggeduser, UserModel.EUserPermissionType.Visor, thispage))
+                    {
+                        response.Result = ResponseStatus.Unauthorized;
+                        response.Message = "No tienes permisos";
+                        return response!;
+                    }
+
+                    // Opción A) Tu API devuelve ApiResponse<List<AuditModel>>
+                    var (ok, apiRes, error, raw) = await TryGetAsync<ApiResponse<MovieListModel>>($"movie/upcoming?language=es-ES&page={page}", ct);
+
+                    if (ok && apiRes is not null)
+                    {
+                        response.Result = ResponseStatus.Ok;
+                        response.Data = JsonSerializer.Deserialize<MovieListModel>(raw, _json);
+                        return response;
+                    }
+                    else
+                    {
+                        response.Result = ResponseStatus.NotFound;
+                        response.Message = $"Error obteniendo {_loslasDatos}";
+                        return response!;
+                    }
+
+                    return response;
+
+                }
+                catch (Exception ex)
+                {
+                    return new ApiResponse<MovieListModel>
                     {
                         Result = ResponseStatus.InternalError,
                         Message = $"Ha ocurrido un error al recuperar {_loslasDatos}",
@@ -352,6 +512,54 @@ namespace ZetaDashboard.Common.Services
                 catch (Exception ex)
                 {
                     return new ApiResponse<List<MovieModel>>
+                    {
+                        Result = ResponseStatus.InternalError,
+                        Message = $"Ha ocurrido un error al recuperar {_loslasDatos}",
+                    };
+                }
+            }
+            public async Task<ApiResponse<MovieListModel>> GetAllDiscoverMovieModelAsync(int page, UserModel loggeduser, Dictionary<string, string> queryparams = null, CancellationToken ct = default)
+            {
+                var response = new ApiResponse<MovieListModel>();
+                try
+                {
+                    if (!HasPermissions(loggeduser, UserModel.EUserPermissionType.Visor, thispage))
+                    {
+                        response.Result = ResponseStatus.Unauthorized;
+                        response.Message = "No tienes permisos";
+                        return response!;
+                    }
+                    string queryparamsstring = $"?page={page}&language=es-ES";
+                    if (queryparams != null)
+                    {
+                        foreach (var inn in queryparams)
+                        {
+                            queryparamsstring += $"&{inn.Key}={inn.Value}";
+                        }
+                    }
+
+                    // Opción A) Tu API devuelve ApiResponse<List<AuditModel>>
+                    var (ok, apiRes, error, raw) = await TryGetAsync<ApiResponse<MovieListModel>>($"discover/movie{queryparamsstring}", ct);
+
+                    if (ok && apiRes is not null)
+                    {
+                        response.Result = ResponseStatus.Ok;
+                        response.Data = JsonSerializer.Deserialize<MovieListModel>(raw, _json);
+                        return response;
+                    }
+                    else
+                    {
+                        response.Result = ResponseStatus.NotFound;
+                        response.Message = $"Error obteniendo {_loslasDatos}";
+                        return response!;
+                    }
+
+                    return response;
+
+                }
+                catch (Exception ex)
+                {
+                    return new ApiResponse<MovieListModel>
                     {
                         Result = ResponseStatus.InternalError,
                         Message = $"Ha ocurrido un error al recuperar {_loslasDatos}",

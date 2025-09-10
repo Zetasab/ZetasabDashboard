@@ -88,3 +88,17 @@ function stopTimer(id, photo) {
     const el = document.getElementById(id);
     if (el && photo) el.src = photo; // reset
 }
+
+function replaceQuery(paramsObj) {
+    const url = new URL(window.location.href);
+
+    // 👇 Limpia toda la query actual
+    url.search = "";
+
+    // Añade solo los params que recibes
+    for (const [k, v] of Object.entries(paramsObj)) {
+        if (v) url.searchParams.set(k, v);
+    }
+
+    window.history.replaceState({}, "", url.toString());
+}
