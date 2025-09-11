@@ -7,6 +7,7 @@ using MongoDB.Bson;
 using MongoDB.Driver;
 using MudBlazor;
 using MudBlazor.Services;
+using MudExtensions.Services;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats.Jpeg;
 using SixLabors.ImageSharp.Formats.Webp;
@@ -48,6 +49,7 @@ builder.Services.AddMudServices(config =>
     config.SnackbarConfiguration.ShowTransitionDuration = 100; 
     config.SnackbarConfiguration.VisibleStateDuration = 1000;  
 });
+builder.Services.AddMudExtensions();
 
 //mongo
 builder.Services.Configure<MongoConfig>(builder.Configuration.GetSection("Mongo"));

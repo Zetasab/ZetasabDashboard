@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
+    <PackageReference Include="CodeBeam.MudBlazor.Extensions" Version="8.2.4" />
     <PackageReference Include="MongoDB.Driver" Version="3.4.1" />
     <PackageReference Include="MudBlazor" Version="8.10.0" />
     <PackageReference Include="SixLabors.ImageSharp" Version="3.1.11" />

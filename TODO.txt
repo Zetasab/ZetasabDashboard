@@ -1,12 +1,11 @@
 Todo: ->
 
-paginacion en peliculas y juegos vistos gusto etc
+poner loadings en search home y detailed games
+
 
 haacer que usuarios estan conectados
 
 poner guardar usuario con storage
-
-poner filters by name en movies liked wathced
 
 cuidado el scroll en paginas en movil
 

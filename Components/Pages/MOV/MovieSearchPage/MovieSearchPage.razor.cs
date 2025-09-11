@@ -75,6 +75,8 @@ namespace ZetaDashboard.Components.Pages.MOV.MovieSearchPage
 
         Dictionary<string, string> Paramss = new Dictionary<string, string>();
 
+        private bool IsLoading { get; set; } = true;
+
         private int Maxpages = 0;
         private bool IsPc = true;
         #endregion
@@ -213,6 +215,10 @@ namespace ZetaDashboard.Components.Pages.MOV.MovieSearchPage
         #region GET
         private async Task GetList()
         {
+            DataList.Clear();
+            IsLoading = true;
+            await InvokeAsync(StateHasChanged);
+
             if (string.IsNullOrEmpty(SelectedCategory))
             {
                 var x = await DController.GetData(await HttpApiService.Movies.GetAllDiscoverMovieModelAsync(_pag, LoggedUser, QueryParams)); ;
@@ -249,13 +255,19 @@ namespace ZetaDashboard.Components.Pages.MOV.MovieSearchPage
                 DataList = x.Results;
                 _maxpag = x.TotalPages;
             }
+            else
+            {
+                var x = (await DController.GetData(await HttpApiService.Movies.GetAllMoviesByNowPlayingMovieAsync(_pag, LoggedUser)));
+                DataList = x.Results;
+                _maxpag = x.TotalPages;
+            }
 
-            SeenMovieList = DController.GetData(await ApiService.SeenMovies.GetAllSeenMoviesByUserIdAsync(LoggedUser)).Result ?? new List<MovieModel>();
+                SeenMovieList = DController.GetData(await ApiService.SeenMovies.GetAllSeenMoviesByUserIdAsync(LoggedUser)).Result ?? new List<MovieModel>();
             LikedMovieList = DController.GetData(await ApiService.LikedMovies.GetAllLikedMoviesByUserIdAsync(LoggedUser)).Result ?? new List<MovieModel>();
             WatchMovieList = DController.GetData(await ApiService.WatchMovies.GetAllWatchMoviesByUserIdAsync(LoggedUser)).Result ?? new List<MovieModel>();
 
 
-            //datagridLoading = false;
+            IsLoading = false;
             await InvokeAsync(StateHasChanged);
         }
         #endregion

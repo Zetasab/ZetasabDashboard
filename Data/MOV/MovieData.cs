@@ -2,6 +2,7 @@
 {
     public static class MovieData
     {
+        #region Genres
         public static List<Genre> Genres { get; set; } = new List<Genre>()
         {
             new Genre { Id = 28, Esp_Name = "Acción" , Name = "Action"},
@@ -24,7 +25,8 @@
             new Genre { Id = 10752, Esp_Name = "Bélica" , Name = "War"},
             new Genre { Id = 37, Esp_Name = "Western", Name = "Western" }
         };
-
+        #endregion
+        #region Watch_providers
         public static List<Watch_provider> WhatProviders { get; set; } = new List<Watch_provider>
         {
             new Watch_provider{ Display_priority = 4, Logo_path = "/pbpMk2JmcoNnQwx5JGpXngfoWtp.jpg", Provider_name = "Netflix", provider_id = 8},
@@ -32,6 +34,9 @@
             new Watch_provider{ Display_priority = 2, Logo_path = "/pvske1MyAoymrs5bguRfVqYiM9a.jpg", Provider_name = "Amazon Prime Video", provider_id = 9},
             new Watch_provider{ Display_priority = 27, Logo_path = "/jbe4gVSfRlbPTdESXhEKpornsfu.jpg", Provider_name = "HBO Max", provider_id = 1899},
         };
+        #endregion
+
+        #region SortBy
 
         public static List<Order> SortsBy { get; set; } = new List<Order>
         {
@@ -56,6 +61,7 @@
             new Order{ eng_order = "vote_count.asc", esp_order = "Menos votos" },
             new Order{ eng_order = "vote_count.desc", esp_order = "Más votos" }
         };
+        #endregion
     }
     public class Genre
     {

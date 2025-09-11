@@ -1,4 +1,6 @@
-﻿using ZetaDashboard.Common.GMS;
+﻿using Microsoft.AspNetCore.Http.HttpResults;
+using ZetaDashboard.Common.GMS;
+using static MudBlazor.CategoryTypes;
 
 namespace ZetaDashboard.Data.GMS
 {
@@ -23,13 +25,80 @@ namespace ZetaDashboard.Data.GMS
             new GameGenre { Id = 15, Name = "Sports",Name_esp ="Deportes", Slug = "sports", GamesCount = 22437, ImageBackground = "https://media.rawg.io/media/screenshots/1be/1be2141edae05d4ba9858182b081e604.jpg", ImageBackground2 = "https://www.instant-gaming.com/themes/igv2/modules/categoryMenu/images/category-background16.jpg", ImageBackgroundShort = "https://www.instant-gaming.com/themes/igv2/modules/categoryMenu/images/category-icon16.png" },
             new GameGenre { Id = 6, Name = "Fighting",Name_esp ="Peleas", Slug = "fighting", GamesCount = 11770, ImageBackground = "https://media.rawg.io/media/games/684/684ecc08397479de72c5f89ef6f16f4f.jpg", ImageBackground2 = "https://www.instant-gaming.com/themes/igv2/modules/categoryMenu/images/category-background7.jpg", ImageBackgroundShort = "https://www.instant-gaming.com/themes/igv2/modules/categoryMenu/images/category-icon7.png" },
             new GameGenre { Id = 19, Name = "Family",Name_esp ="Familia", Slug = "family", GamesCount = 5408, ImageBackground = "https://media.rawg.io/media/games/a87/a8743bdee8627c55bb9f2f01b9136ac1.jpg", ImageBackground2 = "https://www.instant-gaming.com/themes/igv2/modules/categoryMenu/images/category-background10.jpg", ImageBackgroundShort = "https://www.instant-gaming.com/themes/igv2/modules/categoryMenu/images/category-icon10.png" },
-            new GameGenre { Id = 28, Name = "Board Games", Name_esp ="Juegos de mesa", Slug = "board-games", GamesCount = 8389, ImageBackground = "https://media.rawg.io/media/screenshots/8ff/8ffe8f19d2e764867c8ed625ddf4e368.jpg", ImageBackground2 = "", ImageBackgroundShort = "" },
+            new GameGenre { Id = 28, Name = "Board Games", Name_esp ="Juegos de mesa", Slug = "board-games", GamesCount = 8389, ImageBackground = "https://media.rawg.io/media/screenshots/8ff/8ffe8f19d2e764867c8ed625ddf4e368.jpg", ImageBackground2 = "https://www.instant-gaming.com/themes/igv2/modules/categoryMenu/images/category-background24.jpg", ImageBackgroundShort = "https://www.instant-gaming.com/themes/igv2/modules/categoryMenu/images/category-icon24.png" },
             new GameGenre { Id = 17, Name = "Card",Name_esp ="Cartas", Slug = "card", GamesCount = 4537, ImageBackground = "https://media.rawg.io/media/screenshots/bf8/bf87ef7d08a80006f0f65df6d30174e6.jpg", ImageBackground2 = "https://www.instant-gaming.com/themes/igv2/modules/categoryMenu/images/category-background23.jpg", ImageBackgroundShort = "https://www.instant-gaming.com/themes/igv2/modules/categoryMenu/images/category-icon23.png" },
             new GameGenre { Id = 34, Name = "Educational",Name_esp ="Educacional", Slug = "educational", GamesCount = 15694, ImageBackground = "https://media.rawg.io/media/screenshots/49d/49dae660a0fc843b23d63af8ce34e33c.jpg", ImageBackground2 = "https://www.instant-gaming.com/themes/igv2/modules/categoryMenu/images/category-background53.jpg", ImageBackgroundShort = "https://www.instant-gaming.com/themes/igv2/modules/categoryMenu/images/category-icon53.png" }
         };
         #endregion
 
         #region PlatformList
+        public static List<PlatformCategory> ParentPlatforms = new List<PlatformCategory>()
+        {
+            new PlatformCategory
+            {
+                Id = 1,
+                Name = "PC",
+                Slug = "pc",
+                Platforms = new List<PlatformDetail>(),
+                Img = "https://www.lifewire.com/thmb/tecqrB3ByCQ7uXk8ZCjjPBXtGNg=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/blue-windows-wallpaper-0731200e5d204ee09695a06cb45077d3.jpg"
+            },
+            new PlatformCategory
+            {
+                Id = 2,
+                Name = "PlayStation",
+                Slug = "playstation",
+                Platforms = new List<PlatformDetail>(),
+                Img = "https://c4.wallpaperflare.com/wallpaper/451/1007/589/sony-playstation-wallpaper-preview.jpg"
+            },
+            new PlatformCategory
+            {
+                Id = 3,
+                Name = "Xbox",
+                Slug = "xbox",
+                Platforms = new List<PlatformDetail>(),
+                Img = "https://assets.xboxservices.com/assets/02/e8/02e8a7da-a847-4ec1-8195-da881208bc6c.jpg?n=854791_BoM_Wallpaper-Preview_960x540.jpg"
+            },
+            new PlatformCategory
+            {
+                Id = 7,
+                Name = "Nintendo",
+                Slug = "nintendo",
+                Platforms = new List<PlatformDetail>(),
+                Img = "https://img.goodfon.com/wallpaper/big/c/f5/nintendo-nintendo-gc-igrovaia-konsol-igrovaia-pristavka-game.webp"
+            },
+            new PlatformCategory
+            {
+                Id = 4,
+                Name = "iOS",
+                Slug = "ios",
+                Platforms = new List<PlatformDetail>(),
+                Img = "https://cdn.wallpapersafari.com/11/1/nwEQmq.png"
+            },
+            new PlatformCategory
+            {
+                Id = 8,
+                Name = "Android",
+                Slug = "android",
+                Platforms = new List<PlatformDetail>(),
+                Img = "https://andro4all.com/hero/2021/05/apps-descargar-fondos-pantalla-android.jpg?width=1200&aspect_ratio=16:9"
+            },
+            new PlatformCategory
+            {
+                Id = 5,
+                Name = "Apple Macintosh",
+                Slug = "mac",
+                Platforms = new List<PlatformDetail>(),
+                Img = "https://i.insider.com/5d8e65dc21214c3cc712c318?width=800&format=jpeg&auto=webp"
+            },
+            new PlatformCategory
+            {
+                Id = 6,
+                Name = "Linux",
+                Slug = "linux",
+                Platforms = new List<PlatformDetail>(),
+                Img = "https://preview.redd.it/bbvwgctz82191.png?width=640&crop=smart&auto=webp&s=77403e7dbc8ba41a7a8ece615e7eb5d5af568ef6"
+            }
+        };
         public static List<PlatformCategory> Platforms = new List<PlatformCategory>()
         {
             new PlatformCategory
@@ -175,7 +244,7 @@ namespace ZetaDashboard.Data.GMS
                 Name = "Multiplayer",
                 Slug = "multiplayer",
                 GamesCount = 41730,
-                ImageBackground = "https://media.rawg.io/media/games/da1/da1b267764d77221f07a4386b6548e5a.jpg",
+                ImageBackground = "https://www.pcgamesn.com/wp-content/sites/pcgamesn/2022/09/best-multiplayer-games-2022.jpg",
                 Language = "eng"
             },
             new GameTag
@@ -243,6 +312,36 @@ namespace ZetaDashboard.Data.GMS
             }
         };
         #endregion
+        #region Sorting
+        public static List<GameSorting> Sortings = new()
+        {
+             new GameSorting { Name_esp = "🔥 Populares", Value = "-added&dates=2025-01-01,2025-12-31" },
+             new GameSorting { Name_esp = "🆕 Proximos Lanzamientos", Value = "released&dates=2025-09-12,2026-01-01" },
+             new GameSorting { Name_esp = "⌛ Del momento", Value = "-rating&dates=2025-06-01,2025-09-11" },
+
+            new GameSorting { Name_esp = "Nombre A-Z", Value = "name" },
+            new GameSorting { Name_esp = "Nombre Z-A", Value = "-name" },
+
+            new GameSorting { Name_esp = "Lanzamiento más antiguo", Value = "released" },
+            new GameSorting { Name_esp = "Lanzamiento más reciente", Value = "-released" },
+
+            new GameSorting { Name_esp = "Menos añadidos", Value = "added" },
+            new GameSorting { Name_esp = "Más añadidos", Value = "-added" },
+
+            new GameSorting { Name_esp = "Creado antes", Value = "created" },
+            new GameSorting { Name_esp = "Creado más reciente", Value = "-created" },
+
+            new GameSorting { Name_esp = "Actualizado antes", Value = "updated" },
+            new GameSorting { Name_esp = "Actualizado más reciente", Value = "-updated" },
+
+            new GameSorting { Name_esp = "Peor valoración", Value = "rating" },
+            new GameSorting { Name_esp = "Mejor valoración", Value = "-rating" },
+
+            new GameSorting { Name_esp = "Peor Metacritic", Value = "metacritic" },
+            new GameSorting { Name_esp = "Mejor Metacritic", Value = "-metacritic" },
+        };
+
+        #endregion
     }
 
     #region TagModel
@@ -263,6 +362,7 @@ namespace ZetaDashboard.Data.GMS
         public string Name { get; set; } = string.Empty;
         public string Slug { get; set; } = string.Empty;
         public List<PlatformDetail> Platforms { get; set; } = new();
+        public string Img { get; set; } = string.Empty;
     }
     public class PlatformDetail
     {
@@ -292,4 +392,11 @@ namespace ZetaDashboard.Data.GMS
 
     }
     #endregion
+    #region Sorting
+    public class GameSorting
+    { 
+        public string Name_esp { get; set; }
+        public string Value { get; set; }
+    }
+        #endregion
 }

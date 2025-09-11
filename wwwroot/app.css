@@ -123,6 +123,22 @@ h1:focus {
     overflow: hidden;
     position: relative;
 }
+.game-container-date {
+    position: absolute;
+    z-index: 60;
+    top: 0;
+    width: 100%;
+    padding: 10px 4px;
+    background: linear-gradient(174deg, rgb(30, 30, 30) 13%, rgba(0, 0, 0, 0) 50%);
+}
+.movie-container-date {
+    position: absolute;
+    z-index: 60;
+    top: 0;
+    width: 100%;
+    padding:10px 4px;
+    background: linear-gradient(169deg, rgb(30, 30, 30) 13%, rgba(0, 0, 0, 0) 50%);
+}
 
 .game-container-added {
     position: absolute;
@@ -161,7 +177,7 @@ h1:focus {
         inset: 0;
         z-index: 1; /* overlay above background, below content */
         pointer-events: none;
-        margin-left: 213px;
+        margin-left: 233px;
         opacity: var(--opacity);
         background: linear-gradient(90deg,rgba(0,0,0,0) 40%, #272727 97%);
     }

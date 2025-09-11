@@ -54,6 +54,8 @@ namespace ZetaDashboard.Components.Pages.MOV.HomeMoviePage
         public List<MovieModel> TrendingMovies { get; set; } = new List<MovieModel>();
         public List<MovieModel> CarteleraMovies { get; set; } = new List<MovieModel>();
         public List<MovieModel> PopularMovies { get; set; } = new List<MovieModel>();
+
+        private bool IsLoading { get; set; } = true;
         #endregion
 
         #region LifeCycles
@@ -76,6 +78,7 @@ namespace ZetaDashboard.Components.Pages.MOV.HomeMoviePage
 
         private async Task GetLists()
         {
+
             TrendingMovies = await DController.GetData(await HttpApiService.Movies.GetAllMoviesByTrendingAsync("day",LoggedUser));
             CarteleraMovies = await DController.GetData(await HttpApiService.Movies.GetAllMoviesByNowPlayingAsync(1,LoggedUser));
             PopularMovies = await DController.GetData(await HttpApiService.Movies.GetAllMoviesByPopularAsync(1,LoggedUser));
@@ -85,6 +88,7 @@ namespace ZetaDashboard.Components.Pages.MOV.HomeMoviePage
 
             _bg = TrendingMovies[rand.Next(0, 20)].BackdropPath;
 
+            IsLoading = false;
             await InvokeAsync(StateHasChanged);
         }
         private async Task NavigateToSearchMovie()

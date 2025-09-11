@@ -22,7 +22,7 @@
             {
                 <MudButton EndIcon="@Icons.Material.Filled.Cancel"
                            Variant="Variant.Filled" FullWidth="true"
-                           Color="Color.Error" Style="margin-bottom:15px;margin-top:5px;"
+                           Color="Color.Error" Style="margin-bottom:15px;margin-top:25px;"
                            OnClick="CancelSearchByTitleMovies">Cancelar</MudButton>
             }
             else
@@ -93,21 +93,25 @@
             {
                 <MudTextField T="string"
                               ValueChanged="OnQueryChanged"
-                              Variant="Variant.Filled"
+                              Variant="Variant.Outlined"
                               Adornment="Adornment.Start"
                               AdornmentIcon="@Icons.Material.Outlined.Search"
                               AdornmentColor="Color.Primary"
                               Clearable="true"
                               Value="_searchByName"
+                              Placeholder="Buscar por titulo"
+                              Style="margin-top:10px;"
                               Immediate="true"
                               DebounceInterval="450"
-                              Margin="Margin.Dense"
                               FullWidth="true" />
 
             }
+            <MudPaper Class="@((IsLoading) ? "" : "d-none ")" Elevation="0" Style="width:100%;height:400px;position:relative;display:flex;justify-content:center;align-items:center;z-index:300;">
+                <MudProgressCircular Style="width:200px;height:200px" Color="Color.Primary" Indeterminate="true" />
+            </MudPaper>
             @if (DataList.Count > 0) 
             {
-                <div class="movie-grid-5" style="margin-top:15px;">
+                <div class="movie-grid-5" style="margin-top:25px;">
                     @foreach (var movie in DataList)
                     {
                         <MovieCard movie="@movie" 
@@ -118,15 +122,12 @@
                     }
                     <div class="movie-grid-5" style="display:flex;justify-content:center;margin-top:10px;">
 
-                        <MudPagination BoundaryCount="1" MiddleCount="3" SelectedChanged="PagChanged" Selected="@_pag" Count="@_maxpag" Class="mt-4" />
+                        <MudPagination BoundaryCount="1" MiddleCount="3" SelectedChanged="PagChanged" Selected="@_pag" Count="@(_maxpag > 500 ? 500 : _maxpag)" Class="mt-4" />
                     </div>
         
                 </div>
             }
-            else
-            {
-                <MudText>No hay resultados</MudText>
-            }
+            
 
             
         </MudItem>
