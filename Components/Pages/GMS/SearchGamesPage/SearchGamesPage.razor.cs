@@ -102,7 +102,7 @@ namespace ZetaDashboard.Components.Pages.GMS.SearchGamesPage
                 var x = platform.ToString().Split(",");
                 foreach (var y in x)
                 {
-                    _platforms.Add(GameData.ParentPlatforms.FirstOrDefault(z => z.Id.ToString() == y));
+                    _platforms.Add(GameData.ParentPlatforms.FirstOrDefault(z => z.Name.ToString() == y));
                 }
                 
             }
@@ -112,7 +112,7 @@ namespace ZetaDashboard.Components.Pages.GMS.SearchGamesPage
                 var x = genre.ToString().Split(",");
                 foreach (var y in x)
                 {
-                    _genres.Add(GameData.Games_Genres.FirstOrDefault(z => z.Id.ToString() == y));
+                    _genres.Add(GameData.Games_Genres.FirstOrDefault(z => z.Name.ToString() == y));
                 }
             }
             if (query.TryGetValue("tags", out var tag))
@@ -120,7 +120,7 @@ namespace ZetaDashboard.Components.Pages.GMS.SearchGamesPage
                 var x = tag.ToString().Split(",");
                 foreach (var y in x)
                 {
-                    _tags.Add(GameData.TagList.FirstOrDefault(z => z.Id.ToString() == y));
+                    _tags.Add(GameData.TagList.FirstOrDefault(z => z.Name.ToString() == y));
                 }
             }
             if (query.TryGetValue("ordering", out var sort))
@@ -267,17 +267,17 @@ namespace ZetaDashboard.Components.Pages.GMS.SearchGamesPage
             }
             if (_platforms.Count > 0)
             {
-                var aux = string.Join(",", _platforms.Select(x => x.Id));
+                var aux = string.Join(",", _platforms.Select(x => x.Name)).ToString().ToLower();
                 Paramss.Add(key: "platforms", value: aux);
             }
             if (_genres.Count > 0)
             {
-                var aux = string.Join(",", _genres.Select(x => x.Id));
+                var aux = string.Join(",", _genres.Select(x => x.Name)).ToString().ToLower();
                 Paramss.Add(key: "genres", value: aux);
             }
             if (_tags.Count > 0)
             {
-                var aux = string.Join(",", _tags.Select(x => x.Id));
+                var aux = string.Join(",", _tags.Select(x => x.Name)).ToString().ToLower();
                 Paramss.Add(key: "tags", value: aux);
             }
 

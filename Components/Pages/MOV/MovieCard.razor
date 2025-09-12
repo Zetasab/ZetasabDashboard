@@ -4,7 +4,12 @@
         <!-- your existing card -->
         <div class="movie-backdrop" @onclick="@(() => ShowMovie(movie.Id.ToString()))">
             <div class="movie-container-date">
-                📅 @DateTime.ParseExact(movie.ReleaseDate, "yyyy-MM-dd", CultureInfo.InvariantCulture).ToString("dd MMM yyyy", new CultureInfo("es-ES"))
+                @if (!string.IsNullOrEmpty(movie.ReleaseDate))
+                {  
+                    <text>
+                        📅 @DateTime.ParseExact(movie.ReleaseDate, "yyyy-MM-dd", CultureInfo.InvariantCulture).ToString("dd MMM yyyy", new CultureInfo("es-ES"))
+                    </text>
+                }
             </div>
             <img style="width:250px;height:375px;object-fit:cover;object-position:center;"
                  src="@movie.GetPosterUrl("w500")" onload="lazy" onerror="this.onerror=null; this.src='https://static.vecteezy.com/system/resources/previews/004/141/669/non_2x/no-photo-or-blank-image-icon-loading-images-or-missing-image-mark-image-not-available-or-image-coming-soon-sign-simple-nature-silhouette-in-frame-isolated-illustration-vector.jpg';" loading="lazy" />

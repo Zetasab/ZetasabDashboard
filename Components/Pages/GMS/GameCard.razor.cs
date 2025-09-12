@@ -20,6 +20,7 @@ namespace ZetaDashboard.Components.Pages.GMS
         [Parameter] public DataController DController { get; set; }
         [Parameter] public UserModel LoggedUser { get; set; }
         [Parameter] public CommonServices CService { get; set; }
+        [Parameter] public NavigationManager Navigator { get; set; }
         [Parameter] public EventCallback Update { get; set; }
         [Parameter] public bool ShowButtons { get; set; } = true;
         private UserPermissions ThisPage { get; set; } = new UserPermissions()
@@ -103,6 +104,11 @@ namespace ZetaDashboard.Components.Pages.GMS
         private async Task UpdateList()
         {
             await Update.InvokeAsync();
+        }
+
+        private async Task NavigateToGame()
+        {
+            Navigator.NavigateTo($"game/{item.Id}");
         }
     }
 }

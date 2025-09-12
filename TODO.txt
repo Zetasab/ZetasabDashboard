@@ -2,6 +2,8 @@ Todo: ->
 
 poner loadings en search home y detailed games
 
+cambiar max height selects games de movil
+ poner los filtros ocultos en movil con expanded
 
 haacer que usuarios estan conectados
 

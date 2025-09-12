@@ -1,0 +1,534 @@
+﻿@page "/game/{gameId}"
+
+<!-- #region cabecera -->
+<div class="game-cabecera-container">
+    <img src="@(!string.IsNullOrEmpty(GameDetail.BackgroundImageAdditional) ? GameDetail.BackgroundImageAdditional : GameDetail.BackgroundImage)" loading="lazy" />
+    <div class="game-cabecera-container-bg"></div>
+</div>
+<!-- #endregion -->
+
+<MudPaper Class="@((IsLoading) ? "" : "d-none")" Style="width:100%;height:100%;position:fixed;display:flex;justify-content:center;align-items:center;z-index:300;">
+    <MudProgressCircular Style="width:200px;height:200px" Color="Color.Primary" Indeterminate="true" />
+</MudPaper>
+
+<div style="position:absolute;top:0;right:0;z-index:99;margin-top: 40px;margin-right: 40px;">
+    <MudIconButton Variant="Variant.Filled"
+                   Color="Color.Error"
+                   Icon="@Icons.Material.Filled.Close"
+                   Size="Size.Large"
+                   OnClick="GoBack">
+
+    </MudIconButton>
+</div>
+
+
+<MudContainer class="mudcontainer-container" MaxWidth="MaxWidth.Large">
+    <MudGrid style="align-items:center;gap:0px">
+        <MudHidden Breakpoint="Breakpoint.Xs">
+            <MudItem xs="@((int)12)" md="@((int)6)" Style="display:flex;justify-content:end;">
+                <img src="@GameDetail.BackgroundImage" loading="lazy" style="width:100%;height:387px; border-radius:15px;object-fit: cover;" />
+            </MudItem>
+        </MudHidden>
+            <MudItem xs="@((int)12)" md="@((int)6)">
+                <div class="info-container">
+                    @if (!string.IsNullOrEmpty(GameDetail.Website))
+                    {
+                        <a href="@GameDetail.Website"  target="_blank"
+                            style="position:absolute;top:0;right:0;font-size:20px;margin-top:10px;margin-right:10px;">🌐</a>
+                    }
+                    <MudText Typo="Typo.h4" Style="margin-top:15px;text-align:center;">
+                        @GameDetail.Name
+                    </MudText>
+                    <div style="display:flex;justify-content:space-between;gap:30px;margin-top:15px;">
+                        <MudText>
+                            📅 @GameDetail.Released
+                        </MudText>
+                        <MudText>
+                            🕣 @GameDetail.Playtime h
+                        </MudText>
+                    </div>
+                    @if (GameDetail.Publishers != null)
+                    {
+                        <div style="margin-top:25px;display:flex;gap:20px;align-items:center;">
+                            <MudPaper Elevation="0" Style="border-radius:50px;display:flex;gap:10px;align-items:center;padding:7px;padding-right:13px;" >
+                                <img style="object-fit:cover;width:50px;height:50px;border-radius:50px" src="@GameDetail.Publishers[0].ImageBackground" />
+                                <MudText>
+                                    @GameDetail.Publishers[0].Name
+                                </MudText>
+                            </MudPaper>
+                            <MudText>
+                                🔥 @GameDetail.Added añadieron este juego
+                            </MudText>
+                        </div>
+                    }
+                    <div style="margin-top:40px;display:flex;width:100%;justify-content: space-around;">
+                        <div style="position:relative;display:flex;justify-content:center;align-items:center;">
+                            <MudProgressCircular Style="width:80px;height:80px;"
+                                                 Value="@(GameDetail.Rating * 20)"
+                                                 Color="@GetScoreColor(GameDetail.Rating * 20)"
+                                                 StrokeWidth="6" />
+                            <span style="font-size:22px;position:absolute;">@((int)(GameDetail.Rating * 20))</span>
+                        </div>
+                        <div style="display:flex;align-items:end;gap:7px;">
+                            @if (CService.CheckIfPermissions(LoggedUser, ThisPageEdit))
+                            {
+                                <!-- Visto -->
+                                @if (PlayedGames.Any(x => x.Id == GameDetail.Id))
+                                {
+                                    <MudTooltip Text="Desmarcar como jugado">
+                                        <MudIconButton Icon="@Icons.Material.Filled.CheckCircle"
+                                                       Size="Size.Large"
+                                                       Color="Color.Success"
+                                                       OnClick="@(() => UnMarkAsSeen(Transform(GameDetail)))" />
+                                    </MudTooltip>
+                                }
+                                else
+                                {
+                                    <MudTooltip Text="Marcar como jugado">
+                                        <MudIconButton Icon="@Icons.Material.Outlined.CheckCircleOutline"
+                                                       Size="Size.Large"
+                                                       Color="Color.Success"
+                                                       OnClick="@(() => MarkAsSeen(Transform(GameDetail)))" />
+                                    </MudTooltip>
+                                }
+
+
+                                <!-- Añadir a favoritos -->
+                                @if (LikedGames.Any(x => x.Id == GameDetail.Id))
+                                {
+                                    <MudTooltip Text="Quitar de Favoritos">
+                                        <MudIconButton Icon="@Icons.Material.Filled.Favorite"
+                                                       Size="Size.Large"
+                                                       Color="Color.Secondary"
+                                                       OnClick="@(() => UnMarkAsLiked(Transform(GameDetail)))" />
+                                    </MudTooltip>
+                                }
+                                else
+                                {
+                                    <MudTooltip Text="Añadir a Favoritos">
+                                        <MudIconButton Icon="@Icons.Material.Outlined.FavoriteBorder"
+                                                       Size="Size.Large"
+                                                       Color="Color.Secondary"
+                                                       OnClick="@(() => MarkAsLiked(Transform(GameDetail)))" />
+                                    </MudTooltip>
+                                }
+
+                                <!-- Watchlist -->
+                                @if (WatchGames.Any(x => x.Id == GameDetail.Id))
+                                {
+                                    <MudTooltip Text="Quitar de ver mas tarde">
+                                        <MudIconButton Icon="@Icons.Material.Filled.Bookmark"
+                                                       Size="Size.Large"
+                                                       Color="Color.Primary"
+                                                       OnClick="@(() => UnMarkAsWatch(Transform(GameDetail)))" />
+                                    </MudTooltip>
+                                }
+                                else
+                                {
+                                    <MudTooltip Text="Añadir a ver mas tarde">
+                                        <MudIconButton Icon="@Icons.Material.Outlined.BookmarkBorder"
+                                                       Size="Size.Large"
+                                                       Color="Color.Primary"
+                                                       OnClick="@(() => MarkAsWatch(Transform(GameDetail)))" />
+                                    </MudTooltip>
+                                }
+                            }
+                        </div>
+                    </div>
+                    <div class="store-buttons">
+                        @if (GameDetail.Stores is { Count: > 0 })
+                        {
+                            foreach (var s in GameDetail.Stores)
+                            {
+                                <a target="_blank" href="@($"http://{s.Store.Domain}/{GameDetail.Slug ?? GameDetail.Name}")" class="store-buttons-buttons">
+                                        <div class="store-buttons-buttons-container">
+                                            <img src="@GetStoreIconUrl(s.Store.Name)" width="22" height="22" alt="@s.Store.Name" onerror="this.src='https://cdn.simpleicons.org/pcgamingwiki'" />
+                                            <MudText>@s.Store.Name</MudText>
+                                        </div>
+                                </a>
+                            }
+                        }
+                    </div>
+                </div>
+            </MudItem>
+    </MudGrid>
+    <MudGrid Style="margin-top:45px;">
+        <MudItem xs="@((int)12)" md="@((int)7)">
+            <div style="display:flex;flex-direction:column">
+                <div>
+                    <MudText Typo="Typo.h5" Style="color:white;margin-bottom:15px">Plataformas</MudText>
+                    <div class="store-buttons" style="justify-content:start;margin-bottom:15px;">
+                        @if (GameDetail.ParentPlatforms is { Count: > 0 })
+                        {
+                            foreach (var s in GameDetail.ParentPlatforms)
+                            {
+                                <a target="_self" href="@($"search-games?page=1&platforms={s.Platform.Id}")" class="store-buttons-buttons">
+                                    <div class="store-buttons-buttons-container">
+                                        <img src="@GetStoreIconUrl(s.Platform.Name)" width="22" height="22" alt="@s.Platform.Name" onerror="this.src='https://cdn.simpleicons.org/pcgamingwiki'" />
+                                        <MudText>@s.Platform.Name</MudText>
+                                    </div>
+                                </a>
+                            }
+                        }
+                    </div>
+                </div>
+                <div style="@((DescriptionBool) ? "width:100%;height:200px;overflow:hidden;position:relative;" : "width:100%;height:fit-content;overflow:hidden;position:relative;")">
+                    <MudText Typo="Typo.h5" Style="color:white;margin-bottom:20px">Descripción</MudText>
+                    <div style="@((DescriptionBool) ? "width:100%;position:absolute;bottom:0;z-index:4;height:200px;background: linear-gradient(180deg, rgb(39 39 39 / 0) 56%, #272727 92%);" : "display:none")"></div>
+                    <MudText Style="padding: 0px 15px;">
+                        @((MarkupString)GameDetail.DescriptionHtml)
+                    </MudText>
+                    <MudIconButton Icon="@((!DescriptionBool) ? Icons.Material.Filled.Minimize : Icons.Material.Filled.ExpandMore)" Style="position: absolute;z-index: 5;bottom: 0;left: 50%;margin-left: -50px;"
+                                   OnClick="@(() => DescriptionBool = !DescriptionBool)">
+
+                    </MudIconButton>
+                </div>
+                <div>
+                    <MudText Typo="Typo.h5" Style="color:white;margin-top:20px">Tags</MudText>
+                    <div style="margin-top:15px;">
+                        @if (GameDetail.Tags is { Count: > 0 })
+                        {
+                            @foreach (var it in GameDetail.Tags)
+                            {
+                                <MudChip T="string"
+                                Href="@($"search-games?page=1&tags=31{it.Id}")"
+                                         Target="_self"
+                                         Variant="Variant.Outlined">
+                                    @it.Name
+                                </MudChip>
+                            }
+                         }
+                    </div>
+                </div>
+            </div>
+        </MudItem>
+        <MudItem xs="@((int)12)" md="@((int)5)">
+            <div style="width: 100%;height: 100%;display: flex;align-items: center;justify-content: center;flex-direction:column">
+                <div style="width:100%">
+                    <MudText Typo="Typo.h4" Style="color:white">Rating</MudText>
+                </div>
+                <MudChart ChartType="ChartType.Donut" LegendPosition="Position.Bottom"  Height="300px"
+                          InputData="@data" InputLabels="@labels" ChartOptions="options">
+                </MudChart>
+                <div style="width:100%">
+                    <MudText Typo="Typo.h4" Style="color:white;margin-top:20px;">Géneros</MudText>
+                    <div style="margin:15px;display:flex;gap:10px;">
+                        @if (GameDetail.Genres is { Count: > 0 })
+                        {
+                            @foreach (var it in GameDetail.Genres)
+                            {
+                                <a href="@($"search-games?page=1&genres=31{it.Id}")" style="position:relative;width:140px;height:60px;display:flex;align-items:center;justify-content:center;border-radius:15px;overflow:hidden">
+                                    <img src="@it.ImageBackground" style="position:absolute;width:100%;height:100%;object-fit:cover;filter:brightness(0.6)">
+                                    <MudText Style="z-index:4;"> @it.Name</MudText>
+                                </a>
+                                
+                            }
+                        }
+
+                    </div>
+                </div>
+            </div>
+        </MudItem>
+    </MudGrid>
+    
+</MudContainer>
+<div class="movie-collection" style="padding:0px;">
+    <div class="game-collection-img" style="background-image:linear-gradient(rgba(0, 0, 0, 2.35), rgba(0, 0, 0, 0.35)), url(@GameDetail.BackgroundImage);" />
+    <div class="game-collection-top" />
+
+    <div class="game-collection-bottom" />
+</div>
+
+@if (VideosGame.Count > 0 || ScreenshotsGame.Count > 0)
+{
+    <MudContainer class="mudcontainer-container" MaxWidth="MaxWidth.Large" Style="margin-top:75px;">
+            <MudText Typo="Typo.h5" Style="color:white;">Galería</MudText>
+    </MudContainer>
+}
+@if (VideosGame.Count > 0)
+{
+    <MudContainer class="mudcontainer-container" MaxWidth="MaxWidth.Large" Style="margin-top:10px;">
+        <MudText Typo="Typo.h5" Style="color:white;margin-top:20px">Galería</MudText>
+        <MudGrid Style="position:relative;display:flex;align-items:center;margin-top:20px;">
+            <MudIconButton Style="position:absolute;z-index:5;transform: translateX(-100%);" Size="Size.Large"
+            Icon="@Icons.Material.Filled.SkipPrevious" OnClick="PreviusVideo"></MudIconButton>
+            <MudItem xs="@((int)12)">
+                <MudText Style="margin-bottom:3px;">@VideosGame[videoSelected].Name</MudText>
+                <video @key="videoSelected" controls style="width:100%;border-radius:10px;"
+                       poster="@VideosGame[videoSelected].Preview"
+                       preload="metadata"
+                       playsinline>
+                    <!-- Pon primero la mejor calidad; el siguiente es fallback -->
+                    <source src="@VideosGame[videoSelected].Data.Max" type="video/mp4" />
+                    <source src="@VideosGame[videoSelected].Data.P480" type="video/mp4" />
+                    Sorry, your browser doesn't support embedded videos.
+                </video>
+            </MudItem>
+            <MudIconButton Style="position:absolute;z-index:5;right:0;transform: translateX(100%);" Size="Size.Large" 
+            Icon="@Icons.Material.Filled.SkipNext" OnClick="NextVideo"></MudIconButton>
+        </MudGrid>
+        
+        
+    </MudContainer>
+}
+
+@if (ScreenshotsGame.Count > 0)
+{
+    <MudContainer class="mudcontainer-container" MaxWidth="MaxWidth.Large" Style="margin-top:75px;">
+        <div id="galeria" onload="initGallery" class="pswp-gallery" style="margin-top:15px;">
+            <MudGrid>
+                @foreach (var img in ScreenshotsGame.Take((ScreenshotsGame.Count > 7) ? 8 : 4))
+                {
+                    <MudItem xs="@((int)12)" md="@((int)3)">
+                        <a href="@img.Image"
+                           data-pswp-width="@img.Width"
+                           data-pswp-height="@img.Height">
+                            <img src="@img.Image" width="100%" loading="lazy" class="m-2 rounded shadow" />
+                        </a>
+                   </MudItem>
+                }
+                
+                    
+            </MudGrid>
+        </div>
+    </MudContainer>
+}
+
+
+@if (SameSeries.Count > 0)
+{
+    <MudContainer class="mudcontainer-container" MaxWidth="MaxWidth.Large" Style="margin-top:20px;">
+        <MudText Typo="Typo.h5" Style="color:white;margin-top:30px">Juegos de la misma serie</MudText>
+        <MudGrid Style="margin-top:20px;">
+            @foreach (var im in SameSeries.Take(9))
+            {
+                <MudItem xs="@((int)12)" md="@((int)4)">
+                    <GameCard CService="@CService" ApiService="@ApiService" DController="@DController"
+                              item="@im" LoggedUser="@LoggedUser" Navigator="@Navigator" ShowButtons="false"></GameCard>
+                </MudItem>
+            }
+        </MudGrid>
+    </MudContainer>
+}
+
+@if (AchievementsGame.Count > 0)
+{
+    <MudContainer class="mudcontainer-container" MaxWidth="MaxWidth.Large" Style="margin-top:75px;">
+        <MudText Typo="Typo.h5" Style="color:white;margin-top:20px">Logros</MudText>
+        <div class="achievements-grid" style="margin-top:15px;">
+            @foreach (var a in AchievementsGame)
+            {
+                var pct = a.PercentValue ?? 0; // 0.60 -> 0.60%
+                                               <article class="ach-card">
+                                                   <div class="ach-cover-wrap">
+                                                       <img class="ach-cover" src="@a.Image" alt="@a.Name" loading="lazy" />
+                                                       <span class="ach-tag">Achievement</span>
+
+                        <!-- circular percentage -->
+                        <div class="ach-pct" style="--pct:@($"{pct:0.##}%")">
+                            <span>@($"{pct:0.##}%")</span>
+                        </div>
+                    </div>
+
+                    <div class="ach-body">
+                        <h3 class="ach-title">@a.Name</h3>
+                        <p class="ach-desc">@a.Description</p>
+                    </div>
+                </article>
+            }
+        </div>
+    </MudContainer>
+}
+
+<style>
+    :root {
+        --card-bg: #1a1a1a;
+        --card-br: #272727; /* tu color */
+        --text: #eaeaea;
+        --muted: #b3b3b3;
+        --accent: #22C55E; /* verde para el progreso */
+    }
+
+    .achievements-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px,1fr));
+        gap: 16px;
+    }
+
+    .ach-card {
+        position: relative;
+        border-radius: 16px;
+        overflow: hidden;
+        background: linear-gradient(var(--card-bg), var(--card-bg)) padding-box, linear-gradient(135deg, #2a2a2a 0%, #0f0f0f 100%) border-box;
+        border: 1px solid transparent;
+        box-shadow: 0 10px 24px rgba(0,0,0,.25);
+        transition: transform .18s ease, box-shadow .18s ease;
+    }
+
+        .ach-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 16px 36px rgba(0,0,0,.35);
+        }
+
+    .ach-cover-wrap {
+        position: relative;
+        aspect-ratio: 16/9;
+        background: #000;
+    }
+
+    .ach-cover {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+    }
+
+    .ach-tag {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        background: color-mix(in srgb, var(--card-br) 85%, black);
+        color: #fff;
+        font-size: .75rem;
+        padding: 4px 10px;
+        border-radius: 999px;
+        letter-spacing: .3px;
+    }
+
+    .ach-pct {
+        position: absolute;
+        right: 10px;
+        bottom: 10px;
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        background: conic-gradient(var(--accent) var(--pct), #3a3a3a 0);
+        display: grid;
+        place-items: center;
+        box-shadow: 0 6px 14px rgba(0,0,0,.35);
+    }
+
+        .ach-pct::before {
+            content: "";
+            position: absolute;
+            inset: 6px;
+            background: rgba(0,0,0,.75);
+            border-radius: 50%;
+        }
+
+        .ach-pct > span {
+            position: relative;
+            color: #fff;
+            font-weight: 700;
+            font-size: .75rem;
+        }
+
+    .ach-body {
+        padding: 12px 14px 16px;
+        color: var(--text);
+    }
+
+    .ach-title {
+        margin: 0 0 6px 0;
+        font-size: 1rem;
+        line-height: 1.25rem;
+        font-weight: 700;
+    }
+
+    .ach-desc {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.35rem;
+        display: -webkit-box;
+        -webkit-line-clamp: 3; /* clamp to 3 lines */
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .game-collection-img{
+        width:100%;
+        height:100%;
+        position:absolute;
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        
+    }
+
+    .game-collection-bottom {
+        width: 100%;
+        height: 20%;
+        z-index: 4;
+        position: absolute;
+        bottom: 0;
+        background-size: 500px 166px;
+        background-image: url('Img/utilities/Pixels.Png');
+        transform: scaleY(-1);
+    }
+    .game-collection-top{
+        width:100%;
+        height:20%;
+        z-index:4;
+        position:absolute;
+        top:0;
+        background-size: 500px 166px;
+        background-image:url('Img/utilities/Pixels.Png');
+    }
+    .store-buttons-buttons-container{
+        display: flex;
+        gap: 5px;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        z-index: 4;
+        padding: 12px 17px;
+    }
+    
+    .store-buttons-buttons{
+        border-radius:5px;
+        position:relative;
+        overflow:hidden;
+        transition:0.3s;
+        background-color: var(--mud-palette-surface);
+    }
+
+    .store-buttons-buttons:hover{
+        filter:brightness(1.2);
+        cursor:pointer;
+        color: #cdcdcd;
+
+    }
+    .store-buttons{
+        width:100%;
+        display:flex;align-items:center;
+        justify-content:center;
+        flex-wrap:wrap;gap:10px;
+        margin-top:19px;
+        padding:10px 15px;
+    }
+    .game-cabecera-container {
+        position: absolute;
+        width: 100%;
+        height: 600px;
+        background-color: transparent;
+        overflow: hidden;
+    }
+
+    .game-cabecera-container-bg{
+        width:100%;
+        height:300px;
+        background: linear-gradient( 180deg, rgb(39 39 39 / 0) 8%, rgb(39 39 39 / 0.08) 20%, rgb(39 39 39 / 0.18) 35%, rgb(39 39 39 / 0.32) 50%, rgb(39 39 39 / 0.5) 65%, rgb(39 39 39 / 0.7) 80%, #272727 95% );
+        bottom:0px;
+        position:absolute;z-index:4;
+    }
+    .game-cabecera-container img {
+        position: relative;
+        z-index: 1;
+        width: 100%;
+        height: 100%;
+        filter:brightness(0.8);
+        object-fit: cover;
+    }
+    .
+</style>

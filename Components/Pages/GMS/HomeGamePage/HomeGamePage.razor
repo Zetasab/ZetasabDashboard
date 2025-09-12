@@ -2,6 +2,12 @@
 
 <h3>HomeGamePage</h3>
 
-@code {
-
+@for (int i = 0; i < 10; i++)
+{
+    for (int y = 0; y < 10; y++)
+    {
+        var index = i;
+        var yndex = y;
+        <MudText>@index y @yndex</MudText>
+    }
 }
