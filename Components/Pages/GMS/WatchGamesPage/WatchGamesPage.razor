@@ -33,12 +33,21 @@
 {
     <MudContainer MaxWidth="MaxWidth.ExtraLarge">
         <MudGrid Justify="Justify.Center" Style="margin-top:30px;width: 100% !important;position: relative;margin-left: 0px;">
-            @foreach (var item in DataList.OrderBy(x => !x.Priority))
+            @foreach (var item in DataList.Where(x => x.Priority))
             {
                 <MudItem xs="@((int)12)" md="@((int)3)" Style="display:flex;justify-content:center;padding:20px">
                     <GameCard item="@item" ApiService="@ApiService"
                               DController="@DController" LoggedUser="@LoggedUser" Navigator="@Navigator"
                               CService="@CService" LikedGames="@LikedGamesList"
+                              PlayedGames="@PlayedGamesList" Update="GetList" WatchedGames="@WatchGamesList"></GameCard>
+                </MudItem>
+            }
+            @foreach (var item in DataList.Where(x => !x.Priority))
+            {
+                <MudItem xs="@((int)12)" md="@((int)3)" Style="display:flex;justify-content:center;padding:20px">
+                    <GameCard item="@item" ApiService="@ApiService"
+                              DController="@DController" LoggedUser="@LoggedUser" Navigator="@Navigator"
+                              CService="@CService" LikedGames="@LikedGamesList" 
                               PlayedGames="@PlayedGamesList" Update="GetList" WatchedGames="@WatchGamesList"></GameCard>
                 </MudItem>
             }

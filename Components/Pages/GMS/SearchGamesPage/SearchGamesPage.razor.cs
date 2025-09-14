@@ -84,7 +84,10 @@ namespace ZetaDashboard.Components.Pages.GMS.SearchGamesPage
                 );
             await ApiService.Audits.InsertAsync(audit);
             await GetParamsQueryAndList();
-            
+            await GetListActions();
+
+            await InvokeAsync(StateHasChanged);
+
         }
         #endregion
 

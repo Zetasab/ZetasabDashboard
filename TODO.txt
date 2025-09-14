@@ -6,7 +6,7 @@ haacer que usuarios estan conectados
 poner guardar usuario con storage
 
 
-Crear juegos prioridad
+Mejorar juegos prioridad
 
 
 mejorar los backups

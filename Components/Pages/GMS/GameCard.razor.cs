@@ -109,6 +109,15 @@ namespace ZetaDashboard.Components.Pages.GMS
                 $"User {LoggedUser.Name} unmark as Watch game {game.Name}");
             UpdateList();
         }
+        private async Task UnMarkAsWatchPriority(RawgGame game)
+        {
+            _ = await DController.UpdateData(await ApiService.WatchGames.MarkAsWatchUnPriorityAsync(game, LoggedUser),
+                LoggedUser,
+                "MarkAsWatch",
+                $"User {LoggedUser.Name} unmark as Watch game {game.Name}");
+            UpdateList();
+        }
+        
         #endregion
         private async Task UpdateList()
         {
