@@ -92,7 +92,15 @@ namespace ZetaDashboard.Common.Services
                     {
                         foreach (var inn in paramss)
                         {
-                            queryparamsstring += $"&{inn.Key}={inn.Value}";
+                           var value = inn.Value;
+                            if (inn.Key.Equals("ordering") && inn.Value.Equals("popular"))
+                                value = $"-added&dates={new DateTime(DateTime.Now.Year, 1, 1):yyyy-MM-dd},{new DateTime(DateTime.Now.Year, 12, 31):yyyy-MM-dd}";
+                            else if (inn.Key.Equals("ordering") && inn.Value.Equals("prox"))
+                                value = $"released&dates={DateTime.Now:yyyy-MM-dd},{DateTime.Now.AddYears(1):yyyy-MM-dd}";
+                            else if (inn.Key.Equals("ordering") && inn.Value.Equals("moment"))
+                                value = $"-rating&dates={DateTime.Now.AddMonths(-3):yyyy-MM-dd},{DateTime.Now:yyyy-MM-dd}";
+
+                            queryparamsstring += $"&{inn.Key}={value}";
                         }
                     }
 

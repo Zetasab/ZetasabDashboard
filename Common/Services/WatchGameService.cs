@@ -174,6 +174,51 @@ namespace ZetaDashboard.Common.ZDB.Services
                 }
                 return response;
             }
+            public async Task<ApiResponse<bool>> MarkAsWatchPriorityAsync(RawgGame game, UserModel loggeduser)
+            {
+                ApiResponse<bool> response = new ApiResponse<bool>();
+                try
+                {
+                    if (!HasPermissions(loggeduser, UserModel.EUserPermissionType.Editor, thispage))
+                    {
+                        response.Result = ResponseStatus.Unauthorized;
+                        response.Message = "No tienes permisos";
+                        return response;
+                    }
+
+                    var filter = Builders<WatchGameModel>.Filter.Eq(x => x.UserId, loggeduser.Id);
+                    var result = await FindAllAsync(filter);
+
+                    if (result.Count == 0)
+                    {
+                        WatchGameModel aux = new WatchGameModel()
+                        {
+                            Games = new List<RawgGame>(),
+                            UserId = loggeduser.Id
+                        };
+                        await InsertAsync(aux);
+                        result = await FindAllAsync(filter);
+                    }
+
+                    game.Format();
+
+                    result[0].Games.Add(game);
+                    result[0].Games[result[0].Games.IndexOf(game)].Priority = true;
+
+                    await UpdateAsync(result[0]);
+
+
+                    response.Result = ResponseStatus.Ok;
+                    response.Message = $"La pelicula se ha marcado ver mas tarde";
+                }
+                catch (Exception ex)
+                {
+                    response.Result = ResponseStatus.InternalError;
+                    response.Message = $"Ha ocurrido un error al editar {_ellaDato}";
+                    Console.WriteLine($"Error: {ex.Message}");
+                }
+                return response;
+            }
 
             public async Task<ApiResponse<bool>> UnMarkAsWatchAsync(RawgGame game, UserModel loggeduser)
             {

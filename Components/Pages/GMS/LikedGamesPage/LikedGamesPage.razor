@@ -1,7 +1,7 @@
 ﻿@page "/liked-games"
 
 <!-- #region Title -->
-<div style="display:flex;align-items:center;justify-content:space-between">
+<div style="display:flex;align-items:center;justify-content:space-between;margin-top:40px;">
     <div></div>
     <div>
         <h2>🖤 Juegos favoritos</h2>
@@ -14,17 +14,19 @@
 <MudContainer MaxWidth="MaxWidth.ExtraLarge">
     <MudTextField T="string"
                   ValueChanged="OnQueryChanged"
-                  Variant="Variant.Filled"
+                  Variant="Variant.Outlined"
                   Adornment="Adornment.Start"
                   AdornmentIcon="@Icons.Material.Outlined.Search"
                   AdornmentColor="Color.Primary"
                   Clearable="true"
                   Value="_search"
-                  Label="Buscar por título"
+                  Placeholder="Buscar por título"
                   Immediate="true"
                   DebounceInterval="450"
                   Margin="Margin.Dense"
-                  FullWidth="true" />
+                  Class="inputBlackContainer"
+                  FullWidth="true"
+                  Style="margin-top:25px;height:56px" />
 </MudContainer>
 
 @if (DataList.Count > 0)
@@ -36,7 +38,7 @@
                 <MudItem xs="@((int)12)" md="@((int)3)" Style="display:flex;justify-content:center;padding:20px">
                     <GameCard item="@item"  ApiService="@ApiService"
                               DController="@DController" LoggedUser="@LoggedUser" 
-                              CService="@CService" LikedGames="@LikedGamesList" 
+                              CService="@CService" LikedGames="@LikedGamesList" Navigator="@Navigator"
                               PlayedGames="@PlayedGamesList" Update="GetList" WatchedGames="@WatchGamesList"></GameCard>
                 </MudItem>
             }

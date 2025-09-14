@@ -1,25 +1,19 @@
 Todo: ->
 
-poner loadings en search home y detailed games
-
-cambiar max height selects games de movil
- poner los filtros ocultos en movil con expanded
 
 haacer que usuarios estan conectados
 
 poner guardar usuario con storage
 
-cuidado el scroll en paginas en movil
 
-cambiar inputs filters name a los outlined de search games
+Crear juegos prioridad
 
-arreglar la busqeudaa de params games
-
-la busqueda de populares y prox lanzamientros no esta bien por que no coje la fecha variable 
 
 mejorar los backups
 
 poner el linear gradient en pelis tamb
+
+cambiar colores 
 
 Mejoras->
 
@@ -32,8 +26,6 @@ Error or notfound
 
 
 Siguiente ->
-pelis
-juegos
 cocina(platos,semana)
 
 mejoras laargo plazo ->

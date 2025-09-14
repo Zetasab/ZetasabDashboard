@@ -1,10 +1,10 @@
 ﻿@page "/liked-movies"
 
 <!-- #region Title -->
-<div style="display:flex;align-items:center;justify-content:space-between">
+<div style="display:flex;align-items:center;justify-content:space-between;margin-top:40px">
     <div></div>
     <div>
-        <h2>❤ Peliculas Favoritas</h2>
+        <h2>💞 Peliculas Favoritas</h2>
     </div>
     <div style="padding-right:30px;">
     </div>
@@ -14,23 +14,24 @@
 <MudContainer MaxWidth="MaxWidth.ExtraLarge">
     <MudTextField T="string"
                   ValueChanged="OnQueryChanged"
-                  Variant="Variant.Filled"
+                  Variant="Variant.Outlined"
                   Adornment="Adornment.Start"
                   AdornmentIcon="@Icons.Material.Outlined.Search"
                   AdornmentColor="Color.Primary"
                   Clearable="true"
                   Value="_search"
-                  Label="Buscar por título"
+                  Placeholder="Buscar por título"
                   Immediate="true"
                   DebounceInterval="450"
                   Margin="Margin.Dense"
-                  FullWidth="true" />
+                  FullWidth="true"
+                  Style="margin-top:25px;height:56px" />
 </MudContainer>
 
 @if (DataList.Count > 0)
 {
     <MudContainer MaxWidth="MaxWidth.ExtraLarge">
-        <div class="movie-grid-5" style="margin-top:25px;justify-items:center">
+        <div class="movie-grid-5" style="margin-top:35px;justify-items:center">
             @foreach (var movie in DataList)
             {
                 <MovieCard movie="@movie"

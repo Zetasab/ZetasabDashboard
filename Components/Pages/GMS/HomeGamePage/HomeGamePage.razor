@@ -107,7 +107,7 @@
             @foreach(var item in GameData.ParentPlatforms)
             {
                 <MudItem xs="@((int)12)" md="@((int)3)">
-                    <a href="@($"search-games?platforms={item.Id}")" class="findBy-game">
+                    <a href="@($"search-games?parent_platforms={item.Id}")" class="findBy-game">
                         <img class="findBy-game-img" src="@item.Img" />
                         <MudText Style="position:relative;z-index:3;font-size:21px" >
                             @item.Name
@@ -124,13 +124,13 @@
             @foreach (var item in GameData.Games_Genres)
             {
                 <MudItem xs="@((int)12)" md="@((int)4)" Style="margin-top:20px;">
-                    <a href="@($"search-games?genres={item.Name}")" class="findBy-game" style="height:210px;overflow:inherit;display:flex;justify-content:space-around">
-                        <img class="findBy-game-img" src="@item.ImageBackground2" style="border-radius:13px;" />
+                    <a href="@($"search-games?genres={item.Slug}")" class="findBy-game-Genre" style="height:210px;overflow:inherit;display:flex;justify-content:space-around">
+                        <img class="findBy-game-img-Genre" src="@item.ImageBackground2" style="border-radius:13px;" />
                         <MudText Style="position:relative;z-index:3;font-size:21px">
                             @item.Name_esp
                         </MudText>
                         <div></div>
-                        <img src="@item.ImageBackgroundShort" style="position:absolute; max-height:260px;bottom:0;right:0"/>
+                        <img src="@item.ImageBackgroundShort" class="findBy-game-img-Genre2" style="position:absolute; max-height:260px;bottom:0;right:0" />
                     </a>
                 </MudItem>
             }
@@ -143,7 +143,7 @@
             @foreach (var item in GameData.TagList)
             {
                 <MudItem xs="@((int)12)" md="@((int)3)">
-                    <a href="@($"search-games?tags={item.Name}")" class="findBy-game">
+                    <a href="@($"search-games?tags={item.Slug}")" class="findBy-game">
                         <img class="findBy-game-img" src="@item.ImageBackground" />
                         <MudText Style="position:relative;z-index:3;font-size:21px">
                             @item.Name
@@ -164,10 +164,26 @@
     .findBy-game:hover > .findBy-game-img {
         filter: brightness(1);
     }
-    .findBy-game:hover{
-        transform:scale(1.03);
+
+    .findBy-game-Genre:hover > .findBy-game-img-Genre {
+        filter: brightness(1);
+    }
+
+    .findBy-game-Genre:hover {
         color:white;
         cursor:pointer;
+    }
+    .findBy-game:hover {
+        color:white;
+        cursor:pointer;
+        transform:scale(1.03);
+    }
+
+    .findBy-game-img-Genre2{
+        transition:0.3s;
+    }
+   .findBy-game-Genre:hover > .findBy-game-img-Genre2 {
+       transform:scale(1.03) translateY(-3px);
     }
     .findBy-game{
         width:100%;
@@ -182,6 +198,27 @@
         font-size: 29px;
     }
     .findBy-game-img{
+        width:100%;
+        height:100%;
+        object-fit:cover;
+        filter:brightness(0.6);
+        position:absolute;
+        transition: 0.3s;
+    }
+    .findBy-game-Genre{
+        width:100%;
+        height:200px;
+        border-radius:13px;
+        position:relative;
+        overflow:hidden;
+        display:flex;
+        justify-content:center;
+        align-items:center;
+        transition:0.3s;
+        font-size: 29px;
+    }
+
+    .findBy-game-img-Genre {
         width:100%;
         height:100%;
         object-fit:cover;

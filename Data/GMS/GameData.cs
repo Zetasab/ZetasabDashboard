@@ -315,9 +315,9 @@ namespace ZetaDashboard.Data.GMS
         #region Sorting
         public static List<GameSorting> Sortings = new()
         {
-             new GameSorting { Name_esp = "🔥 Populares", Value = "-added&dates=2025-01-01,2025-12-31" },
-             new GameSorting { Name_esp = "🆕 Proximos Lanzamientos", Value = "released&dates=2025-09-12,2026-01-01" },
-             new GameSorting { Name_esp = "⌛ Del momento", Value = "-rating&dates=2025-06-01,2025-09-11" },
+             new GameSorting { Name_esp = "🔥 Populares", Value = "popular" },
+             new GameSorting { Name_esp = "🆕 Proximos Lanzamientos", Value = "prox" },
+             new GameSorting { Name_esp = "⌛ Del momento", Value = "moment" },
 
             new GameSorting { Name_esp = "Nombre A-Z", Value = "name" },
             new GameSorting { Name_esp = "Nombre Z-A", Value = "-name" },

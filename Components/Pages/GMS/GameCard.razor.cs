@@ -6,6 +6,7 @@ using ZetaDashboard.Common.Services;
 using ZetaDashboard.Common.ZDB.Models;
 using ZetaDashboard.Common.ZDB.Services;
 using ZetaDashboard.Services;
+using static MudBlazor.CategoryTypes;
 using static ZetaDashboard.Common.ZDB.Models.UserModel;
 
 namespace ZetaDashboard.Components.Pages.GMS
@@ -92,6 +93,14 @@ namespace ZetaDashboard.Components.Pages.GMS
                 $"User {LoggedUser.Name} mark as Watch game {game.Name}");
             UpdateList();
         }
+        private async Task MarkAsWatchPrority(RawgGame game)
+        {
+            _ = await DController.UpdateData(await ApiService.WatchGames.MarkAsWatchPriorityAsync(game, LoggedUser),
+                LoggedUser,
+                "MarkAsWatch",
+                $"User {LoggedUser.Name} mark as Watch game {game.Name}");
+            UpdateList();
+        }
         private async Task UnMarkAsWatch(RawgGame game)
         {
             _ = await DController.UpdateData(await ApiService.WatchGames.UnMarkAsWatchAsync(game, LoggedUser),
@@ -109,6 +118,51 @@ namespace ZetaDashboard.Components.Pages.GMS
         private async Task NavigateToGame()
         {
             Navigator.NavigateTo($"game/{item.Id}");
+        }
+
+
+
+        private DateTime _pressStart;
+        private bool _longPressTriggered;
+
+        private void StartPress(RawgGame item)
+        {
+            _pressStart = DateTime.Now;
+            _longPressTriggered = false;
+        }
+
+        private void EndPress(RawgGame item)
+        {
+            var elapsed = (DateTime.Now - _pressStart).TotalMilliseconds;
+
+            if (!_longPressTriggered)
+            {
+                if (elapsed > 600) // >600ms lo consideramos long click
+                {
+                    LongClick(item);
+                    _longPressTriggered = true;
+                }
+                else
+                {
+                    ShortClick(item);
+                }
+            }
+        }
+
+        private void CancelPress()
+        {
+            _longPressTriggered = false;
+        }
+
+        private void ShortClick(RawgGame item)
+        {
+            // acción normal
+            MarkAsWatch(item);
+        }
+
+        private void LongClick(RawgGame item)
+        {
+            MarkAsWatchPrority(item);
         }
     }
 }

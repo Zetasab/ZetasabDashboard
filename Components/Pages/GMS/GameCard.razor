@@ -77,18 +77,22 @@
                         <!-- Watchlist -->
                         @if (WatchedGames.Any(x => x.Id == item.Id))
                         {
-                            <MudTooltip Text="Quitar de ver mas tarde">
+                            <MudTooltip Text="Quitar de previsto">
                                 <MudIconButton Icon="@Icons.Material.Filled.Bookmark"
-                                               Color="Color.Primary"
-                                               OnClick="@(() => UnMarkAsWatch(item))" />
+                                               Color="@(item.Priority ? Color.Secondary : Color.Primary)"
+                                               OnClick="@(() => UnMarkAsWatch(item))"  />
                             </MudTooltip>
                         }
                         else
                         {
-                            <MudTooltip Text="Añadir a ver mas tarde">
+                            <MudTooltip Text="Añadir a previsto">
                                 <MudIconButton Icon="@Icons.Material.Outlined.BookmarkBorder"
-                                               Color="Color.Primary"
-                                               OnClick="@(() => MarkAsWatch(item))" />
+                                               Color="@(item.Priority ? Color.Secondary : Color.Primary)"
+                                               @onmousedown="@(e => StartPress(item))"
+                                               @onmouseup="@(e => EndPress(item))"
+                                               @ontouchstart="@(e => StartPress(item))"
+                                               @ontouchend="@(e => EndPress(item))"
+                                               @onmouseleave="@(e => CancelPress())" />
                             </MudTooltip>
                         }
                     </div>

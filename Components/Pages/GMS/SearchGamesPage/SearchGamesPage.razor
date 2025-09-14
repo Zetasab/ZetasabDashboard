@@ -12,173 +12,357 @@
 </div>
 <!-- #endregion -->
 
-<MudContainer MaxWidth="MaxWidth.Large">
+<!-- #region Filters pc -->
+
+<MudHidden Breakpoint="Breakpoint.SmAndDown">
+    <MudContainer MaxWidth="MaxWidth.Large">
+
+        <MudTextField T="string"
+                      ValueChanged="OnQueryChanged"
+                      Variant="Variant.Outlined"
+                      Adornment="Adornment.Start"
+                      AdornmentIcon="@Icons.Material.Outlined.Search"
+                      AdornmentColor="Color.Primary"
+                      Clearable="true"
+                      Style="margin-top:15px;height:56px"
+                      Value="_search"
+                      Placeholder="Buscar por nombre"
+                      Immediate="true"
+                      DebounceInterval="450"
+                      Margin="Margin.Dense"
+                      Class="inputBlackContainer"
+                      FullWidth="false" />
+
+        <MudGrid Justify="Justify.Center" Style="">
+            <MudItem xs="@((int)12)" md="@((int)3)" Style="margin-top:25px">
+                <div>
+                    <MudSelectExtended SearchBox="true" T="PlatformCategory" ItemCollection="@GameData.ParentPlatforms" EnableSelectedItemStyle="false"
+                                       ValuePresenter="ValuePresenter.Chip" ChipCloseable="true" ToStringFunc="@(t => t?.Name)"
+                                       MultiSelection="true" Placeholder="Selecciona Plataformas" Clearable="true" SearchBoxPlaceholder="Buscar plataforma"
+                                       Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter" MaxHeight="600"
+                                       PopoverClass="itemMudSelectExtendedNoPaggin" InputClass="sel-fixed-h"
+                                       Class="sel-fixed-h inputBlack" SelectedValues="@_platforms"
+                                       SelectedValuesChanged="SelectedPlatformChanged">
+                        <ItemTemplate>
+                            <div class="MudSelectExtendeditem">
+
+                                <img src="@context.Value.Img" loading="lazy" class="MudSelectExtendeditemImg" />
+
+                                <div class="text-overlay">
+                                    <MudText>
+                                        @context.Value.Name
+                                    </MudText>
+                                </div>
+                            </div>
+                        </ItemTemplate>
+                        <ItemSelectedTemplate>
+                            <div class="MudSelectExtendeditem MudSelectExtendedSelected">
+
+                                <img src="@context.Value.Img" loading="lazy" class="MudSelectExtendeditemImg" />
+
+                                <div class="text-overlay">
+                                    <MudText>
+                                        @context.Value.Name
+                                    </MudText>
+                                </div>
+                            </div>
+                        </ItemSelectedTemplate>
+
+                    </MudSelectExtended>
+
+                </div>
+            </MudItem>
+            <MudItem xs="@((int)12)" md="@((int)3)" Style="margin-top:25px">
+                <div>
+                    <MudSelectExtended SearchBox="true" T="GameGenre" ItemCollection="@GameData.Games_Genres" EnableSelectedItemStyle="false"
+                                       ValuePresenter="ValuePresenter.Chip" ChipCloseable="true" ToStringFunc="@(t => t?.Name)"
+                                       MultiSelection="true" Placeholder="Selecciona Géneros" Clearable="true" SearchBoxPlaceholder="Buscar género"
+                                       Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter" MaxHeight="600"
+                                       PopoverClass="itemMudSelectExtendedNoPaggin" InputClass="sel-fixed-h"
+                                       Class="sel-fixed-h inputBlack" SelectedValues="@_genres"
+                                       SelectedValuesChanged="SelectedGenresChanged">
+                        <ItemTemplate>
+                            <div class="MudSelectExtendeditem">
+
+                                <img src="@context.Value.ImageBackground2" loading="lazy" style="width:100%;height:100%;object-fit:cover;position:absolute;filter: brightness(0.7);" />
+                                <div class="text-overlay" style="margin-left:30px;">
+                                    <MudText>
+                                        @context.Value.Name
+                                    </MudText>
+                                </div>
+                                <div>
+                                    <img src="@context.Value.ImageBackgroundShort" class="MudSelectExtendeditemImgShort" loading="lazy" />
+                                </div>
+                            </div>
+                        </ItemTemplate>
+                        <ItemSelectedTemplate>
+                            <div class="MudSelectExtendeditem MudSelectExtendedSelected">
+
+                                <img src="@context.Value.ImageBackground2" loading="lazy" style="width:100%;height:100%;object-fit:cover;position:absolute;filter: brightness(0.7);" />
+                                <div class="text-overlay" style="margin-left:30px;">
+                                    <MudText>
+                                        @context.Value.Name
+                                    </MudText>
+                                </div>
+                                <div>
+                                    <img src="@context.Value.ImageBackgroundShort" class="MudSelectExtendeditemImgShort" loading="lazy" />
+                                </div>
+                            </div>
+                        </ItemSelectedTemplate>
+
+                    </MudSelectExtended>
+                </div>
+            </MudItem>
+            <MudItem xs="@((int)12)" md="@((int)3)" Style="margin-top:25px">
+                <div>
+                    <MudSelectExtended SearchBox="true" ItemCollection="@GameData.TagList" EnableSelectedItemStyle="false"
+                                       ValuePresenter="ValuePresenter.Chip" ChipCloseable="true" ToStringFunc="@(t => t?.Name)"
+                                       MultiSelection="true" Placeholder="Selecciona tags" Clearable="true" SearchBoxPlaceholder="Buscar tag"
+                                       Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter" MaxHeight="600"
+                                       PopoverClass="itemMudSelectExtendedNoPaggin" InputClass="sel-fixed-h"
+                                       Class="sel-fixed-h inputBlack" SelectedValues="@_tags"
+                                       SelectedValuesChanged="SelectedTagsChanged" T="GameTag">
+                        <ItemTemplate>
+                            <div class="MudSelectExtendeditem">
+                                <img src="@context.Value.ImageBackground" loading="lazy" class="MudSelectExtendeditemImg" />
+
+                                <div class="text-overlay">
+                                    <MudText>
+                                        @context.Value.Name
+                                    </MudText>
+                                </div>
+
+                            </div>
+                        </ItemTemplate>
+                        <ItemSelectedTemplate>
+                            <div class="MudSelectExtendeditem MudSelectExtendedSelected">
+                                <img src="@context.Value.ImageBackground" loading="lazy" class="MudSelectExtendeditemImg" />
+
+                                <div class="text-overlay">
+                                    <MudText>
+                                        @context.Value.Name
+                                    </MudText>
+                                </div>
+                            </div>
+                        </ItemSelectedTemplate>
+
+                    </MudSelectExtended>
+                </div>
+            </MudItem>
+            <MudItem xs="@((int)12)" md="@((int)3)" Style="margin-top:25px">
+                <div>
+                    <MudSelectExtended SearchBox="true" ItemCollection="@GameData.Sortings" EnableSelectedItemStyle="false"
+                                       ValuePresenter="ValuePresenter.Text" ChipCloseable="true" ToStringFunc="@(t => t?.Name_esp)"
+                                       MultiSelection="false" Placeholder="Ordenar por" Clearable="true" SearchBoxPlaceholder="Buscar"
+                                       Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter" MaxHeight="600"
+                                       PopoverClass="itemMudSelectExtendedNoPaggin" Class="inputBlack" Value="@_sorting"
+                                       ValueChanged="SelectedSortingChanged" T="GameSorting">
+                        <ItemTemplate>
+                            <div style="position:relative;width:100%;height:50px;display:flex;justify-content:space-around;align-items:center">
+                                <div class="">
+                                    <MudText>
+                                        @context.Value.Name_esp
+                                    </MudText>
+                                </div>
+
+                            </div>
+                        </ItemTemplate>
+                        <ItemSelectedTemplate>
+                            <div style="position:relative;width:100%;height:50px;display:flex;justify-content:space-around;align-items:center;filter:opacity(0.3)">
+                                <div class="">
+                                    <MudText>
+                                        @context.Value.Name_esp
+                                    </MudText>
+                                </div>
+                            </div>
+                        </ItemSelectedTemplate>
+
+                    </MudSelectExtended>
+                </div>
+            </MudItem>
+        </MudGrid>
+    </MudContainer>
+</MudHidden>
+<!-- #endregion -->
+
+<!-- #region Filters Movil -->
+<MudHidden Breakpoint="Breakpoint.MdAndUp">
     
-    <MudTextField T="string"
-                  ValueChanged="OnQueryChanged"
-                  Variant="Variant.Outlined"
-                  Adornment="Adornment.Start"
-                  AdornmentIcon="@Icons.Material.Outlined.Search"
-                  AdornmentColor="Color.Primary"
-                  Clearable="true"
-                  Style="margin-top:15px;height:56px"
-                  Value="_search"
-                  Placeholder="Buscar por nombre"
-                  Immediate="true"
-                  DebounceInterval="450"
-                  Margin="Margin.Dense"
-                  Class="inputBlackContainer"
-                  FullWidth="false" />
+    <MudContainer MaxWidth="MaxWidth.Large">
+        <MudExpansionPanels Style="margin-top:20px;" Class="moreblack">
+            <MudExpansionPanel Text="Filtros" Expanded="false">
+                <MudTextField T="string"
+                              ValueChanged="OnQueryChanged"
+                              Variant="Variant.Outlined"
+                              Adornment="Adornment.Start"
+                              AdornmentIcon="@Icons.Material.Outlined.Search"
+                              AdornmentColor="Color.Primary"
+                              Clearable="true"
+                              Style="margin-top:15px;height:56px"
+                              Value="_search"
+                              Placeholder="Buscar por nombre"
+                              Immediate="true"
+                              DebounceInterval="450"
+                              Margin="Margin.Dense"
+                              Class="inputBlackContainer"
+                              FullWidth="false" />
 
-    <MudGrid Justify="Justify.Center" Style="">
-        <MudItem xs="@((int)12)" md="@((int)3)" Style="margin-top:25px">
-            <div>
-                <MudSelectExtended SearchBox="true" T="PlatformCategory" ItemCollection="@GameData.ParentPlatforms" EnableSelectedItemStyle="false"
-                                   ValuePresenter="ValuePresenter.Chip" ChipCloseable="true" ToStringFunc="@(t => t?.Name)"
-                                   MultiSelection="true" Placeholder="Selecciona Plataformas" Clearable="true" SearchBoxPlaceholder="Buscar plataforma"
-                                   Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter" MaxHeight="600"
-                                   PopoverClass="itemMudSelectExtendedNoPaggin" InputClass="sel-fixed-h"
-                                   Class="sel-fixed-h inputBlack" SelectedValues="@_platforms"
-                                   SelectedValuesChanged="SelectedPlatformChanged">
-                    <ItemTemplate>
-                        <div class="MudSelectExtendeditem">
+                <MudGrid Justify="Justify.Center" Style="">
+                    <MudItem xs="@((int)12)" md="@((int)3)" Style="margin-top:25px">
+                        <div>
+                            <MudSelectExtended SearchBox="true" T="PlatformCategory" ItemCollection="@GameData.ParentPlatforms" EnableSelectedItemStyle="false"
+                                               ValuePresenter="ValuePresenter.Chip" ChipCloseable="true" ToStringFunc="@(t => t?.Name)"
+                                               MultiSelection="true" Placeholder="Selecciona Plataformas" Clearable="true" SearchBoxPlaceholder="Buscar plataforma"
+                                               Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter" MaxHeight="300"
+                                               PopoverClass="itemMudSelectExtendedNoPaggin" InputClass="sel-fixed-h"
+                                               Class="sel-fixed-h inputBlack" SelectedValues="@_platforms"
+                                               SelectedValuesChanged="SelectedPlatformChanged">
+                                <ItemTemplate>
+                                    <div class="MudSelectExtendeditem">
 
-                            <img src="@context.Value.Img" loading="lazy" class="MudSelectExtendeditemImg" />
-                            
-                            <div class="text-overlay">
-                                <MudText>
-                                    @context.Value.Name
-                                </MudText>
-                            </div>
-                        </div>
-                    </ItemTemplate>
-                    <ItemSelectedTemplate>
-                        <div class="MudSelectExtendeditem MudSelectExtendedSelected">
+                                        <img src="@context.Value.Img" loading="lazy" class="MudSelectExtendeditemImg" />
 
-                            <img src="@context.Value.Img" loading="lazy" class="MudSelectExtendeditemImg" />
-                            
-                            <div class="text-overlay">
-                                <MudText>
-                                    @context.Value.Name
-                                </MudText>
-                            </div>
-                        </div>
-                    </ItemSelectedTemplate>
+                                        <div class="text-overlay">
+                                            <MudText>
+                                                @context.Value.Name
+                                            </MudText>
+                                        </div>
+                                    </div>
+                                </ItemTemplate>
+                                <ItemSelectedTemplate>
+                                    <div class="MudSelectExtendeditem MudSelectExtendedSelected">
 
-                </MudSelectExtended>
+                                        <img src="@context.Value.Img" loading="lazy" class="MudSelectExtendeditemImg" />
 
-            </div>
-        </MudItem>
-        <MudItem xs="@((int)12)" md="@((int)3)" Style="margin-top:25px">
-            <div>
-                <MudSelectExtended SearchBox="true" T="GameGenre" ItemCollection="@GameData.Games_Genres" EnableSelectedItemStyle="false"
-                                   ValuePresenter="ValuePresenter.Chip" ChipCloseable="true" ToStringFunc="@(t => t?.Name)"
-                                   MultiSelection="true" Placeholder="Selecciona Géneros" Clearable="true" SearchBoxPlaceholder="Buscar género"
-                                   Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter" MaxHeight="600"
-                                   PopoverClass="itemMudSelectExtendedNoPaggin" InputClass="sel-fixed-h"
-                                   Class="sel-fixed-h inputBlack" SelectedValues="@_genres"
-                                   SelectedValuesChanged="SelectedGenresChanged">
-                    <ItemTemplate>
-                        <div class="MudSelectExtendeditem">
+                                        <div class="text-overlay">
+                                            <MudText>
+                                                @context.Value.Name
+                                            </MudText>
+                                        </div>
+                                    </div>
+                                </ItemSelectedTemplate>
 
-                            <img src="@context.Value.ImageBackground2" loading="lazy" style="width:100%;height:100%;object-fit:cover;position:absolute;filter: brightness(0.7);" />
-                            <div class="text-overlay" style="margin-left:30px;">
-                                <MudText>
-                                    @context.Value.Name
-                                </MudText>
-                            </div>
-                            <div>
-                                <img src="@context.Value.ImageBackgroundShort" class="MudSelectExtendeditemImgShort" loading="lazy" />
-                            </div>
-                        </div>
-                    </ItemTemplate>
-                    <ItemSelectedTemplate>
-                        <div class="MudSelectExtendeditem MudSelectExtendedSelected">
-
-                            <img src="@context.Value.ImageBackground2" loading="lazy" style="width:100%;height:100%;object-fit:cover;position:absolute;filter: brightness(0.7);" />
-                            <div class="text-overlay" style="margin-left:30px;">
-                                <MudText>
-                                    @context.Value.Name
-                                </MudText>
-                            </div>
-                            <div>
-                                <img src="@context.Value.ImageBackgroundShort" class="MudSelectExtendeditemImgShort" loading="lazy" />
-                            </div>
-                        </div>
-                    </ItemSelectedTemplate>
-
-                </MudSelectExtended>
-            </div>
-        </MudItem>
-        <MudItem xs="@((int)12)" md="@((int)3)" Style="margin-top:25px">
-            <div>
-                <MudSelectExtended SearchBox="true" ItemCollection="@GameData.TagList" EnableSelectedItemStyle="false"
-                                   ValuePresenter="ValuePresenter.Chip" ChipCloseable="true" ToStringFunc="@(t => t?.Name)"
-                                   MultiSelection="true" Placeholder="Selecciona tags" Clearable="true" SearchBoxPlaceholder="Buscar tag"
-                                   Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter" MaxHeight="600"
-                                   PopoverClass="itemMudSelectExtendedNoPaggin" InputClass="sel-fixed-h"
-                                   Class="sel-fixed-h inputBlack" SelectedValues="@_tags"
-                                   SelectedValuesChanged="SelectedTagsChanged" T="GameTag">
-                    <ItemTemplate>
-                        <div class="MudSelectExtendeditem">
-                            <img src="@context.Value.ImageBackground" loading="lazy" class="MudSelectExtendeditemImg" />
-                            
-                            <div class="text-overlay">
-                                <MudText>
-                                    @context.Value.Name
-                                </MudText>
-                            </div>
-                          
-                        </div>
-                    </ItemTemplate>
-                    <ItemSelectedTemplate>
-                        <div class="MudSelectExtendeditem MudSelectExtendedSelected">
-                            <img src="@context.Value.ImageBackground" loading="lazy" class="MudSelectExtendeditemImg" />
-                            
-                            <div class="text-overlay">
-                                <MudText>
-                                    @context.Value.Name
-                                </MudText>
-                            </div>
-                        </div>
-                    </ItemSelectedTemplate>
-
-                </MudSelectExtended>
-            </div>
-        </MudItem>
-        <MudItem xs="@((int)12)" md="@((int)3)" Style="margin-top:25px">
-            <div>
-                <MudSelectExtended SearchBox="true" ItemCollection="@GameData.Sortings" EnableSelectedItemStyle="false"
-                                   ValuePresenter="ValuePresenter.Text" ChipCloseable="true" ToStringFunc="@(t => t?.Name_esp)"
-                                   MultiSelection="false" Placeholder="Ordenar por" Clearable="true" SearchBoxPlaceholder="Buscar"
-                                   Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter" MaxHeight="600"
-                                   PopoverClass="itemMudSelectExtendedNoPaggin" Class="inputBlack" Value="@_sorting"
-                                   ValueChanged="SelectedSortingChanged" T="GameSorting">
-                    <ItemTemplate>
-                        <div style="position:relative;width:100%;height:50px;display:flex;justify-content:space-around;align-items:center">
-                            <div class="">
-                                <MudText>
-                                    @context.Value.Name_esp
-                                </MudText>
-                            </div>
+                            </MudSelectExtended>
 
                         </div>
-                    </ItemTemplate>
-                    <ItemSelectedTemplate>
-                        <div style="position:relative;width:100%;height:50px;display:flex;justify-content:space-around;align-items:center;filter:opacity(0.3)">
-                            <div class="">
-                                <MudText>
-                                    @context.Value.Name_esp
-                                </MudText>
-                            </div>
-                        </div>
-                    </ItemSelectedTemplate>
+                    </MudItem>
+                    <MudItem xs="@((int)12)" md="@((int)3)" Style="margin-top:25px">
+                        <div>
+                            <MudSelectExtended SearchBox="true" T="GameGenre" ItemCollection="@GameData.Games_Genres" EnableSelectedItemStyle="false"
+                                               ValuePresenter="ValuePresenter.Chip" ChipCloseable="true" ToStringFunc="@(t => t?.Name)"
+                                               MultiSelection="true" Placeholder="Selecciona Géneros" Clearable="true" SearchBoxPlaceholder="Buscar género"
+                                               Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter" MaxHeight="300"
+                                               PopoverClass="itemMudSelectExtendedNoPaggin" InputClass="sel-fixed-h"
+                                               Class="sel-fixed-h inputBlack" SelectedValues="@_genres"
+                                               SelectedValuesChanged="SelectedGenresChanged">
+                                <ItemTemplate>
+                                    <div class="MudSelectExtendeditem">
 
-                </MudSelectExtended>
-            </div>
-        </MudItem>
-    </MudGrid>
-</MudContainer>
+                                        <img src="@context.Value.ImageBackground2" loading="lazy" style="width:100%;height:100%;object-fit:cover;position:absolute;filter: brightness(0.7);" />
+                                        <div class="text-overlay" style="margin-left:30px;">
+                                            <MudText>
+                                                @context.Value.Name
+                                            </MudText>
+                                        </div>
+                                        <div>
+                                            <img src="@context.Value.ImageBackgroundShort" class="MudSelectExtendeditemImgShort" loading="lazy" />
+                                        </div>
+                                    </div>
+                                </ItemTemplate>
+                                <ItemSelectedTemplate>
+                                    <div class="MudSelectExtendeditem MudSelectExtendedSelected">
+
+                                        <img src="@context.Value.ImageBackground2" loading="lazy" style="width:100%;height:100%;object-fit:cover;position:absolute;filter: brightness(0.7);" />
+                                        <div class="text-overlay" style="margin-left:30px;">
+                                            <MudText>
+                                                @context.Value.Name
+                                            </MudText>
+                                        </div>
+                                        <div>
+                                            <img src="@context.Value.ImageBackgroundShort" class="MudSelectExtendeditemImgShort" loading="lazy" />
+                                        </div>
+                                    </div>
+                                </ItemSelectedTemplate>
+
+                            </MudSelectExtended>
+                        </div>
+                    </MudItem>
+                    <MudItem xs="@((int)12)" md="@((int)3)" Style="margin-top:25px">
+                        <div>
+                            <MudSelectExtended SearchBox="true" ItemCollection="@GameData.TagList" EnableSelectedItemStyle="false"
+                                               ValuePresenter="ValuePresenter.Chip" ChipCloseable="true" ToStringFunc="@(t => t?.Name)"
+                                               MultiSelection="true" Placeholder="Selecciona tags" Clearable="true" SearchBoxPlaceholder="Buscar tag"
+                                               Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter" MaxHeight="300"
+                                               PopoverClass="itemMudSelectExtendedNoPaggin" InputClass="sel-fixed-h"
+                                               Class="sel-fixed-h inputBlack" SelectedValues="@_tags"
+                                               SelectedValuesChanged="SelectedTagsChanged" T="GameTag">
+                                <ItemTemplate>
+                                    <div class="MudSelectExtendeditem">
+                                        <img src="@context.Value.ImageBackground" loading="lazy" class="MudSelectExtendeditemImg" />
+
+                                        <div class="text-overlay">
+                                            <MudText>
+                                                @context.Value.Name
+                                            </MudText>
+                                        </div>
+
+                                    </div>
+                                </ItemTemplate>
+                                <ItemSelectedTemplate>
+                                    <div class="MudSelectExtendeditem MudSelectExtendedSelected">
+                                        <img src="@context.Value.ImageBackground" loading="lazy" class="MudSelectExtendeditemImg" />
+
+                                        <div class="text-overlay">
+                                            <MudText>
+                                                @context.Value.Name
+                                            </MudText>
+                                        </div>
+                                    </div>
+                                </ItemSelectedTemplate>
+
+                            </MudSelectExtended>
+                        </div>
+                    </MudItem>
+                    <MudItem xs="@((int)12)" md="@((int)3)" Style="margin-top:25px">
+                        <div>
+                            <MudSelectExtended SearchBox="true" ItemCollection="@GameData.Sortings" EnableSelectedItemStyle="false"
+                                               ValuePresenter="ValuePresenter.Text" ChipCloseable="true" ToStringFunc="@(t => t?.Name_esp)"
+                                               MultiSelection="false" Placeholder="Ordenar por" Clearable="true" SearchBoxPlaceholder="Buscar"
+                                               Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter" MaxHeight="300"
+                                               PopoverClass="itemMudSelectExtendedNoPaggin" Class="inputBlack" Value="@_sorting"
+                                               ValueChanged="SelectedSortingChanged" T="GameSorting">
+                                <ItemTemplate>
+                                    <div style="position:relative;width:100%;height:50px;display:flex;justify-content:space-around;align-items:center">
+                                        <div class="">
+                                            <MudText>
+                                                @context.Value.Name_esp
+                                            </MudText>
+                                        </div>
+
+                                    </div>
+                                </ItemTemplate>
+                                <ItemSelectedTemplate>
+                                    <div style="position:relative;width:100%;height:50px;display:flex;justify-content:space-around;align-items:center;filter:opacity(0.3)">
+                                        <div class="">
+                                            <MudText>
+                                                @context.Value.Name_esp
+                                            </MudText>
+                                        </div>
+                                    </div>
+                                </ItemSelectedTemplate>
+
+                            </MudSelectExtended>
+                        </div>
+                    </MudItem>
+                </MudGrid>
+            </MudExpansionPanel>
+        </MudExpansionPanels>
+    </MudContainer>
+</MudHidden>
+
+
+<!-- #endregion -->
+
 
 
 <MudContainer MaxWidth="MaxWidth.ExtraLarge" Style="position:relative;">
@@ -210,13 +394,17 @@
 
 
 <style>
+    .inputBlackContainer > .mud-input-control-input-container > .mud-input {
+        background-color: #1c1c1c;
+    }
+    .moreblack > .mud-expand-panel{
+        background-color: #272727 !important;
+    }
     .mud-input-slot.mud-input-root.mud-input-root-outlined.mud-select-input-extended.mud-no-start-adornment.sel-fixed-h > div > .mud-chipset > div > button {
         margin-top:0px;
     }
 
-    .inputBlackContainer > .mud-input-control-input-container > .mud-input{
-        background-color: #1c1c1c;
-    }
+    
     .inputBlack{
         background-color: #1c1c1c;
     }

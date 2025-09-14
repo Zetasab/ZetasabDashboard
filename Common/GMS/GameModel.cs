@@ -76,6 +76,7 @@ namespace ZetaDashboard.Common.GMS
         [JsonPropertyName("reviews_count")] public int ReviewsCount { get; set; }
         [JsonPropertyName("saturated_color")] public string? SaturatedColor { get; set; }
         [JsonPropertyName("dominant_color")] public string? DominantColor { get; set; }
+        [JsonPropertyName("priority")] public bool Priority { get; set; }
 
         [JsonPropertyName("platforms")] public List<PlatformEntry> Platforms { get; set; } = new();
         [JsonPropertyName("parent_platforms")] public List<ParentPlatformRef> ParentPlatforms { get; set; } = new();
@@ -90,13 +91,13 @@ namespace ZetaDashboard.Common.GMS
     
         public void Format()
         {
-            Ratings.Clear();
-            Platforms.Clear();
-            ParentPlatforms.Clear();
+            Ratings?.Clear();
+            Platforms?.Clear();
+            ParentPlatforms?.Clear();
             AddedByStatus = new AddedByStatus();
-            Genres.Clear();
-            Stores.Clear();
-            Tags.Clear();
+            Genres?.Clear();
+            Stores?.Clear();
+            Tags?.Clear();
             EsrbRating = new EsrbRating();
         }
     }

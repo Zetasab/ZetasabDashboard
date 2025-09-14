@@ -119,7 +119,7 @@
                                     <MudTooltip Text="Quitar de ver mas tarde">
                                         <MudIconButton Icon="@Icons.Material.Filled.Bookmark"
                                                        Size="Size.Large"
-                                                       Color="Color.Primary"
+                                                   Color="@(WatchGames.FirstOrDefault(x => x.Id == GameDetail.Id).Priority ? Color.Secondary : Color.Primary)"
                                                        OnClick="@(() => UnMarkAsWatch(Transform(GameDetail)))" />
                                     </MudTooltip>
                                 }
@@ -162,7 +162,7 @@
                         {
                             foreach (var s in GameDetail.ParentPlatforms)
                             {
-                                <a target="_self" href="@($"search-games?page=1&platforms={s.Platform.Id}")" class="store-buttons-buttons">
+                                <a target="_self" href="@($"search-games?page=1&parent_platforms={s.Platform.Id}")" class="store-buttons-buttons">
                                     <div class="store-buttons-buttons-container">
                                         <img src="@GetStoreIconUrl(s.Platform.Name)" width="22" height="22" alt="@s.Platform.Name" onerror="this.src='https://cdn.simpleicons.org/pcgamingwiki'" />
                                         <MudText>@s.Platform.Name</MudText>
@@ -191,7 +191,7 @@
                             @foreach (var it in GameDetail.Tags)
                             {
                                 <MudChip T="string"
-                                Href="@($"search-games?page=1&tags=31{it.Id}")"
+                                Href="@($"search-games?page=1&tags={it.Slug}")"
                                          Target="_self"
                                          Variant="Variant.Outlined">
                                     @it.Name
@@ -217,7 +217,7 @@
                         {
                             @foreach (var it in GameDetail.Genres)
                             {
-                                <a href="@($"search-games?page=1&genres=31{it.Id}")" style="position:relative;width:140px;height:60px;display:flex;align-items:center;justify-content:center;border-radius:15px;overflow:hidden">
+                                <a href="@($"search-games?page=1&genres={it.Slug}")" style="position:relative;width:140px;height:60px;display:flex;align-items:center;justify-content:center;border-radius:15px;overflow:hidden">
                                     <img src="@it.ImageBackground" style="position:absolute;width:100%;height:100%;object-fit:cover;filter:brightness(0.6)">
                                     <MudText Style="z-index:4;"> @it.Name</MudText>
                                 </a>
