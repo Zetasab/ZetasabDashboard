@@ -35,7 +35,7 @@
                         <!-- Visto -->
                         @if (PlayedGames.Any(x => x.Id == item.Id))
                         {
-                            <MudTooltip Text="Desmarcar como visto">
+                            <MudTooltip Text="Desmarcar como jugado">
                                 <MudIconButton Icon="@Icons.Material.Filled.CheckCircle"
                                                Color="Color.Success"
                                                OnClick="@(() => UnMarkAsPlayed(item))" />
@@ -43,7 +43,7 @@
                         }
                         else
                         {
-                            <MudTooltip Text="Marcar como visto">
+                            <MudTooltip Text="Marcar como jugado">
                                 <MudIconButton Icon="@Icons.Material.Outlined.CheckCircleOutline"
                                                Color="Color.Success"
                                                OnClick="@(() => MarkAsPlayed(item))" />
