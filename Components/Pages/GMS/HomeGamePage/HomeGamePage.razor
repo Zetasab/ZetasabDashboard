@@ -1,13 +1,387 @@
 ﻿@page "/games-home"
+@using ZetaDashboard.Data.GMS
 
-<h3>HomeGamePage</h3>
+<MudPaper Class="@((IsLoading) ? "" : "d-none ")" Elevation="0" Style="width:100%;height:100%;position:fixed;display:flex;justify-content:center;align-items:center;z-index:300;">
+    <MudProgressCircular Style="width:200px;height:200px" Color="Color.Primary" Indeterminate="true" />
+</MudPaper>
 
-@for (int i = 0; i < 10; i++)
-{
-    for (int y = 0; y < 10; y++)
-    {
-        var index = i;
-        var yndex = y;
-        <MudText>@index y @yndex</MudText>
+<div class="game-video-bg">
+    <iframe src="@_videos[_videorand]"
+            title="YouTube video player"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerpolicy="strict-origin-when-cross-origin"
+            allowfullscreen>
+    </iframe>
+</div>
+
+<div class="game-video-bg-up">
+    <div class="game-video-bg-show-bottom"></div>
+</div>
+
+<div class="main-games moreblack">
+    
+    <div class="moreblack">
+
+    <br />
+    
+    </div>
+
+    <MudContainer class="mudcontainer-container moreblack" MaxWidth="MaxWidth.Large" Style="margin-top:40px;">
+        <div style="display:flex;align-items:center;gap:40px;margin-top:30px">
+        <MudText Typo="Typo.h4" Style="color:white">Juegos</MudText>
+        <MudToggleGroup Style="width:fit-content;height:40px" T="string" SelectedClass="custom-gradient" Value="_trendingGame" ValueChanged="ChangeTrendingGames">
+                <MudToggleItem Value="@("🔥 Populares")" />
+                <MudToggleItem Value="@("🆕 Proximos Lanzamientos")" />
+                <MudToggleItem Value="@("⌛ Del momento")" />
+        </MudToggleGroup>
+        </div>
+        <MudGrid Style="width: 100% !important;position: relative;margin-left: 0px;margin-top: 40px;">
+            @foreach (var item in PopularGames.Take(9))
+            {
+                <MudItem xs="@((int)12)" md="@((int)4)" Style="display:flex;justify-content:center;padding:20px">
+                    <GameCard item="@item"  ApiService="@ApiService"
+                              DController="@DController" LoggedUser="@LoggedUser" 
+                              CService="@CService"  ShowButtons="false"
+                              Navigator="@Navigator"></GameCard>
+                </MudItem>
+            }
+        </MudGrid>
+    </MudContainer>
+
+    <MudPaper Elevation="0" Class="personal-movies-container">
+        <div>
+            <MudText Typo="Typo.h2" Style="color:white;font-weight:bold;">
+                ¿No ves lo que buscas?
+            </MudText>
+        </div>
+        <div>
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="/search-games" Style="padding: 14px 30px;font-size: 19px;margin:25px;">
+                📟 Descubre juegos
+            </MudButton>
+        </div>
+    </MudPaper>
+
+     <MudContainer class="mudcontainer-container moreblack" MaxWidth="MaxWidth.Large" Style="margin-top:90px;">
+        <MudText Typo="Typo.h4" Style="color:white">Juegos de siempre</MudText>
+        <MudGrid Style="width: 100% !important;position: relative;margin-left: 0px;margin-top: 40px;">
+            @foreach (var item in EverGames.Take(9))
+            {
+                <MudItem xs="@((int)12)" md="@((int)4)" Style="display:flex;justify-content:center;padding:20px">
+                    <GameCard item="@item" ApiService="@ApiService"
+                              DController="@DController" LoggedUser="@LoggedUser"
+                              CService="@CService" ShowButtons="false"
+                              Navigator="@Navigator"></GameCard>
+                </MudItem>
+            }
+        </MudGrid>
+    </MudContainer>
+
+    <div class="three-panels">
+        <a href="/played-games" class="panel panel--watched" tabindex="0">
+            <div class="movie-link">
+                <MudText Typo="Typo.h5">✅ Juegos jugados</MudText>
+            </div>
+        </a>
+
+        <a href="/liked-movies" class="panel panel--favorites" tabindex="0">
+            <div class="liked-games">
+                <MudText Typo="Typo.h5">🖤 Juegos favoritos</MudText>
+            </div>
+        </a>
+        <a href="/watch-games" class="panel panel--saved" tabindex="0">
+            <div class="movie-link">
+                <MudText Typo="Typo.h5">🕝 Juegos previstos</MudText>
+            </div>
+        </a>
+    </div>
+
+    <MudContainer class="mudcontainer-container moreblack" MaxWidth="MaxWidth.Large" Style="margin-top:90px;">
+        <MudText Typo="Typo.h4">
+            🔎 Buscar juegos por
+        </MudText>
+        <MudText Style="margin:40px;">
+            Plataformas
+        </MudText>
+        <MudGrid>
+            @foreach(var item in GameData.ParentPlatforms)
+            {
+                <MudItem xs="@((int)12)" md="@((int)3)">
+                    <a href="@($"search-games?platforms={item.Id}")" class="findBy-game">
+                        <img class="findBy-game-img" src="@item.Img" />
+                        <MudText Style="position:relative;z-index:3;font-size:21px" >
+                            @item.Name
+                        </MudText>
+                    </a>
+                </MudItem>
+            }
+        </MudGrid>
+        <MudDivider Style="margin-top: 60px;"></MudDivider>
+        <MudText Style="margin:40px;">
+            Géneros
+        </MudText>
+        <MudGrid>
+            @foreach (var item in GameData.Games_Genres)
+            {
+                <MudItem xs="@((int)12)" md="@((int)4)" Style="margin-top:20px;">
+                    <a href="@($"search-games?genres={item.Name}")" class="findBy-game" style="height:210px;overflow:inherit;display:flex;justify-content:space-around">
+                        <img class="findBy-game-img" src="@item.ImageBackground2" style="border-radius:13px;" />
+                        <MudText Style="position:relative;z-index:3;font-size:21px">
+                            @item.Name_esp
+                        </MudText>
+                        <div></div>
+                        <img src="@item.ImageBackgroundShort" style="position:absolute; max-height:260px;bottom:0;right:0"/>
+                    </a>
+                </MudItem>
+            }
+        </MudGrid>
+        <MudDivider Style="margin-top: 60px;"></MudDivider>
+        <MudText Style="margin:40px;">
+            Géneros
+        </MudText>
+        <MudGrid>
+            @foreach (var item in GameData.TagList)
+            {
+                <MudItem xs="@((int)12)" md="@((int)3)">
+                    <a href="@($"search-games?tags={item.Name}")" class="findBy-game">
+                        <img class="findBy-game-img" src="@item.ImageBackground" />
+                        <MudText Style="position:relative;z-index:3;font-size:21px">
+                            @item.Name
+                        </MudText>
+                    </a>
+                </MudItem>
+            }
+        </MudGrid>
+    </MudContainer>
+    <div style="width:100%;height:100px;background:black;margin-top:120px">
+
+    </div>
+</div>
+
+
+
+<style>
+    .findBy-game:hover > .findBy-game-img {
+        filter: brightness(1);
     }
-}
+    .findBy-game:hover{
+        transform:scale(1.03);
+        color:white;
+        cursor:pointer;
+    }
+    .findBy-game{
+        width:100%;
+        height:200px;
+        border-radius:13px;
+        position:relative;
+        overflow:hidden;
+        display:flex;
+        justify-content:center;
+        align-items:center;
+        transition:0.3s;
+        font-size: 29px;
+    }
+    .findBy-game-img{
+        width:100%;
+        height:100%;
+        object-fit:cover;
+        filter:brightness(0.6);
+        position:absolute;
+        transition: 0.3s;
+    }
+    .main-games{
+        position:relative;
+    }
+
+    .game-video-bg-up{
+        width:100%;
+        height: 700px;
+        background-color:transparent;
+        position:relative;
+        display:flex;
+        align-items:end;
+    }
+    .game-video-bg{
+        width: calc(100vw - 260px);
+        height:700px;
+        position:fixed;
+        filter: brightness(0.5);
+    }
+
+    .custom-gradient {
+        background-image: linear-gradient(to right top, #051937, #004d7a, #008793, #00bf72, #a8eb12);
+        color: white !important;
+    }
+
+    .personal-movies-container {
+        width: 100%;
+        min-height: 400px;
+        background-image: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.35)), url("https://www.raccoongames.es/min/img/categorias/banner%20videojuegos.png");
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        position: relative;
+        overflow: hidden;
+        margin-top: 150px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+        text-align: center; /* centra el texto y el botón en móvil */
+    }
+    @@media (max-width: 768px) {
+        .game-video-bg-up {
+            width: 100%;
+            height: 200px !important;
+            background-color: transparent;
+        }
+        .game-video-bg {
+            width: 100vw !important;
+            height: 200px !important;
+        }
+
+        .game-video-bg-show{
+            height:200px !important;
+        }
+
+        .game-video-bg-show-bottom{
+            height: 100px !important;
+        }
+    }
+
+        .game-video-bg iframe{
+           width:100%;
+           height:100%;
+        }
+
+    .game-video-bg-show {
+        width: 100%;
+        height: 700px;
+        position: relative;
+        background-color: transparent;
+        display: flex;
+        align-items: end;
+    }
+
+    .game-video-bg-show-bottom{
+        width:100%;
+        height: 300px;
+        
+        position:relative;
+        background: linear-gradient(180deg, rgb(39 39 39 / 0) 8%, rgb(39 39 39 / 0.08) 20%, rgb(39 39 39 / 0.18) 35%, rgb(39 39 39 / 0.32) 50%, rgb(39 39 39 / 0.5) 65%, rgb(39 39 39 / 0.7) 80%, #272727 95%);
+    }
+
+    .three-panels {
+        display: flex;
+        width: 100%;
+        height: 400px;
+        overflow: hidden;
+        margin-top: 90px;
+    }
+
+    .panel {
+        flex: 1 1 0%;
+        display: grid;
+        place-items: center;
+        text-decoration: none;
+        color: #fff;
+        font-weight: 600;
+        font-size: 1.25rem;
+        transition: flex-grow .45s ease, flex-basis .45s ease, filter .3s ease, transform .3s ease;
+        will-change: flex-basis, flex-grow;
+        position: relative;
+    }
+
+        .panel::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.45); /* oscurece el fondo */
+            z-index: 0;
+            transition: 0.3s
+        }
+
+    /* Fondos de ejemplo */
+    .panel--watched {
+        background: url("https://infillion.com/wp-content/uploads/2024/02/Blog-Post_Video-Games.jpg") center/cover no-repeat;
+    }
+
+    .panel--favorites {
+        background: url("https://i.blogs.es/b9f767/the-game-awards/840_560.jpeg") center/cover no-repeat;
+    }
+
+    .panel--saved {
+        background: url("https://institutoautor.org/wp-content/uploads/2024/10/Videojuegos.png") center/cover no-repeat;
+    }
+
+    /* Oscurecer un poco por defecto para legibilidad */
+
+
+    .panel > span {
+        position: relative;
+        z-index: 1;
+    }
+
+    /* Al entrar en el contenedor, todas se contraen un poco */
+    .three-panels:hover .panel,
+    .three-panels:focus-within .panel {
+        flex-basis: 10%;
+        filter: brightness(.7);
+    }
+
+    /* La panel activa (hover o foco) se expande y gana brillo */
+    /* IMPORTANTE: esta regla va DESPUÉS para que gane a la anterior (igual especificidad) */
+    .three-panels .panel:hover,
+    .three-panels .panel:focus {
+        flex-grow: 6;
+        flex-basis: 80%;
+        filter: brightness(1);
+        transform: translateZ(0);
+    }
+
+        .three-panels .panel:hover::after,
+        .three-panels .panel:focus::after {
+            opacity: .05;
+        }
+
+    /* Opcional: indicación de foco accesible */
+    .panel:focus-visible {
+        outline: 2px solid rgba(255,255,255,.8);
+        outline-offset: -2px;
+    }
+
+    /* Responsivo: en pantallas estrechas, apilar y usar foco/click */
+    @@media (max-width: 700px) {
+        .three-panels {
+            flex-direction: column;
+            height: 60vh;
+        }
+
+            .three-panels:hover .panel {
+                flex-basis: auto;
+            }
+
+            .three-panels .panel {
+                min-height: 30%;
+            }
+    }
+
+    .movie-link {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-decoration: none;
+        color: black;
+        font-weight: 500;
+        font-size: 1.1rem;
+        padding: 1rem;
+        border-radius: 1rem;
+        background: rgba(255,255,255,0.6);
+        backdrop-filter: blur(6px);
+        box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        transition: all 0.3s ease;
+        min-width: 100px;
+        z-index: 4;
+    }
+</style>

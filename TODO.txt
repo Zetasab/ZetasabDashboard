@@ -11,7 +11,15 @@ poner guardar usuario con storage
 
 cuidado el scroll en paginas en movil
 
+cambiar inputs filters name a los outlined de search games
+
+arreglar la busqeudaa de params games
+
+la busqueda de populares y prox lanzamientros no esta bien por que no coje la fecha variable 
+
 mejorar los backups
+
+poner el linear gradient en pelis tamb
 
 Mejoras->
 

@@ -205,16 +205,14 @@ h1:focus {
     position: relative;
 }
 
-.game-container:hover {
-    cursor: pointer;
-}
-
-    .game-container:hover > .game-container-img-container > .game-container-img {
+    .game-container-img:hover {
+        cursor: pointer;
         transform: scale(1.04);
         filter: brightness(1);
     }
 
-    .game-container:hover > .game-container-img-container > .game-container-added {
+
+    .game-container-img-container:hover > .game-container-added {
         margin-right: 0px;
     }
 
