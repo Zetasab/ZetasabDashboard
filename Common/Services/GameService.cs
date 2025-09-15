@@ -144,7 +144,7 @@ namespace ZetaDashboard.Common.Services
                         return response!;
                     }
 
-                    string queryparamsstring = $"?page_size=9";
+                    string queryparamsstring = $"?page_size=9{paramss}";
 
                     // Opción A) Tu API devuelve ApiResponse<List<AuditModel>>
                     var (ok, apiRes, error, raw) = await TryGetAsync<ApiResponse<GameModel>>($"games{queryparamsstring}", ct);

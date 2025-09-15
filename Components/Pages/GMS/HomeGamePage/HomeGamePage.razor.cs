@@ -94,8 +94,8 @@ namespace ZetaDashboard.Components.Pages.GMS.HomeGamePage
             IsLoading = true;
             await InvokeAsync(StateHasChanged);
 
-            string paraams = "&dates=2025-06-01,2025-09-11&ordering=-rating&page_size=20";
-               var x = await DController.GetData(await HttpApiService.Games.GetSearchGameModelByUrlAsync(paraams, LoggedUser));
+            string paraams = $"ordering=-added&dates={new DateTime(DateTime.Now.Year, 1, 1):yyyy-MM-dd},{new DateTime(DateTime.Now.Year, 12, 31):yyyy-MM-dd}";
+            var x = await DController.GetData(await HttpApiService.Games.GetSearchGameModelByUrlAsync(paraams, LoggedUser));
             PopularGames = x.Results;
 
             var y = await DController.GetData(await HttpApiService.Games.GetSearchGameModelByUrlAsync("", LoggedUser));
@@ -112,24 +112,25 @@ namespace ZetaDashboard.Components.Pages.GMS.HomeGamePage
             if (text == "🔥 Populares")
             {
                 _trendingGame = text;
-                string paraams = "&dates=2025-06-01,2025-09-11&ordering=-rating&page_size=20";
+                string paraams = $"ordering=-added&dates={new DateTime(DateTime.Now.Year, 1, 1):yyyy-MM-dd},{new DateTime(DateTime.Now.Year, 12, 31):yyyy-MM-dd}";
                 var x = await DController.GetData(await HttpApiService.Games.GetSearchGameModelByUrlAsync(paraams, LoggedUser));
                 PopularGames = x.Results;
             }
             else if(text == "🆕 Proximos Lanzamientos")
             {
                 _trendingGame = text;
-                string paraams = "&dates=2025-09-12,2026-01-01";
+                string paraams = $"ordering=released&dates={DateTime.Now:yyyy-MM-dd},{DateTime.Now.AddYears(1):yyyy-MM-dd}";
                 var x = await DController.GetData(await HttpApiService.Games.GetSearchGameModelByUrlAsync(paraams, LoggedUser));
                 PopularGames = x.Results;
             }
             else
             {
                 _trendingGame = text;
-                string paraams = "&dates=2025-06-01,2025-09-11";
+                string paraams = $"ordering-rating&dates={DateTime.Now.AddMonths(-3):yyyy-MM-dd},{DateTime.Now:yyyy-MM-dd}";
                 var x = await DController.GetData(await HttpApiService.Games.GetSearchGameModelByUrlAsync(paraams, LoggedUser));
                 PopularGames = x.Results;
             }
+            await InvokeAsync(StateHasChanged);
         }
 
 
